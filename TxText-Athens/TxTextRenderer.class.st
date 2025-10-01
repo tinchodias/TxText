@@ -1,22 +1,3 @@
-Class {
-	#name : #TxTextRenderer,
-	#superclass : #Object,
-	#instVars : [
-		'text',
-		'font',
-		'canvas',
-		'glyphRenderer',
-		'color',
-		'advance',
-		'maxAscent',
-		'currentLine'
-	],
-	#category : #'TxText-Athens'
-}
-
-{ #category : #'as yet unclassified' }
-TxTextRenderer class >> textGoryDetails [
-
 "
 Took from: http://www.freetype.org/freetype2/docs/tutorial/step2.html
 
@@ -59,28 +40,44 @@ underline_thickness
 
 When displaying or rendering underlined text, this value corresponds to the vertical thickness of the underline.
 
-
 "
-]
+Class {
+	#name : 'TxTextRenderer',
+	#superclass : 'Object',
+	#instVars : [
+		'text',
+		'font',
+		'canvas',
+		'glyphRenderer',
+		'color',
+		'advance',
+		'maxAscent',
+		'currentLine'
+	],
+	#category : 'TxText-Athens-Layout',
+	#package : 'TxText-Athens',
+	#tag : 'Layout'
+}
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxTextRenderer >> advance: ad [
 	
 	canvas pathTransform translateBy: ad
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxTextRenderer >> canvas [
 	^ canvas
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 TxTextRenderer >> initialize [
+
 	super initialize.
-	color := Smalltalk ui theme textColor.
+	color := Smalltalk ui theme textColor
 ]
 
-{ #category : #rendering }
+{ #category : 'rendering' }
 TxTextRenderer >> render: aText lines: lines on: aCanvas [
 
 	text := aText.
@@ -102,9 +99,8 @@ TxTextRenderer >> render: aText lines: lines on: aCanvas [
 		] ]
 ]
 
-{ #category : #rendering }
-TxTextRenderer >> renderCharacters: aString from: start to: stop [ 
-	
+{ #category : 'rendering' }
+TxTextRenderer >> renderCharacters: aString from: start to: stop [
 
 	" accumulate advance while rendering spans"
 	"canvas drawShape: (advance x @ advance y extent: 2 @ 2)."
@@ -114,14 +110,15 @@ TxTextRenderer >> renderCharacters: aString from: start to: stop [
 		drawString: aString from: start to: stop
 ]
 
-{ #category : #rendering }
+{ #category : 'rendering' }
 TxTextRenderer >> renderEndOfLineMark [
-	canvas 
+
+	canvas
 		setPaint: Color red;
-		drawShape: (0@ 0 corner: 10@ -10).
+		drawShape: (0 @ 0 corner: 10 @ -10)
 ]
 
-{ #category : #rendering }
+{ #category : 'rendering' }
 TxTextRenderer >> renderLines: lines on: aCanvas [
 
 	canvas := aCanvas.
@@ -146,7 +143,7 @@ TxTextRenderer >> renderLines: lines on: aCanvas [
 		] ]
 ]
 
-{ #category : #rendering }
+{ #category : 'rendering' }
 TxTextRenderer >> renderLines: lines onSpartaCanvas: aCanvas [
 
 	canvas := aCanvas.
@@ -171,7 +168,7 @@ TxTextRenderer >> renderLines: lines onSpartaCanvas: aCanvas [
 		] ]
 ]
 
-{ #category : #rendering }
+{ #category : 'rendering' }
 TxTextRenderer >> renderMorph: aMorph [
 
 	canvas pathTransform restoreAfter: [  
@@ -182,12 +179,14 @@ TxTextRenderer >> renderMorph: aMorph [
 	]
 ]
 
-{ #category : #accessing }
-TxTextRenderer >> setColor: aColor [ 
-	color := aColor.
+{ #category : 'accessing' }
+TxTextRenderer >> setColor: aColor [
+
+	color := aColor
 ]
 
-{ #category : #accessing }
-TxTextRenderer >> setFont: aFont [ 
+{ #category : 'accessing' }
+TxTextRenderer >> setFont: aFont [
+
 	font := aFont
 ]

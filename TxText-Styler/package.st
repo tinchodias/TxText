@@ -1,1 +1,1 @@
-Package { #name : #'TxText-Styler' }
+Package { #name : 'TxText-Styler' }

@@ -10,43 +10,42 @@
 	- cmd-click on class name to browse it
 "
 Class {
-	#name : #TxTextStyler,
-	#superclass : #Object,
+	#name : 'TxTextStyler',
+	#superclass : 'Object',
 	#instVars : [
 		'styles',
 		'text'
 	],
-	#category : #'TxText-Styler'
+	#category : 'TxText-Styler',
+	#package : 'TxText-Styler'
 }
 
-{ #category : #examples }
+{ #category : 'examples' }
 TxTextStyler class >> highlightIncompleteCode [
+
 	| styler text code |
-	
-	
 	code := 'thisIsIncompleteMethod: argument
 		| dork zork |
 		Wo
 	
 	'.
-	
-	styler := self new.
-	text := styler styleCode: code inContext: self "class" isMethod: true.
 
-	^ text editInWindow.
+	styler := self new.
+	text := styler styleCode: code inContext: self isMethod: true.
+
+	^ text editInWindow
 ]
 
-{ #category : #examples }
+{ #category : 'examples' }
 TxTextStyler class >> useCase [
 
 	| styler text |
-	
 	styler := self new.
-	text := styler styleMethod: (self >> #initializeStylesFor:).
-	^ text editInWindow.
+	text := styler styleMethod: self >> #initializeStylesFor:.
+	^ text editInWindow
 ]
 
-{ #category : #attributes }
+{ #category : 'attributes' }
 TxTextStyler >> addAttribute: attr forNode: node [
 	| start selection startIndex nodeSize |
 	startIndex := node start - 1.
@@ -56,7 +55,7 @@ TxTextStyler >> addAttribute: attr forNode: node [
 	selection applyAttribute: attr.
 ]
 
-{ #category : #attributes }
+{ #category : 'attributes' }
 TxTextStyler >> addAttribute: attr startPosition: startPosition stopPosition: stopPosition [
 	| start selection startIndex nodeSize |
 	startIndex := startPosition - 1.
@@ -66,7 +65,7 @@ TxTextStyler >> addAttribute: attr startPosition: startPosition stopPosition: st
 	selection applyAttribute: attr
 ]
 
-{ #category : #attributes }
+{ #category : 'attributes' }
 TxTextStyler >> addAttributes: style forNode: node [
 	| start selection |
 	start := text startPosition moveRight: node start - 1 .
@@ -74,7 +73,7 @@ TxTextStyler >> addAttributes: style forNode: node [
 	style attributes valuesDo: [ :each |	selection applyAttribute:  each ].
 ]
 
-{ #category : #attributes }
+{ #category : 'attributes' }
 TxTextStyler >> addAttributes: style startPosition: startPosition stopPosition: stopPosition [
 	| start selection |
 	start := text startPosition moveRight: startPosition - 1.
@@ -82,28 +81,28 @@ TxTextStyler >> addAttributes: style startPosition: startPosition stopPosition: 
 	style attributes valuesDo: [ :each | selection applyAttribute: each ]
 ]
 
-{ #category : #styling }
+{ #category : 'styling' }
 TxTextStyler >> addStyle: styleName forNode: node [  
 	self addAttributes: (self attributesFor: styleName) forNode: node.
 ]
 
-{ #category : #styling }
+{ #category : 'styling' }
 TxTextStyler >> addStyle: styleName startPosition: startPosition stopPosition: stopPosition [
 	self addAttributes: (self attributesFor: styleName) startPosition: startPosition stopPosition: stopPosition
 ]
 
-{ #category : #styling }
+{ #category : 'styling' }
 TxTextStyler >> attributesFor: aName [ 
 	^ styles at: aName 
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 TxTextStyler >> initialize [
 
 	self initializeStylesFor: Smalltalk ui theme shStyleTable
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 TxTextStyler >> initializeStylesFor: styleTable [
 
 	styles := IdentityDictionary new.
@@ -143,7 +142,7 @@ TxTextStyler >> initializeStylesFor: styleTable [
 		]
 ]
 
-{ #category : #styling }
+{ #category : 'styling' }
 TxTextStyler >> literalStyleSymbol: aValue [
 	aValue isSymbol
 		ifTrue: [ ^ #symbol ].
@@ -160,7 +159,7 @@ TxTextStyler >> literalStyleSymbol: aValue [
 	^ #default
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 TxTextStyler >> pickFontWithEmphasis: emphasisName [
 	| emphasis |
 	emphasis := TextEmphasis perform: emphasisName.
@@ -170,7 +169,7 @@ TxTextStyler >> pickFontWithEmphasis: emphasisName [
 
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 TxTextStyler >> resolveStyleFor: aVariableNode [
 	aVariableNode binding isUndeclared ifTrue: [
 		| var |
@@ -187,7 +186,7 @@ TxTextStyler >> resolveStyleFor: aVariableNode [
 	^#invalid.
 ]
 
-{ #category : #styling }
+{ #category : 'styling' }
 TxTextStyler >> restyle: aText inContext: aContext isMethod: isMethod [
 	| ast code |
 	
@@ -210,7 +209,7 @@ TxTextStyler >> restyle: aText inContext: aContext isMethod: isMethod [
 
 ]
 
-{ #category : #styling }
+{ #category : 'styling' }
 TxTextStyler >> styleCode: aCode inContext: aContext isMethod: isMethod [
 	| ast |
 	
@@ -232,7 +231,7 @@ TxTextStyler >> styleCode: aCode inContext: aContext isMethod: isMethod [
 
 ]
 
-{ #category : #styling }
+{ #category : 'styling' }
 TxTextStyler >> styleMethod: aMethod [
 	| ast |
 	
@@ -245,20 +244,20 @@ TxTextStyler >> styleMethod: aMethod [
 
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 TxTextStyler >> visitArgumentNode: node [ 
 	self 
 		addStyle: #argument
 		forNode: node.
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 TxTextStyler >> visitArrayNode: anArrayNode [
 	anArrayNode children do: [:each | self visitNode: each]
 
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 TxTextStyler >> visitAssignmentNode: anAssignmentNode [ 
 
 	self visitNode: anAssignmentNode variable.
@@ -269,7 +268,7 @@ TxTextStyler >> visitAssignmentNode: anAssignmentNode [
 	]
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 TxTextStyler >> visitBlockNode: aBlockNode [ 
 
 	aBlockNode comments do: [ :comment | 
@@ -287,28 +286,28 @@ TxTextStyler >> visitBlockNode: aBlockNode [
 	"self styleCloseBracket: aBlockNode"
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 TxTextStyler >> visitCascadeNode: aCascadeNode [ 
 
 	aCascadeNode messages do: [:each | self visitNode: each]
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 TxTextStyler >> visitGlobalNode: aRBGlobalNode [
 	^ self visitVariableNode: aRBGlobalNode
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 TxTextStyler >> visitInstanceVariableNode: aSelfNode [
 	^ self visitVariableNode: aSelfNode
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 TxTextStyler >> visitLiteralArrayNode: aRBLiteralArrayNode [ 
 	aRBLiteralArrayNode contents do: [:each | self visitNode: each]
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 TxTextStyler >> visitLiteralNode: node [ 
 	
 	self 
@@ -316,7 +315,7 @@ TxTextStyler >> visitLiteralNode: node [
 		forNode: node
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 TxTextStyler >> visitMessageNode: aMessageNode [
 	| style link hand |
 	style := #keyword.
@@ -348,7 +347,7 @@ TxTextStyler >> visitMessageNode: aMessageNode [
 	aMessageNode arguments do: [ :each | self visitNode: each ]
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 TxTextStyler >> visitMethodNode: aMethodNode [ 
 
 	aMethodNode comments do: [ :comment |
@@ -377,7 +376,7 @@ TxTextStyler >> visitMethodNode: aMethodNode [
 	self visitNode: aMethodNode body
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 TxTextStyler >> visitNode: node [
 	"node comments do: [ :comment |
 		self 
@@ -389,7 +388,7 @@ TxTextStyler >> visitNode: node [
 
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 TxTextStyler >> visitParseErrorNode: errorNode [
 
 	self 
@@ -398,7 +397,7 @@ TxTextStyler >> visitParseErrorNode: errorNode [
 	
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 TxTextStyler >> visitPragmaNode: aPragmaNode [
 
 	aPragmaNode selectorParts 
@@ -413,7 +412,7 @@ TxTextStyler >> visitPragmaNode: aPragmaNode [
 	aPragmaNode arguments do: [ :each | self visitNode: each ]
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 TxTextStyler >> visitReturnNode: aReturnNode [
 
 	self addStyle: 	#return 
@@ -423,7 +422,7 @@ TxTextStyler >> visitReturnNode: aReturnNode [
 	self visitNode: aReturnNode value
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 TxTextStyler >> visitSelfNode: aSelfNode [
 	| link methodClass |
 	
@@ -443,7 +442,7 @@ TxTextStyler >> visitSelfNode: aSelfNode [
 		forNode: aSelfNode.
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 TxTextStyler >> visitSequenceNode: node [
 	
 	node temporaries do: [ :temporary|
@@ -455,21 +454,21 @@ TxTextStyler >> visitSequenceNode: node [
 
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 TxTextStyler >> visitSuperNode: aSuperNode [
 
 	self addStyle: #super
 		forNode: aSuperNode
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 TxTextStyler >> visitTemporaryNode: aTemporaryNode [ 
 	self 
 		addStyle: #tempVar
 		forNode: aTemporaryNode
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 TxTextStyler >> visitThisContextNode: aThisContextNode [
 
 	self 
@@ -477,7 +476,7 @@ TxTextStyler >> visitThisContextNode: aThisContextNode [
 		forNode: aThisContextNode
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 TxTextStyler >> visitVariableNode: aVariableNode [ 
 "	aVariableNode name first isUppercase 
 		ifTrue: [environment ifNil: [ ^ self visitClassReferenceNode: aVariableNode ]].

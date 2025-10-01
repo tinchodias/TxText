@@ -474,8 +474,10 @@ TxBasicSpan >> prev: anObject [
 
 { #category : 'accessing' }
 TxBasicSpan >> prevIfNone: aBlock [
-	
-	^ prev == self ifTrue: [ aBlock value] ifFalse: [ prev ]
+
+	^ prev == self
+		ifTrue: [ aBlock value ]
+		ifFalse: [ prev ]
 ]
 
 { #category : 'printing' }

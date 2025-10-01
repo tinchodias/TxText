@@ -1,16 +1,18 @@
 Class {
-	#name : #TxAthensLayoutStrategy,
-	#superclass : #Object,
+	#name : 'TxAthensLayoutStrategy',
+	#superclass : 'Object',
 	#instVars : [
 		'currentPosition',
 		'currentLine',
 		'metStopCondition',
 		'layout'
 	],
-	#category : #'TxText-Athens'
+	#category : 'TxText-Athens-Layout',
+	#package : 'TxText-Athens',
+	#tag : 'Layout'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'private' }
 TxAthensLayoutStrategy >> alignTab: font [
 	| tabWidth lineWidth |
 	tabWidth := self layout tabWidthUsingFont: font.
@@ -20,24 +22,25 @@ TxAthensLayoutStrategy >> alignTab: font [
 	
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 TxAthensLayoutStrategy >> completeLine [
 
 	currentLine endPosition: currentPosition.
-	metStopCondition := true.
+	metStopCondition := true
 ]
 
-{ #category : #geometry }
+{ #category : 'geometry' }
 TxAthensLayoutStrategy >> fontMetricsProviderFor: aFont [
+
 	^ self view fontMetricsProviderFor: aFont
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxAthensLayoutStrategy >> layout [
 	^ layout
 ]
 
-{ #category : #scanning }
+{ #category : 'scanning' }
 TxAthensLayoutStrategy >> scanSingleVisualLineFor: aLayout startingAt: aPosition [
 	"Scan a single visual line until meeting stop condition.
 	Note, the incoming position can be in the middle of text line (because of wrapping)"
@@ -52,26 +55,26 @@ TxAthensLayoutStrategy >> scanSingleVisualLineFor: aLayout startingAt: aPosition
 	^ currentLine
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 TxAthensLayoutStrategy >> startNewLine [
 
-	currentLine := TxAthensLayoutLine new
-		layout: self layout;
-		startPosition: currentPosition;
-		yourself.
-	
+	currentLine :=
+		TxAthensLayoutLine new
+			layout: self layout;
+			startPosition: currentPosition;
+			yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxAthensLayoutStrategy >> view [
+
 	^ layout view
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 TxAthensLayoutStrategy >> visitEmbeddedObjectSpan: aSpan [
 
 	| font fontMetricsProvider command |
-
 	font := aSpan getAttribute: TxFontAttribute.  
 	fontMetricsProvider := layout fontMetricsProviderFor: font.
 
@@ -85,17 +88,15 @@ TxAthensLayoutStrategy >> visitEmbeddedObjectSpan: aSpan [
 	currentLine addCommand: command.
 
 	^ aSpan next startPosition
-
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 TxAthensLayoutStrategy >> visitEndSpan: aSpan [
 
-	self completeLine.
-
+	self completeLine
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 TxAthensLayoutStrategy >> visitLineSeparator: aSpan [
 
 	"A line separator indicates new line
@@ -104,15 +105,14 @@ TxAthensLayoutStrategy >> visitLineSeparator: aSpan [
 	currentPosition isAtSpanStart ifTrue: [
 		"end of line"
 		self completeLine.
-		^ currentPosition
-	].
+		^ currentPosition ].
 
 	^ currentPosition nextPosition
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 TxAthensLayoutStrategy >> visitStartSpan: aSpan [
-
 	"usually just skip over start span"
+
 	^ aSpan next startPosition
 ]

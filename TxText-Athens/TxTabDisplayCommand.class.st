@@ -1,10 +1,12 @@
 Class {
-	#name : #TxTabDisplayCommand,
-	#superclass : #TxCharacterSpanDisplayCommand,
-	#category : #'TxText-Athens'
+	#name : 'TxTabDisplayCommand',
+	#superclass : 'TxCharacterSpanDisplayCommand',
+	#category : 'TxText-Athens-Layout',
+	#package : 'TxText-Athens',
+	#tag : 'Layout'
 }
 
-{ #category : #geometry }
+{ #category : 'geometry' }
 TxTabDisplayCommand >> horizontalAdvanceUpTo: aTextPosition layout: aTextLayout [
 
 	^ stop > aTextPosition spanPosition
@@ -13,17 +15,17 @@ TxTabDisplayCommand >> horizontalAdvanceUpTo: aTextPosition layout: aTextLayout 
 
 ]
 
-{ #category : #rendering }
+{ #category : 'rendering' }
 TxTabDisplayCommand >> renderOn: renderer [
 
-	renderer advance:advance.
+	renderer advance: advance
 ]
 
-{ #category : #geometry }
+{ #category : 'geometry' }
 TxTabDisplayCommand >> textPositionForHorizontalOffset: anOffset layout: layout [
-
 	"Tab is a single unbreakable space, return start if offset closer to tab starting position, or end otherwise"
-	^ anOffset < (advance x/2) 
+
+	^ anOffset < (advance x / 2) 
 		ifTrue: [ span positionAt: start ]
 		ifFalse: [ span positionAt: stop ]
 

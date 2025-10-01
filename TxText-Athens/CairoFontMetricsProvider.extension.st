@@ -1,15 +1,15 @@
-Extension { #name : #CairoFontMetricsProvider }
+Extension { #name : 'CairoFontMetricsProvider' }
 
-{ #category : #'*TxText-Athens' }
+{ #category : '*TxText-Athens' }
 CairoFontMetricsProvider >> newCharacterSpanDisplayCommand: span start: startPos stop: stopPos advance: aPoint [
 
 	^ TxCairoCharacterSpanDisplayCommand new 
-			span: span start: startPos stop: stopPos;
-			advance: aPoint;
-			yourself
+		span: span start: startPos stop: stopPos;
+		advance: aPoint;
+		yourself
 ]
 
-{ #category : #'*TxText-Athens' }
+{ #category : '*TxText-Athens' }
 CairoFontMetricsProvider >> newEmbeddedObjectCommand: anEmbeddedObjectSpan [ 
 
 	^ TxEmbeddedObjectCommand new 
@@ -17,7 +17,7 @@ CairoFontMetricsProvider >> newEmbeddedObjectCommand: anEmbeddedObjectSpan [
 		yourself
 ]
 
-{ #category : #'*TxText-Athens' }
+{ #category : '*TxText-Athens' }
 CairoFontMetricsProvider >> newTabDisplayCommand: span start: startPos stop: stopPos advance: aPoint [ 
 
 	^ TxTabDisplayCommand new 

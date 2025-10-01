@@ -2,8 +2,8 @@
 I highlight text backgroung e.g. to show a selection. I require a layout view, paint, and text interval.
 "
 Class {
-	#name : #TxHighlightRenderer,
-	#superclass : #Object,
+	#name : 'TxHighlightRenderer',
+	#superclass : 'Object',
 	#instVars : [
 		'layoutView',
 		'paint',
@@ -11,52 +11,56 @@ Class {
 		'extendEnd',
 		'interval'
 	],
-	#category : #'TxText-Athens'
+	#category : 'TxText-Athens-Layout',
+	#package : 'TxText-Athens',
+	#tag : 'Layout'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 TxHighlightRenderer class >> highlighting: aTxInterval in: layoutView with: paint [
 
 	^ self new
 		layoutView: layoutView;
 		interval: aTxInterval;
 		paint: paint;
-		yourself.
+		yourself
 ]
 
-{ #category : #'private-accessing' }
+{ #category : 'private-accessing' }
 TxHighlightRenderer >> interval: aTxInterval [
+
 	interval := aTxInterval.
-	shapes := nil.
+	shapes := nil
 ]
 
-{ #category : #'private-accessing' }
+{ #category : 'private-accessing' }
 TxHighlightRenderer >> layout [
 
-	^ layoutView layout.
+	^ layoutView layout
 ]
 
-{ #category : #'private-accessing' }
+{ #category : 'private-accessing' }
 TxHighlightRenderer >> layoutView: anObject [
+
 	layoutView := anObject
 ]
 
-{ #category : #'private-accessing' }
+{ #category : 'private-accessing' }
 TxHighlightRenderer >> paint: anObject [
+
 	paint := anObject
 ]
 
-{ #category : #rendering }
+{ #category : 'rendering' }
 TxHighlightRenderer >> renderHighlightOn: canvas [
-	
+
 	canvas pathTransform restoreAfter: [
 		canvas pathTransform translateBy: layoutView offset negated.
 		canvas setPaint: paint.
-		self shapes do: [ :e | canvas drawShape: e ]
-	].
+		self shapes do: [ :e | canvas drawShape: e ] ]
 ]
 
-{ #category : #'private-accessing' }
+{ #category : 'private-accessing' }
 TxHighlightRenderer >> shapes [
 
 	| lineStream currentLine startPoint endPoint height highlightStartPosition highlightEndPosition |
@@ -66,46 +70,61 @@ TxHighlightRenderer >> shapes [
 	self trimIntervalToLayout.
 	interval isEmpty ifTrue: [ ^ shapes ].
 
-	highlightStartPosition := self layout positionAt: interval start ifOutside: [ self shouldNotHappen ].
-	highlightEndPosition := self layout positionAt: interval end ifOutside: [ self shouldNotHappen ]. 
-	
+	highlightStartPosition :=
+		self layout
+			positionAt: interval start
+			ifOutside: [ self error: 'Should not happen' ].
+	highlightEndPosition :=
+		self layout
+			positionAt: interval end
+			ifOutside: [ self error: 'Should not happen' ]. 
+
 	height := 0.
 	lineStream := self layout lines readStream.
 
 	"Skip to line where highlight starts, caching the accumulated y offset for later"	
-	[ (currentLine := lineStream next) = highlightStartPosition line ] whileFalse: [ height := height + currentLine height ].
+	[ (currentLine := lineStream next) = highlightStartPosition line ]
+		whileFalse: [ height := height + currentLine height ].
 
 	"The highlight of the first line of the interval will always start at... the start of the interval, duh"
 	startPoint := highlightStartPosition topPoint.
 	
 	"The highlight of each line except the last ends at the right side of the view"
 	[ currentLine == highlightEndPosition line ] whileFalse: [  
-		endPoint := (layoutView width + layoutView offset x) @ (height + currentLine height).
+		endPoint :=
+			(layoutView width + layoutView offset x)
+				@ (height + currentLine height).
+
 		shapes add: (startPoint rectangle: endPoint).
 		
 		height := height + currentLine height.
 		currentLine := lineStream next.
-		startPoint := 0@height.
-	].
+		startPoint := 0 @ height ].
 
 	"We're at the last line, end the highlight at the end of the interval"
 	endPoint := extendEnd 
-		ifTrue: [ (layoutView width + layoutView offset x) @ (height + currentLine height) ]
+		ifTrue: [
+			(layoutView width + layoutView offset x)
+				@ (height + currentLine height) ]
 		ifFalse: [ highlightEndPosition bottomPoint ].
 	
 	shapes add: (startPoint rectangle: endPoint).
 
-	^ shapes.
+	^ shapes
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 TxHighlightRenderer >> trimIntervalToLayout [
+
 	| start end |
-
 	interval minMaxDo: [ :min :max |
-		start := (self layout startPosition max: min) min: self layout endPosition.
-		extendEnd := self layout endPosition < max.
-		end := (self layout startPosition max: max) min: self layout endPosition ].
+		start := (self layout startPosition max: min)
+			min: self layout endPosition.
 
-	interval := start to: end.
+		extendEnd := self layout endPosition < max.
+
+		end := (self layout startPosition max: max)
+			min: self layout endPosition ].
+
+	interval := start to: end
 ]

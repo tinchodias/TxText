@@ -1,30 +1,34 @@
 Class {
-	#name : #TxEmbeddedObjectCommand,
-	#superclass : #TxDisplayCommand,
+	#name : 'TxEmbeddedObjectCommand',
+	#superclass : 'TxDisplayCommand',
 	#instVars : [
 		'span',
 		'morph'
 	],
-	#category : #'TxText-Athens'
+	#category : 'TxText-Athens-Layout',
+	#package : 'TxText-Athens',
+	#tag : 'Layout'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxEmbeddedObjectCommand >> advance [
+
 	^ self width @ 0
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TxEmbeddedObjectCommand >> contains: aTextPosition [
 
-	^ aTextPosition span == span 
+	^ aTextPosition span == span
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxEmbeddedObjectCommand >> height [
+
 	^ self morph height
 ]
 
-{ #category : #geometry }
+{ #category : 'geometry' }
 TxEmbeddedObjectCommand >> horizontalAdvanceUpTo: aTextPosition layout: aTextLayout [
 
 	^ aTextPosition spanPosition = 0 
@@ -32,54 +36,60 @@ TxEmbeddedObjectCommand >> horizontalAdvanceUpTo: aTextPosition layout: aTextLay
 		ifFalse: [ self morph width ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxEmbeddedObjectCommand >> morph [
+
 	^ morph
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxEmbeddedObjectCommand >> morph: aMorph [
+
 	morph := aMorph
 ]
 
-{ #category : #notification }
-TxEmbeddedObjectCommand >> notifyRemovedFrom: layout [ 
+{ #category : 'notification' }
+TxEmbeddedObjectCommand >> notifyRemovedFrom: layout [
+
 	^ layout hideEmbeddedObject: morph
 ]
 
-{ #category : #rendering }
+{ #category : 'rendering' }
 TxEmbeddedObjectCommand >> renderOn: renderer [
 
-	renderer 
+	renderer
 		renderMorph: self morph;
-		advance: self advance.
+		advance: self advance
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxEmbeddedObjectCommand >> span [
+
 	^ span
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxEmbeddedObjectCommand >> span: anObject [
+
 	span := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxEmbeddedObjectCommand >> startPosition [
+
 	^ span startPosition
 ]
 
-{ #category : #geometry }
+{ #category : 'geometry' }
 TxEmbeddedObjectCommand >> textPositionForHorizontalOffset: anOffset layout: layout [
 
-	^ anOffset < (self advance x/2) 
+	^ anOffset < (self advance x / 2)
 		ifTrue: [ span startPosition ]
 		ifFalse: [ span endPosition ]
-	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxEmbeddedObjectCommand >> width [
+
 	^ self morph width
 ]

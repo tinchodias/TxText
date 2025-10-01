@@ -1,49 +1,53 @@
 Class {
-	#name : #TxNewLineDisplayCommand,
-	#superclass : #TxDisplayCommand,
+	#name : 'TxNewLineDisplayCommand',
+	#superclass : 'TxDisplayCommand',
 	#instVars : [
 		'span'
 	],
-	#category : #'TxText-Athens'
+	#category : 'TxText-Athens-Layout',
+	#package : 'TxText-Athens',
+	#tag : 'Layout'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxNewLineDisplayCommand >> advance [
-	^ 10@0
+
+	^ 10 @ 0
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TxNewLineDisplayCommand >> contains: aTextPosition [
+
 	^ false
-	
+
 	"^ aTextPosition span == span"
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxNewLineDisplayCommand >> horizontalAdvanceUpTo: textPosition layout: layout [
 
 	^ 10
 ]
 
-{ #category : #rendering }
+{ #category : 'rendering' }
 TxNewLineDisplayCommand >> renderOn: renderer [
 
-	renderer renderEndOfLineMark.
-	
-	
+	renderer renderEndOfLineMark
 ]
 
-{ #category : #accessing }
-TxNewLineDisplayCommand >> span: aTxLineSeparator [ 
+{ #category : 'accessing' }
+TxNewLineDisplayCommand >> span: aTxLineSeparator [
+
 	span := aTxLineSeparator
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxNewLineDisplayCommand >> startPosition [
+
 	^ span startPosition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxNewLineDisplayCommand >> textPositionForHorizontalOffset: anOffset layout: layout [
 
 	^ span startPosition

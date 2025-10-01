@@ -5,8 +5,8 @@ to position inside view's layout.
 
 "
 Class {
-	#name : #TxAthensLayoutPosition,
-	#superclass : #Object,
+	#name : 'TxAthensLayoutPosition',
+	#superclass : 'Object',
 	#instVars : [
 		'textPosition',
 		'layout',
@@ -15,96 +15,100 @@ Class {
 		'horizontalOffset',
 		'command'
 	],
-	#category : #'TxText-Athens'
+	#category : 'TxText-Athens-Layout',
+	#package : 'TxText-Athens',
+	#tag : 'Layout'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'instance creation' }
 TxAthensLayoutPosition class >> textPosition: textPosition layout: txLayout [
 
-	^ self new textPosition: textPosition layout: txLayout
-
+	^ self new
+		textPosition: textPosition layout: txLayout;
+		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxAthensLayoutPosition >> baselinePoint [
 	"answer the point at baseline matching with given layout position"
 	
 	^ horizontalOffset @ (lineTopOffset + line maxAscent )
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxAthensLayoutPosition >> baselinePointInView [
 	"answer the point at baseline matching with given layout position"
 	
 	^ self baselinePoint - layout view offset
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxAthensLayoutPosition >> bottomPoint [
 	"answer the point at baseline matching with given layout position"
-	
-	^ self topPoint + (0@line height)
+
+	^ self topPoint + (0 @ line height)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxAthensLayoutPosition >> bottomPointInView [
 	"answer the point at baseline matching with given layout position"
 	
 	^ self bottomPoint - layout view offset
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxAthensLayoutPosition >> command [
 	"Answer the display command which correspond to given layout position"
 	^ command
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxAthensLayoutPosition >> horizontalOffset [
 	^ horizontalOffset
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxAthensLayoutPosition >> layout [
 	^ layout
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxAthensLayoutPosition >> line [
 	^ line 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxAthensLayoutPosition >> textPosition [
+
 	^ textPosition
 ]
 
-{ #category : #initializing }
+{ #category : 'initializing' }
 TxAthensLayoutPosition >> textPosition: aTextPosition layout: txLayout [
+
+	self initialize.
 	
 	textPosition := aTextPosition.
 	layout := txLayout.
-	
-	self updateInfo.
-	
- 
+
+	self updateInfo
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxAthensLayoutPosition >> topPoint [
 	"answer the point at baseline matching with given layout position"
 	
 	^ horizontalOffset @ lineTopOffset 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxAthensLayoutPosition >> topPointInView [
 	"answer the point at baseline matching with given layout position"
 	
 	^ self topPoint - layout view offset
 ]
 
-{ #category : #calculating }
+{ #category : 'calculating' }
 TxAthensLayoutPosition >> updateInfo [
 
  	lineTopOffset := 0.
@@ -120,5 +124,5 @@ TxAthensLayoutPosition >> updateInfo [
 		lineTopOffset := lineTopOffset + each height.
 	].
 
-	horizontalOffset isNil ifTrue:[ self error: 'should not get here!'].
+	horizontalOffset ifNil:[ self error: 'should not get here!']
 ]

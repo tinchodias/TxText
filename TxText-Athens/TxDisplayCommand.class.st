@@ -1,39 +1,44 @@
 Class {
-	#name : #TxDisplayCommand,
-	#superclass : #Object,
+	#name : 'TxDisplayCommand',
+	#superclass : 'Object',
 	#instVars : [
 		'next'
 	],
-	#category : #'TxText-Athens'
+	#category : 'TxText-Athens-Layout',
+	#package : 'TxText-Athens',
+	#tag : 'Layout'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxDisplayCommand >> addLast: aCommand [
+
 	self tail next: aCommand
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TxDisplayCommand >> contains: aTextPosition [
+
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxDisplayCommand >> do: aBlock [
+
 	| nn |
 	nn := self.
-	
-	[ nn isNil ] whileFalse: [ 
+
+	[ nn isNil ] whileFalse: [
 		aBlock value: nn.
-		nn := nn next. ]
+		nn := nn next ]
 ]
 
-{ #category : #geometry }
+{ #category : 'geometry' }
 TxDisplayCommand >> horizontalAdvanceUpTo: textPosition layout: layout [
 
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxDisplayCommand >> insert: aCommands [
 
 	| nn |
@@ -42,49 +47,58 @@ TxDisplayCommand >> insert: aCommands [
 	next tail next: nn
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxDisplayCommand >> next [
 
 	^ next
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxDisplayCommand >> next: anObject [
 	
 	next := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 TxDisplayCommand >> notifyRemovedFrom: aTxAthensLayout [ 
 
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 TxDisplayCommand >> postCopy [
 	"unlink the copy by default"
+
 	next := nil
 ]
 
-{ #category : #rendering }
+{ #category : 'rendering' }
 TxDisplayCommand >> renderOn: renderer [
-	self shouldBeImplemented 
+
+	self shouldBeImplemented
 ]
 
-{ #category : #accessing }
+{ #category : 'as yet unclassified' }
+TxDisplayCommand >> span: anObject [ 
+	^ self subclassResponsibility
+]
+
+{ #category : 'accessing' }
 TxDisplayCommand >> startPosition [
 	"answer the text position, matching the start of command"
+
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxDisplayCommand >> tail [
+
 	| nn |
 	nn := self.
 	[ nn next notNil ] whileTrue: [ nn := nn next ].
 	^ nn
 ]
 
-{ #category : #geometry }
+{ #category : 'geometry' }
 TxDisplayCommand >> textPositionForHorizontalOffset: anOffset layout: layout [
 
 	self subclassResponsibility
