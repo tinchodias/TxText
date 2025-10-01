@@ -16,8 +16,8 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'next',
-		'prev',
-		'text'
+		'text',
+		'previous'
 	],
 	#category : 'TxText-Model',
 	#package : 'TxText-Model'
@@ -46,7 +46,7 @@ TxBasicSpan >> < aSpan [
 	forward := backward := self.
 	 [
 		forward := forward next.
-		backward := backward prev.
+		backward := backward previous.
 	
 		forward == aSpan ifTrue: [ ^ true ].
 		backward == aSpan ifTrue: [ ^ false ].
@@ -56,8 +56,7 @@ TxBasicSpan >> < aSpan [
 		"reached end"
 		forward isAtEnd ifTrue: [ ^ false ].
 		
-	] repeat.
-	
+	] repeat
 ]
 
 { #category : 'visitor' }
@@ -112,35 +111,39 @@ TxBasicSpan >> asStringOn: aStream startingAt: startIndex upTo: endIndex [
 
 { #category : 'printing' }
 TxBasicSpan >> asStringOn: aStream upTo: index [
-	self asStringOn: aStream startingAt: 0 upTo: index.
+
+	self asStringOn: aStream startingAt: 0 upTo: index
 ]
 
 { #category : 'operation' }
 TxBasicSpan >> at: txPosition insert: aString [
-	"
-	Insert a possibly multi-line string at given position of receiver.
+	"Insert a possibly multi-line string at given position of receiver.
 	Answer the position past the last character of inserted string.
-	The inserted portion of text must have same attributes as insertion point.
-	"
+	The inserted portion of text must have same attributes as insertion point."
 
 	| position first insertAttributes |
 	position := txPosition.
 	first := true.
 	insertAttributes := self styleAtPosition: txPosition.
 
-	self string: aString linesDo: [:chars |
-		
+	self string: aString linesDo: [ :chars |
 		first 
-			ifTrue: [ first := false. ]
+			ifTrue: [ first := false ]
 			ifFalse: [ 
 				| separator |
 				separator := text newLineSeparator replaceAttributes: insertAttributes.
-				position := position span insertLineSeparator: separator at: position ].
+				position :=
+					position span
+						insertLineSeparator: separator
+						at: position ].
 
 		chars ifNotEmpty: [
-			position := position span insertCharacters: chars at: position attributes: insertAttributes
-			]  
-	].
+			position :=
+				position span
+					insertCharacters: chars
+					at: position
+					attributes: insertAttributes ] ].
+
 	^ position
 ]
 
@@ -154,7 +157,7 @@ TxBasicSpan >> at: txPosition insertObject: anObject [
 	
 	txPosition isAtSpanStart 
 		ifTrue: [ 
-			self insertPrev: newSpan.
+			self insertPrevious: newSpan.
 			^ txPosition ].
 	txPosition isAtSpanEnd 
 		ifTrue: [ 
@@ -171,6 +174,7 @@ TxBasicSpan >> at: txPosition insertObject: anObject [
 
 { #category : 'accessing' }
 TxBasicSpan >> attributeAt: anAttributeClass [
+
 	^ self style get: anAttributeClass
 ]
 
@@ -181,9 +185,9 @@ TxBasicSpan >> basicNext: anObject [
 ]
 
 { #category : 'private' }
-TxBasicSpan >> basicPrev: anObject [
-	
-	prev := anObject
+TxBasicSpan >> basicPrevious: anObject [
+
+	previous := anObject
 ]
 
 { #category : 'accessing' }
@@ -196,82 +200,89 @@ TxBasicSpan >> characterBeforePosition: spanPosition ifNone: aBlock [
 
 { #category : 'operation' }
 TxBasicSpan >> delete [
-	"remove myself from the span list".
-	prev next: next.
+	"remove myself from the span list"
+
+	previous next: next
 ]
 
 { #category : 'operation' }
 TxBasicSpan >> deleteUpTo: end startingAt: start [
 	"start and end pointing to receiver, nothing to remove"
+
 	self assert: start span == self.
-	
+
 	end span == self ifTrue: [
 		start spanPosition > 0 ifTrue: [ "nothing to delete" ^ end ].
-		end spanPosition = 1 ifTrue: [ self delete. ^ next startPosition ].
-		^ end
-	].
-	
-	start spanPosition = 0 ifTrue: [
-		self delete.
-	].
-	^ next deleteUpTo: end startingAt: next startPosition.
+		end spanPosition = 1 ifTrue: [
+			self delete.
+			^ next startPosition ].
+		^ end ].
 
+	start spanPosition = 0 ifTrue: [ self delete ].
+	^ next deleteUpTo: end startingAt: next startPosition
 ]
 
 { #category : 'enumerating' }
 TxBasicSpan >> do: aBlock [
+
 	| span |
 	span := self.
-	[ aBlock value: span. span := span nextIfNone: [ ^ self ] ] repeat.
+	[ aBlock value: span. span := span nextIfNone: [ ^ self ] ] repeat
 ]
 
 { #category : 'accessing-text position' }
 TxBasicSpan >> endPosition [
 	"answer the text position, pointing to the end of receiver"
+
 	self subclassResponsibility
 ]
 
 { #category : 'enumerating' }
 TxBasicSpan >> first [
+
 	| span |
 	span := self.
-	[ span isAtStart ] whileFalse: [ span := span prev ].
+	[ span isAtStart ] whileFalse: [ span := span previous ].
 	^ span
 ]
 
 { #category : 'attributes' }
 TxBasicSpan >> getAttribute: anAttributeClass [
 
-	^self style get: anAttributeClass ifAbsent: [ text defaultStyle get: anAttributeClass ] 
+	^ self style
+		  get: anAttributeClass
+		  ifAbsent: [ text defaultStyle get: anAttributeClass ]
 ]
 
-{ #category : 'initialize-release' }
+{ #category : 'initialization' }
 TxBasicSpan >> initWithText: anObject [
 	
 	text := anObject
 ]
 
-{ #category : 'initialize-release' }
+{ #category : 'initialization' }
 TxBasicSpan >> initialize [
-	next := prev := self
+
+	next := previous := self
 ]
 
 { #category : 'operation' }
 TxBasicSpan >> insertCharacters: chars at: position attributes: insertAttributes [
-
 	"Insert characters (no line separators allowed!!!), with given attributes at given position into receiver.
 	Answer the end position of inserted characters"
 
-	
 	self subclassResponsibility 
 ]
 
 { #category : 'operation' }
-TxBasicSpan >> insertNewLine: aString [ 
+TxBasicSpan >> insertNewLine: aString [
 	"Insert a newline then the String"
+
 	| newline chars |
 	newline := text newLineSeparator.
-	aString isEmpty ifTrue: [ self insertNext: newline. ^ newline ].
+	aString isEmpty ifTrue: [
+		self insertNext: newline.
+		^ newline ].
 	chars := text newCharacterSpan: aString.
 	newline next: chars.
 	self insertNext: newline.
@@ -279,71 +290,78 @@ TxBasicSpan >> insertNewLine: aString [
 ]
 
 { #category : 'accessing' }
-TxBasicSpan >> insertNext: aSpans [
+TxBasicSpan >> insertNext: aSpan [
 	"insert new span(s) after receiver. "
+
 	| oldNext |
 	oldNext := next.
-	aSpans prev: self.
-	
-	(oldNext == self)
-		ifFalse: [ aSpans last next: oldNext ].
+	aSpan previous: self.
 
-	^ aSpans
+	oldNext == self ifFalse: [ aSpan last next: oldNext ].
+
+	^ aSpan
 ]
 
 { #category : 'accessing' }
-TxBasicSpan >> insertPrev: aSpan [
-	
-	self isAtStart 
-		ifFalse: [ aSpan prev: prev ].
+TxBasicSpan >> insertPrevious: aSpan [
+
+	self isAtStart ifFalse: [ aSpan previous: previous ].
 	aSpan next: self.
 	^ aSpan
-
 ]
 
 { #category : 'testing' }
 TxBasicSpan >> isAtEnd [
+
 	^ false
 ]
 
 { #category : 'testing' }
 TxBasicSpan >> isAtLineEnd [
+
 	^ self isAtEnd or: [ next isLineSeparator ]
 ]
 
 { #category : 'testing' }
 TxBasicSpan >> isAtLineStart [
-	^ self isAtStart or: [ self prev isLineSeparator ]
+
+	^ self isAtStart or: [ self previous isLineSeparator ]
 ]
 
 { #category : 'testing' }
 TxBasicSpan >> isAtLineStart: spanPosition [
 	"just after the line start"
-	^ spanPosition = 0 and: [ prev isLineSeparator ]
+
+	^ spanPosition = 0 and: [ previous isLineSeparator ]
 ]
 
 { #category : 'testing' }
 TxBasicSpan >> isAtStart [
+
 	^ false
 ]
 
 { #category : 'testing' }
 TxBasicSpan >> isCharacterSpan [
+
 	^ false
 ]
 
 { #category : 'testing' }
 TxBasicSpan >> isLastPosition: aNumber [
+
 	^ false
 ]
 
 { #category : 'testing' }
 TxBasicSpan >> isLineSeparator [
+
 	^ false
 ]
 
 { #category : 'enumerating' }
 TxBasicSpan >> last [
+
 	| span |
 	span := self.
 	[ span next == span ] whileFalse: [ span := span next ].
@@ -352,53 +370,57 @@ TxBasicSpan >> last [
 
 { #category : 'accessing' }
 TxBasicSpan >> lastInsertPosition [
+
 	^ 0
 ]
 
 { #category : 'accessing' }
 TxBasicSpan >> lineEndSpan [
-	"Answer the last span in the same line as receiver" 
-	self
-		detect: [ :span | span isAtLineEnd ]
-		ifFound: [ :span | ^ span ].
-	Error signal: 'Should not happen'.
+	"Answer the last span in the same line as receiver"
+
+	self detect: [ :span | span isAtLineEnd ] ifFound: [ :span | ^ span ].
+
+	self error: 'Should not happen'
 ]
 
 { #category : 'accessing' }
 TxBasicSpan >> lineNumber [
+
 	| number |
 	number := 1.
-	text spansDo: [:span |
-		span isLineSeparator ifTrue: [ number := number + 1].
-		span == self ifTrue: [ ^ number ].
-		].
+	text spansDo: [ :span |
+		span isLineSeparator ifTrue: [ number := number + 1 ].
+		span == self ifTrue: [ ^ number ] ].
 
 	self error: 'cannot happen'
 ]
 
 { #category : 'accessing' }
-TxBasicSpan >> lineNumberAt: aTxTextPosition [ 
-	self subclassResponsibility.
+TxBasicSpan >> lineNumberAt: aTxTextPosition [
+
+	self subclassResponsibility
 ]
 
 { #category : 'accessing' }
 TxBasicSpan >> lineSize [
-	^ self lineStartSpan sizeToLineEnd 
+
+	^ self lineStartSpan sizeToLineEnd
 ]
 
 { #category : 'accessing' }
 TxBasicSpan >> lineStartSpan [
-	" return the closest line start span "
-	self reverseDo: [ :span | 
-		span isAtLineStart ifTrue: [ ^ span ]].
-	Error signal: 'Should not happen'.
+	"Return the closest line start span"
+
+	self reverseDo: [ :span | span isAtLineStart ifTrue: [ ^ span ] ].
+
+	self error: 'Should not happen'
 ]
 
 { #category : 'accessing' }
 TxBasicSpan >> lineStartSpanIfNone: aBlock [
-	self reverseDo: [ :span | 
-		span isAtLineStart ifTrue: [ ^ span ]].
-	^ aBlock value 
+
+	self reverseDo: [ :span | span isAtLineStart ifTrue: [ ^ span ] ].
+	^ aBlock value
 ]
 
 { #category : 'accessing' }
@@ -411,7 +433,7 @@ TxBasicSpan >> next [
 TxBasicSpan >> next: anObject [
 	
 	self basicNext: anObject.
-	anObject basicPrev: self.
+	anObject basicPrevious: self.
 	^ anObject
 ]
 
@@ -423,8 +445,8 @@ TxBasicSpan >> nextIfNone: aBlock [
 
 { #category : 'operation' }
 TxBasicSpan >> nextLineIfNone: aBlock [
+
 	| span |
-	
 	span := self lineEndSpan.
 	span isAtEnd ifTrue: [ ^ aBlock value ].
 	^ span next next
@@ -443,84 +465,86 @@ TxBasicSpan >> nextLineSeparatorIfNone: aBlock [
 { #category : 'accessing' }
 TxBasicSpan >> numberOfLinesBefore [
 	"Count the number of lines just before the receiver"
+
 	| number |
 	number := 1.
-	text spansDo: [:span |
+	text spansDo: [ :span |
 		span == self ifTrue: [ ^ number ].
-		span isLineSeparator ifTrue: [ number := number + 1].
-		].
+		span isLineSeparator ifTrue: [ number := number + 1 ] ].
 
 	self error: 'cannot happen'
 ]
 
 { #category : 'accessing-text position' }
 TxBasicSpan >> positionAt: characterIndex [
+
 	^ TxTextPosition span: self spanPosition: characterIndex
 ]
 
 { #category : 'accessing' }
-TxBasicSpan >> prev [
+TxBasicSpan >> previous [
 	
-	^ prev
+	^ previous
 ]
 
 { #category : 'accessing' }
-TxBasicSpan >> prev: anObject [
+TxBasicSpan >> previous: aSpan [
 	
-	self basicPrev: anObject.
-	anObject basicNext: self.
-	^ anObject
+	self basicPrevious: aSpan.
+	aSpan basicNext: self.
+	^ aSpan
 ]
 
 { #category : 'accessing' }
-TxBasicSpan >> prevIfNone: aBlock [
+TxBasicSpan >> previousIfNone: aBlock [
 
-	^ prev == self
+	^ previous == self
 		ifTrue: [ aBlock value ]
-		ifFalse: [ prev ]
+		ifFalse: [ previous ]
 ]
 
 { #category : 'printing' }
-TxBasicSpan >> printTextOn: aStream upTo: endSpan [ 
-	self do: [ :eachSpan |
-		
-		eachSpan == endSpan ifTrue: [ ^self ].
-		eachSpan asStringOn: aStream.			
-		
-	 ]
+TxBasicSpan >> printTextOn: aStream upTo: endSpan [
 
-		
+	self do: [ :eachSpan |
+		eachSpan == endSpan ifTrue: [ ^ self ].
+		eachSpan asStringOn: aStream ]
 ]
 
 { #category : 'attributes' }
 TxBasicSpan >> replaceAttributes: newAttributes [
 	"replace receiver's attributes by copying from given one"
-	self subclassResponsibility 
+
+	self subclassResponsibility
 ]
 
 { #category : 'enumerating' }
 TxBasicSpan >> reverseDo: aBlock [
+
 	| span |
 	span := self.
 	
-	[ aBlock value: span. span := span prevIfNone: [ ^ self ] ] repeat
+	[ aBlock value: span. span := span previousIfNone: [ ^ self ] ] repeat
 ]
 
 { #category : 'accessing' }
 TxBasicSpan >> sizeToLineEnd [
+
 	| size |
 	size := 0.
-	self do: [ :span| 
+	self do: [ :span |
 		size := size + span size.
-		span isAtLineEnd ifTrue: [ ^ size ]].
-	Error signal: 'Should not happen!'.
+		span isAtLineEnd ifTrue: [ ^ size ] ].
+
+	self error: 'Should not happen!'
 ]
 
 { #category : 'enumerating' }
-TxBasicSpan >> spanAndPositionDo:  aBlock [
+TxBasicSpan >> spanAndPositionDo: aBlock [
+
 	| position |
 	position := 0.
-	self do: [ :span|
+	self do: [ :span |
 		aBlock value: span value: position.
 		position := position + span size ]
 ]
@@ -528,11 +552,9 @@ TxBasicSpan >> spanAndPositionDo:  aBlock [
 { #category : 'private' }
 TxBasicSpan >> splitLinesOf: aString [
 
-
 	| lines |
-	
 	lines := OrderedCollection new.
-	self string: aString linesDo: [:line | lines add: line ].
+	self string: aString linesDo: [ :line | lines add: line ].
 
 	^ lines
 ]
@@ -540,6 +562,7 @@ TxBasicSpan >> splitLinesOf: aString [
 { #category : 'accessing-text position' }
 TxBasicSpan >> startPosition [
 	"answer the text position, pointing to the start of receiver"
+
 	self subclassResponsibility
 ]
 
@@ -547,7 +570,6 @@ TxBasicSpan >> startPosition [
 TxBasicSpan >> string: aString linesDo: aBlock [
 
 	| stream cr current|
-	
 	stream := aString readStream.
 	current := String new writeStream.
 	cr := Character cr.
@@ -563,10 +585,11 @@ TxBasicSpan >> string: aString linesDo: aBlock [
 
 { #category : 'accessing' }
 TxBasicSpan >> style [
+
 	^ self subclassResponsibility
 ]
 
-{ #category : 'accessing' }
+{ #category : 'operation' }
 TxBasicSpan >> styleAtPosition: txPosition [ 
 
 	"The receiver's attributes is defined for the next line,
@@ -584,17 +607,20 @@ TxBasicSpan >> text [
 
 { #category : 'accessing' }
 TxBasicSpan >> text: aTxModel [
-	text := aTxModel.
+
+	text := aTxModel
 ]
 
 { #category : 'operation' }
 TxBasicSpan >> tryMergeWithNext [
 	"Applicable only to character spans"
+
 	^ self
 ]
 
 { #category : 'operation' }
 TxBasicSpan >> tryMergeWithNextPreserving: selection [
 	"Applicable only to character spans"
+
 	^ self
 ]

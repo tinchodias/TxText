@@ -39,6 +39,7 @@ TxTextStyles >> defaultStyle [
 { #category : 'operations' }
 TxTextStyles >> extend: style with: aNewAttribute [
 	"Answer a style, which is the same as the first argument, but with a new/different attribute value."
+
 	| newStyle |
 	(style includes: aNewAttribute) ifTrue: [ ^ style ].
 	newStyle := style copy add: aNewAttribute.
@@ -47,31 +48,33 @@ TxTextStyles >> extend: style with: aNewAttribute [
 
 { #category : 'initialize' }
 TxTextStyles >> initWithText: aTxModel [
+
 	text := aTxModel
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 TxTextStyles >> initialize [
 
 	self initializeDefaultStyle.
-	
-	styles := WeakSet new.
+
+	styles := WeakSet new
 ]
 
 { #category : 'initialize' }
 TxTextStyles >> initializeDefaultStyle [
 
-	defaultStyle := TxStyle new.
-	
+	defaultStyle := TxStyle new
 ]
 
 { #category : 'copying' }
 TxTextStyles >> postCopy [
+
 	defaultStyle := defaultStyle copy.
-	styles := styles collect: [ :each | each copy ].
+	styles := styles collect: [ :each | each copy ]
 ]
 
 { #category : 'accessing' }
 TxTextStyles >> text [
+
 	^ text
 ]

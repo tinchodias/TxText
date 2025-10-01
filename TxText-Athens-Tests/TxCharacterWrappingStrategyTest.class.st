@@ -7,13 +7,12 @@ Class {
 
 { #category : 'private' }
 TxCharacterWrappingStrategyTest >> defaultStrategy [
-	^ TxAthensCharacterWrappingStrategy new 
-	
 
-
+	^ TxAthensCharacterWrappingStrategy new
 ]
 
 { #category : 'testing' }
 TxCharacterWrappingStrategyTest >> testLayoutShouldContainMultipleLines [
-	self assert: (view layout numberOfLines >  1)
+
+	self assert: view layout numberOfLines > 1
 ]

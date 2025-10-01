@@ -26,39 +26,39 @@ TxEndSpan >> appendCopyTo: anotherText [
 ]
 
 { #category : 'operation' }
-TxEndSpan >> at: aTxTextPosition insertSingleLine: aString [ 
+TxEndSpan >> at: aTxTextPosition insertSingleLine: aString [
 
-	prev isCharacterSpan ifFalse: [
-		self insertPrev: text newCharacterSpan 
-		].
-	
-	^ prev at: prev endPosition insertSingleLine: aString 
+	previous isCharacterSpan ifFalse: [
+		self insertPrevious: text newCharacterSpan ].
+
+	^ previous at: previous endPosition insertSingleLine: aString
 ]
 
 { #category : 'operation' }
 TxEndSpan >> insertCharacters: chars at: position attributes: insertAttributes [
-	
 	"Insert characters (no line separators allowed!!!), with given attributes at given position in receiver.
 	Answer the end position of inserted characters"
-	
+
 	"Since we cannot insert anything into end span, and its only valid position is zero,
 	we either delegate to the previous character span, or create a new one, if none"
-	
+
 	| span |
-	prev isCharacterSpan ifTrue: [
-		^ prev insertCharacters: chars at: prev endPosition attributes: insertAttributes 
-	].
+	previous isCharacterSpan ifTrue: [
+		^ previous
+			  insertCharacters: chars
+			  at: previous endPosition
+			  attributes: insertAttributes ].
 
 	span := (text newCharacterSpan: chars) replaceAttributes: insertAttributes.
-	self insertPrev: span.
+	self insertPrevious: span.
+
 	^ position
-	
 ]
 
 { #category : 'operation' }
 TxEndSpan >> insertLineSeparator: separator at: position [
 
-	self insertPrev: separator.
+	self insertPrevious: separator.
 	^ position
 ]
 
@@ -70,11 +70,13 @@ TxEndSpan >> isAtEnd [
 { #category : 'accessing' }
 TxEndSpan >> lineNumberAt: aTxTextPosition [
 	"same as my previous span"
-	^ prev lineNumberAt: prev endPosition
+
+	^ previous lineNumberAt: previous endPosition
 ]
 
 { #category : 'accessing' }
 TxEndSpan >> next: anObject [
+
 	self error: 'End span cannot have next span!'
 ]
 
@@ -93,6 +95,7 @@ TxEndSpan >> removeBefore: anIndex [
 { #category : 'accessing-text position' }
 TxEndSpan >> replaceAttributes: newAttributes [
 	"replace receiver's attributes by copying from given one"
+
 	^ self
 ]
 
@@ -103,5 +106,5 @@ TxEndSpan >> style [
 	
 	^ text isEmpty
 		ifTrue: [ text defaultStyle ]
-		ifFalse: [ prev style ]
+		ifFalse: [ previous style ]
 ]

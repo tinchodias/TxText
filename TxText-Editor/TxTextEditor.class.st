@@ -159,7 +159,7 @@ TxTextEditor >> moveDown [
 { #category : 'navigation' }
 TxTextEditor >> moveLeft [
 
-	(selection end isAtStart and: [ selection end span prev isAtStart ])
+	(selection end isAtStart and: [ selection end span previous isAtStart ])
 		ifTrue: [ ^ self ].
 
 	self recordSelectionChange: [

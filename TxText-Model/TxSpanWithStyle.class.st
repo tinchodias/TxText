@@ -13,36 +13,32 @@ Class {
 
 { #category : 'copying' }
 TxSpanWithStyle >> appendCopyTo: anotherText [
-
 	"Create a copy of receiver and append it to the another text (at the end of it).
 	Answer the copy"
 
 	| copy |
-	
 	copy := self copy.
-	
-	copy 
+
+	copy
 		text: anotherText;
 		basicNext: copy.
-	
-	anotherText endSpan prev insertNext: copy.
-	
+
+	anotherText endSpan previous insertNext: copy.
+
 	^ copy
-	
 ]
 
-{ #category : 'operation' }
+{ #category : 'attributes' }
 TxSpanWithStyle >> applyAttribute: anAttribute [
 	"Apply attribute to whole receiver"
-	style := self text styles extend: style with: anAttribute.
 
+	style := self text styles extend: style with: anAttribute
 ]
 
 { #category : 'copying' }
 TxSpanWithStyle >> postCopy [
 
-	style := style copy.	
-
+	style := style copy
 ]
 
 { #category : 'printing' }
@@ -51,23 +47,26 @@ TxSpanWithStyle >> printContentsOn: aStream [
 
 { #category : 'printing' }
 TxSpanWithStyle >> printOn: aStream [
-	self printContentsOn: aStream.
+
+	self printContentsOn: aStream
 ]
 
 { #category : 'accessing' }
 TxSpanWithStyle >> replaceAttributes: newAttributes [
 	"replace receiver's attributes by copying from given one"
-	style := newAttributes copy.
+
+	style := newAttributes copy
 ]
 
 { #category : 'accessing' }
 TxSpanWithStyle >> setStyle: aStyle [
 
-	style := text styles addStyle: aStyle.
+	style := text styles addStyle: aStyle
 ]
 
 { #category : 'accessing' }
 TxSpanWithStyle >> style [
+
 	^ style
 ]
 
@@ -75,6 +74,6 @@ TxSpanWithStyle >> style [
 TxSpanWithStyle >> text: aTxModel [
 
 	super text: aTxModel.
-	
-	style := text defaultStyle.
+
+	style := text defaultStyle
 ]

@@ -8,6 +8,12 @@ Class {
 	#package : 'TxText-Athens-Tests'
 }
 
+{ #category : 'testing' }
+TxAthensTextTransformsTest class >> isAbstract [
+
+	^ self == TxAthensTextTransformsTest
+]
+
 { #category : 'private' }
 TxAthensTextTransformsTest >> defaultLayoutViewExtent [
 	^ 100@500.

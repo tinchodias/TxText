@@ -21,45 +21,53 @@ TxEmbeddedObjectSpan >> accept: anObject [
 { #category : 'attributes' }
 TxEmbeddedObjectSpan >> applyAttribute: anAttribute from: startPosition to: endPosition [
 	"do not apply only if start position is > 1 or end < 1"
-	
-	(startPosition span == self and: [ startPosition spanPosition > 0 ]) ifTrue: [ ^ self ].
-	(endPosition span == self and: [ endPosition spanPosition = 0 ]) ifTrue: [ ^ self ].
-	self applyAttribute: anAttribute.
 
+	(startPosition span == self and: [ startPosition spanPosition > 0 ])
+		ifTrue: [ ^ self ].
+	(endPosition span == self and: [ endPosition spanPosition = 0 ])
+		ifTrue: [ ^ self ].
+	self applyAttribute: anAttribute
 ]
 
 { #category : 'accessing-text position' }
 TxEmbeddedObjectSpan >> endPosition [
 	"answer the text position, pointing to the end of receiver"
+
 	^ self positionAt: 1
 ]
 
 { #category : 'as yet unclassified' }
 TxEmbeddedObjectSpan >> initWithText: aText [
+
 	super initWithText: aText.
 	"add a default style"
-	self setStyle: TxStyle new.
+	self setStyle: TxStyle new
 ]
 
 { #category : 'operation' }
-TxEmbeddedObjectSpan >> insertCharacters: aString at: aTxTextPosition attributes: aTxAttributes [ 
-	^ self next insertCharacters: aString at: self next startPosition attributes: aTxAttributes 
+TxEmbeddedObjectSpan >> insertCharacters: aString at: aTxTextPosition attributes: aTxAttributes [
+
+	^ self next
+		  insertCharacters: aString
+		  at: self next startPosition
+		  attributes: aTxAttributes
 ]
 
 { #category : 'operation' }
-TxEmbeddedObjectSpan >> insertLineSeparator: separator at: position [ 
+TxEmbeddedObjectSpan >> insertLineSeparator: separator at: position [
 
 	position spanPosition > 0 ifTrue: [
-		self insertNext: separator. 
+		self insertNext: separator.
 		^ next endPosition ].
-	
-	self insertPrev: separator.
+
+	self insertPrevious: separator.
 	^ self startPosition
 ]
 
 { #category : 'accessing' }
-TxEmbeddedObjectSpan >> lineNumberAt: aTxTextPosition [ 
-	^ self numberOfLinesBefore.
+TxEmbeddedObjectSpan >> lineNumberAt: aTxTextPosition [
+
+	^ self numberOfLinesBefore
 ]
 
 { #category : 'accessing' }
@@ -73,25 +81,28 @@ TxEmbeddedObjectSpan >> object: anObject [
 ]
 
 { #category : 'printing' }
-TxEmbeddedObjectSpan >> printContentsOn: aStream [ 
-	aStream nextPut: $[; print: object; nextPut: $].
+TxEmbeddedObjectSpan >> printContentsOn: aStream [
+
+	aStream
+		nextPut: $[;
+		print: object;
+		nextPut: $]
 ]
 
 { #category : 'operation' }
 TxEmbeddedObjectSpan >> removeBefore: anIndex [
-	anIndex = 1 ifTrue: [
-			"remove ourselves"
-			self delete.
-	].
 
+	anIndex = 1 ifTrue: [ "remove ourselves" self delete ]
 ]
 
 { #category : 'accessing' }
 TxEmbeddedObjectSpan >> size [
+
 	^ 1
 ]
 
 { #category : 'accessing-text position' }
 TxEmbeddedObjectSpan >> startPosition [
+
 	^ self positionAt: 0
 ]

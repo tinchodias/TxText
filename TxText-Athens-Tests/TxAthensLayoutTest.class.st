@@ -12,7 +12,8 @@ Class {
 
 { #category : 'private' }
 TxAthensLayoutTest >> defaultLayoutViewExtent [
-	^ 100@100
+
+	^ 100 @ 100
 ]
 
 { #category : 'private' }
@@ -38,47 +39,49 @@ Section 1.10.33 of "de Finibus Bonorum et Malorum", written by Cicero in 45 BC
 { #category : 'as yet unclassified' }
 TxAthensLayoutTest >> layout [
 
-	^ view layout.
+	^ view layout
 ]
 
 { #category : 'running' }
 TxAthensLayoutTest >> setUp [
+
+	super setUp.
 	text := self newText: self defaultText.
-	view := self newViewOn: text.
+	view := self newViewOn: text
 ]
 
 { #category : 'tests' }
 TxAthensLayoutTest >> testFreshViewLayoutNotNil [
-		
-	self assert: view layout isNil not 
+
+	self assert: view layout isNil not
 ]
 
 { #category : 'tests' }
 TxAthensLayoutTest >> testFreshViewOffsetShouldBeZero [
 	"initially origin should be set to 0@0 "
-	
-	
-	self assert: view offset equals: 0@0
+
+	self assert: view offset equals: 0 @ 0
 ]
 
 { #category : 'tests' }
 TxAthensLayoutTest >> testFreshViewPositionIsAtStart [
 	"layout should answer text position from visual position"
+
 	self assert: view layout startPosition equals: text startPosition
 ]
 
 { #category : 'tests' }
 TxAthensLayoutTest >> testLayoutShouldComputeExtent [
 	"text is not empty, so layout should be not empty either"
-	self assert: view layout extent x isZero not.
-	self assert: view layout extent y isZero not.
-	
 
+	self assert: view layout extent x isZero not.
+	self assert: view layout extent y isZero not
 ]
 
 { #category : 'tests' }
 TxAthensLayoutTest >> testLayoutShouldHaveNoGaps [
 	"check that layout has no gaps"
+
 	self assert: view layout isWellFormed
 ]
 
@@ -86,27 +89,25 @@ TxAthensLayoutTest >> testLayoutShouldHaveNoGaps [
 TxAthensLayoutTest >> testScrollToLargeX [
 	"never scroll beyond layout"
 
-	view scrollBy: 10000@0.
-	
-	self assert: view offset x <= (view layout width - view extent x).
+	view scrollBy: 10000 @ 0.
+
+	self assert: view offset x <= (view layout width - view extent x)
 ]
 
 { #category : 'tests' }
 TxAthensLayoutTest >> testScrollToNegativeX [
 	"never scroll beyond layout"
-	
-	
-	view scrollBy: -1000@0.
-	
-	self assert: view offset x = 0.
+
+	view scrollBy: -1000 @ 0.
+
+	self assert: view offset x = 0
 ]
 
 { #category : 'tests' }
 TxAthensLayoutTest >> testSettingViewExtent [
 	"layout should answer text position from visual position"
-	
-	
-	view extent:100@100.
-	
-	self assert: view extent equals:100@100
+
+	view extent: 100 @ 100.
+
+	self assert: view extent equals: 100 @ 100
 ]

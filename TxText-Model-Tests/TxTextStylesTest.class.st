@@ -11,36 +11,37 @@ Class {
 	#package : 'TxText-Model-Tests'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'running' }
 TxTextStylesTest >> setUp [
-	text := 'abc' asTxModel 
+
+	text := 'abc' asTxModel
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 TxTextStylesTest >> testAddingCopyOfSameStyleReturnsOriginalStyle [
+
 	| style attribute result original copy |
-	
 	style := TxStyle new.
 	attribute := TxForeColorAttribute with: Color red.
 	style add: attribute.
-	
+
 	original := text addStyle: style.
 	copy := original copy.
-		
+
 	result := text addStyle: copy.
-	
-	self assert: result == original
+
+	self assert: result identicalTo: original
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 TxTextStylesTest >> testAddingSameStyleTwice [
+
 	| style attribute result |
-	
 	style := TxStyle new.
 	attribute := TxForeColorAttribute with: Color red.
 	style add: attribute.
-	
+
 	result := text addStyle: style.
-	
-	self assert: result == style
+
+	self assert: result identicalTo: style
 ]

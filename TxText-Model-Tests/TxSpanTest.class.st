@@ -1,5 +1,5 @@
 Class {
-	#name : 'TxSpanTestCase',
+	#name : 'TxSpanTest',
 	#superclass : 'TestCase',
 	#instVars : [
 		'span',
@@ -10,15 +10,22 @@ Class {
 }
 
 { #category : 'testing' }
-TxSpanTestCase class >> isAbstract [ 
-	^self == TxSpanTestCase
+TxSpanTest class >> isAbstract [ 
+	^self == TxSpanTest
 ]
 
 { #category : 'running' }
-TxSpanTestCase >> setUp [
+TxSpanTest >> setUp [
+
 	super setUp.
 	textModel := TxModel new.
-	
+
 	span := self spanClass new.
 	span text: textModel
+]
+
+{ #category : 'accessing' }
+TxSpanTest >> spanClass [
+
+	^ self subclassResponsibility
 ]

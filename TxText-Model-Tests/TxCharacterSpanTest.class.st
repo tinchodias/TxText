@@ -1,38 +1,36 @@
 Class {
 	#name : 'TxCharacterSpanTest',
-	#superclass : 'TxSpanTestCase',
+	#superclass : 'TxSpanTest',
 	#category : 'TxText-Model-Tests',
 	#package : 'TxText-Model-Tests'
 }
 
 { #category : 'accessing' }
 TxCharacterSpanTest >> spanClass [
-	^TxCharacterSpan 
+
+	^ TxCharacterSpan
 ]
 
 { #category : 'tests' }
 TxCharacterSpanTest >> testGettingAbsentAttribute [
 
 	| actual |
-
 	textModel := TxModel new.
 	textModel defaultStyle at: TxFontAttribute put: #mockValue.
 	span text: textModel.
-	
+
 	actual := span getAttribute: TxFontAttribute.
-	
+
 	self assert: actual equals: #mockValue
 ]
 
 { #category : 'tests' }
 TxCharacterSpanTest >> testGettingExistedAttribute [
 
-	|  actual |
-	
+	| actual |
 	span style add: TxFontAttribute with: #font.
-	
+
 	actual := span getAttribute: TxFontAttribute.
-	
-	self assert: actual == #font
-	
+
+	self assert: actual identicalTo: #font
 ]

@@ -38,36 +38,38 @@ TxStartSpan >> deleteUpTo: end startingAt: start [
 
 { #category : 'operation' }
 TxStartSpan >> insertCharacters: chars at: position attributes: insertAttributes [
-	
 	"Insert characters (no line separators allowed!!!), with given attributes at given position in receiver.
 	Answer the end position of inserted characters"
-	
+
 	"Since we cannot insert anything into start span, and our only valid position is zero,
 	we either delegate to next character span, or create a new one, if none"
-	
+
 	| span |
 	next isCharacterSpan ifTrue: [
-		^ next insertCharacters: chars at: next startPosition attributes: insertAttributes 
-	].
+		^ next
+			  insertCharacters: chars
+			  at: next startPosition
+			  attributes: insertAttributes ].
 
 	span := (text newCharacterSpan: chars) replaceAttributes: insertAttributes.
 	self insertNext: span.
+
 	^ next endPosition
-	
 ]
 
 { #category : 'operation' }
 TxStartSpan >> insertLineSeparator: separator at: position [
+
 	| pos |
 	pos := next startPosition.
 	self insertNext: separator.
 	^ pos
-
 ]
 
 { #category : 'testing' }
 TxStartSpan >> isAtLineStart: spanPosition [
 	"start of text always starts a new line "
+
 	^ true
 ]
 
@@ -79,21 +81,25 @@ TxStartSpan >> isAtStart [
 { #category : 'accessing' }
 TxStartSpan >> lineNumberAt: aTxTextPosition [
 	"i am always at 1st line"
+
 	^ 1
 ]
 
 { #category : 'accessing' }
-TxStartSpan >> prev: anObject [
+TxStartSpan >> previous: aSpan [
+
 	self error: 'Start span cannot have previous span!'
 ]
 
 { #category : 'printing' }
 TxStartSpan >> printOn: aStream [
-	 aStream nextPutAll: '<< ' 
+
+	aStream nextPutAll: '<< '
 ]
 
 { #category : 'accessing' }
-TxStartSpan >> style [	
+TxStartSpan >> style [
+
 	^ text isEmpty
 		ifTrue: [ text defaultStyle ]
 		ifFalse: [ next style ]

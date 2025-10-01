@@ -124,12 +124,11 @@ TxTextEditorElement class >> exampleWithEmbeddedObject [
 	1000 timesRepeat: [ 
 		text endPosition
 			insert: 'wioeuhfiw eufi';
-			insertObject:  Morph new;
+			insertObject: Morph new;
 			insert: 'uwe hfiuweh fiue', String cr;
 			insert: '-------', String cr.
 	].
 	^ self openInWindowWithText: text
-
 ]
 
 { #category : 'initialization' }
@@ -496,10 +495,10 @@ TxTextEditorElement >> insert: aString [
 ]
 
 { #category : 'editing' }
-TxTextEditorElement >> insertObject: anObject [ 	
+TxTextEditorElement >> insertObject: anObject [
 
 	controller insertObject: anObject.
-	self controllerChanged.
+	self controllerChanged
 ]
 
 { #category : 'event handling' }

@@ -10,8 +10,9 @@ Class {
 
 { #category : 'running' }
 TxStyleTest >> setUp [
+
 	super setUp.
-	
+
 	style := TxStyle new
 ]
 
@@ -34,7 +35,7 @@ TxStyleTest >> testAddingAttributeWithValue [
 	
 	actual := style at: TxFontAttribute. 
 
-	self assert: (actual value == #font)
+	self assert: actual value identicalTo: #font
 ]
 
 { #category : 'tests' }
@@ -46,7 +47,7 @@ TxStyleTest >> testGettingAbsentAttributeValue [
 	
 	actual := style at: TxFontAttribute ifAbsent: [#result].
 	
-	self assert: actual == #result
+	self assert: actual identicalTo: #result
 ]
 
 { #category : 'tests' }
@@ -59,7 +60,7 @@ TxStyleTest >> testGettingExistedAttributeValue [
 	
 	actual := style get: TxFontAttribute ifAbsent: nil.
 	
-	self assert: actual == #font
+	self assert: actual identicalTo: #font
 ]
 
 { #category : 'tests' }

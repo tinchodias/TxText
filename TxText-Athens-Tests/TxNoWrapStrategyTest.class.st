@@ -7,10 +7,12 @@ Class {
 
 { #category : 'private' }
 TxNoWrapStrategyTest >> defaultStrategy [
-	^ TxAthensNoWrapStrategy new 
+
+	^ TxAthensNoWrapStrategy new
 ]
 
 { #category : 'tests' }
 TxNoWrapStrategyTest >> testLayoutShouldContainASingleLine [
-	self assert: (view layout numberOfLines =  1)
+
+	self assert: view layout numberOfLines = 1
 ]

@@ -60,6 +60,7 @@ TxBasicTextPosition >> asPosition [
 
 { #category : 'converting' }
 TxBasicTextPosition >> asSelection [
+
 	^ TxSelection from: self to: self
 ]
 
@@ -106,7 +107,7 @@ TxBasicTextPosition >> hasSamePositionAs: position [
 		^ self spanPosition = position spanPosition ].
 
 	(self isAtSpanStart and: [
-		position isAtSpanEnd and: [ self span prev = position span ] ])
+		position isAtSpanEnd and: [ self span previous = position span ] ])
 			ifTrue: [ ^ true ].
 
 	(self isAtSpanEnd and: [
@@ -150,27 +151,33 @@ TxBasicTextPosition >> invalidPosition [
 { #category : 'testing' }
 TxBasicTextPosition >> isAtEnd [
 	"Answer true if receiver points to the end of text"
+
 	^ self span next isAtEnd and: [ self spanPosition = self span size ]
 ]
 
 { #category : 'testing' }
 TxBasicTextPosition >> isAtLineEnd [
-	^ (self spanPosition = 0 and: [ self span isLineSeparator ])
-		or: [  (self isAtSpanEnd and: [self span next isLineSeparator ])]
+
+	^ (self spanPosition = 0 and: [ self span isLineSeparator ]) or: [
+		  self isAtSpanEnd and: [ self span next isLineSeparator ] ]
 ]
 
 { #category : 'testing' }
 TxBasicTextPosition >> isAtLineStart [
-	^ self isAtStart or: [ self span isLineSeparator and: [ self isAtSpanEnd ] ]
+
+	^ self isAtStart or: [
+		  self span isLineSeparator and: [ self isAtSpanEnd ] ]
 ]
 
 { #category : 'testing' }
 TxBasicTextPosition >> isAtSpanEnd [
+
 	^ self span isLastPosition: self spanPosition
 ]
 
 { #category : 'testing' }
 TxBasicTextPosition >> isAtSpanStart [
+
 	^ self spanPosition = 0
 ]
 
@@ -178,79 +185,84 @@ TxBasicTextPosition >> isAtSpanStart [
 TxBasicTextPosition >> isAtStart [
 	"Answer true if receiver points to the start of text"
 
-	^ self span prev isAtStart and: [ self spanPosition = 0 ]
+	^ self span previous isAtStart and: [ self spanPosition = 0 ]
 ]
 
 { #category : 'testing' }
 TxBasicTextPosition >> isValid [
-	^ (self text includesSpan: self span) and: [ self spanPosition between: 0 and: self span size ]
+
+	^ (self text includesSpan: self span) and: [
+		  self spanPosition between: 0 and: self span size ]
 ]
 
 { #category : 'accessing' }
 TxBasicTextPosition >> lineNumber [
 	"Answer the 1-based line number, where receiver is currently in. "
-	^ self span lineNumberAt: self 
+
+	^ self span lineNumberAt: self
 ]
 
 { #category : 'accessing' }
 TxBasicTextPosition >> linePosition [
 	"Answer the position of receiver, relative to line start. "
 
-	(self span isLineSeparator and: [self spanPosition =1 ]) ifTrue: [ ^ 0 ].
+	(self span isLineSeparator and: [self spanPosition = 1 ]) ifTrue: [ ^ 0 ].
 	
 	self span lineStartSpan spanAndPositionDo: [ :newSpan :spanStartPosition |
 		newSpan = self span 
-			ifTrue: [ ^ spanStartPosition + self spanPosition ]].
+			ifTrue: [ ^ spanStartPosition + self spanPosition ] ].
 		
-	^ self invalidPosition 
-
+	^ self invalidPosition
 ]
 
 { #category : 'accessing' }
-TxBasicTextPosition >> linePosition: offset [ 
+TxBasicTextPosition >> linePosition: offset [
 	"Answer the position, in same line as receiver, relative to line start.
 	If offset bigger than line size, answer position for the end of line. "
+
 	self subclassResponsibility
 ]
 
 { #category : 'navigation' }
 TxBasicTextPosition >> moveDown [
+
 	^ self moveDown: 1
 ]
 
 { #category : 'navigation' }
 TxBasicTextPosition >> moveDown: number [
-	self subclassResponsibility 
+
+	self subclassResponsibility
 ]
 
 { #category : 'navigation' }
 TxBasicTextPosition >> moveLeft [
-	
+
 	^ self moveLeft: 1
 ]
 
 { #category : 'navigation' }
 TxBasicTextPosition >> moveLeft: number [
-	self subclassResponsibility 
+
+	self subclassResponsibility
 ]
 
 { #category : 'navigation' }
 TxBasicTextPosition >> moveRight [
 
 	^ self moveRight: 1
-
-
 ]
 
 { #category : 'navigation' }
 TxBasicTextPosition >> moveRight: number [
-	self subclassResponsibility 
+
+	self subclassResponsibility
 ]
 
 { #category : 'navigation' }
 TxBasicTextPosition >> moveTo: anotherTextPosition [
 
-	self subclassResponsibility 
+	self subclassResponsibility
 ]
 
 { #category : 'navigation' }
@@ -275,6 +287,7 @@ TxBasicTextPosition >> moveToStart [
 
 { #category : 'navigation' }
 TxBasicTextPosition >> moveUp [
+
 	^ self moveUp: 1
 ]
 
@@ -286,26 +299,31 @@ TxBasicTextPosition >> moveUp: number [
 { #category : 'accessing' }
 TxBasicTextPosition >> nextPosition [
 	"answer the position in text, which follows the receiver"
-	self subclassResponsibility 
+
+	self subclassResponsibility
 ]
 
 { #category : 'printing' }
-TxBasicTextPosition >> printTextOn: aStream upTo: endPosition [ 
+TxBasicTextPosition >> printTextOn: aStream upTo: endPosition [
 
-	self span == endPosition span ifTrue: [ 
-		^self span asStringOn: aStream startingAt: self spanPosition upTo: endPosition spanPosition].
+	self span == endPosition span ifTrue: [
+		^ self span
+			  asStringOn: aStream
+			  startingAt: self spanPosition
+			  upTo: endPosition spanPosition ].
 
 	self span asStringOn: aStream startingAt: self spanPosition.
 	self span next printTextOn: aStream upTo: endPosition span.
-	endPosition span asStringOn: aStream upTo: endPosition spanPosition.
-
-	
+	endPosition span asStringOn: aStream upTo: endPosition spanPosition
 ]
 
 { #category : 'converting' }
 TxBasicTextPosition >> selectTo: aPosition [
-	^ self text newSelection start: self; end: aPosition; yourself 
 
+	^ self text newSelection
+		  start: self;
+		  end: aPosition;
+		  yourself
 ]
 
 { #category : 'accessing' }
@@ -330,27 +348,29 @@ TxBasicTextPosition >> text [
 TxBasicTextPosition >> timesToMoveRightTo: aPosition [
 	"Private.
 	Assuming that receiver <= aPosition, answer the number of times
-	to move receiver right to reach the given position.
-	"
+	to move receiver right to reach the given position."
 
 	| result mySpan targetSpan |
 	mySpan := self span.
 	targetSpan := aPosition span.
 	result := 0.
-	mySpan == targetSpan
-		ifTrue: [ ^ aPosition spanPosition - self spanPosition ].
-	mySpan
-		do: [ :each | 
-			each == targetSpan
-				ifTrue: [ ^ result + aPosition spanPosition ]
-				ifFalse: [ 
-					result := each == mySpan
-						ifTrue: [ mySpan size - self spanPosition ]
-						ifFalse: [ result + each size ] ] ].
+
+	mySpan == targetSpan ifTrue: [
+		^ aPosition spanPosition - self spanPosition ].
+
+	mySpan do: [ :each | 
+		each == targetSpan
+			ifTrue: [ ^ result + aPosition spanPosition ]
+			ifFalse: [
+				result := each == mySpan
+					ifTrue: [ mySpan size - self spanPosition ]
+					ifFalse: [ result + each size ] ] ].
+
 	self invalidPosition
 ]
 
 { #category : 'converting' }
 TxBasicTextPosition >> to: aPosition [
+
 	^ TxInterval from: self to: aPosition
 ]

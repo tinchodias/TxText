@@ -5,25 +5,22 @@ Class {
 	#package : 'TxText-Athens-Tests'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 TxEmbeddedObjectTest >> testBuildingLayoutWithObject [
+
 	(text startPosition moveRight: 5) insertObject: Object new.
 
 	"null containers don't allow embedded objects"
-	self should: [ view resetLayout ] raise: Error.
-
-	
+	self should: [ view resetLayout ] raise: Error
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 TxEmbeddedObjectTest >> testInsertingObject [
-	| theObject  newPosition |
-	theObject := Object new.
-	newPosition := (text startPosition moveRight:5) insertObject: theObject.
-	
-	self assert: (newPosition moveLeft: 5) isAtStart not.
-	self assert: (newPosition moveLeft: 6) isAtStart.
-	
 
-	
+	| theObject newPosition |
+	theObject := Object new.
+	newPosition := (text startPosition moveRight: 5) insertObject: theObject.
+
+	self assert: (newPosition moveLeft: 5) isAtStart not.
+	self assert: (newPosition moveLeft: 6) isAtStart
 ]

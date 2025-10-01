@@ -61,16 +61,17 @@ TxBlCursor >> isBlinkingVisibleNow [
 
 { #category : 'accessing' }
 TxBlCursor >> layoutPosition: aPosition [
+
 	| rect |
 	lastChangeTick := Time millisecondClockValue.
 	layoutPosition := aPosition.
 
 	"update bounds according to new layout position"
 	rect := self calculateNewBounds.
-	self relocate: rect origin.
-	self size: rect extent.
-	
-"	self startStepping"
+	self position: rect origin.
+	self size: rect extent
+
+	"	self startStepping"
 ]
 
 { #category : 'geometry' }

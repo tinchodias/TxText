@@ -66,7 +66,8 @@ TxModel >> asString [
 
 { #category : 'conversion' }
 TxModel >> asStringOn: aStream [
-	self spansDo: [ :span | span asStringOn: aStream ].
+
+	self spansDo: [ :span | span asStringOn: aStream ]
 ]
 
 { #category : 'conversion' }
@@ -186,7 +187,7 @@ TxModel >> newCursor [
 
 { #category : 'private-factory methods' }
 TxModel >> newLineSeparator [ 
-	^ TxLineSeparator text: self
+	^ TxLineSeparatorSpan text: self
 ]
 
 { #category : 'factory methods' }
@@ -200,7 +201,7 @@ TxModel >> normalize: selection [
 
 	| span normalizedSelection |
 	normalizedSelection := selection normalized.
-	span := normalizedSelection start span prev.
+	span := normalizedSelection start span previous.
 	
 	[ span tryMergeWithNextPreserving: selection.
 	  span == normalizedSelection end span ] whileFalse: [ span := span next ].

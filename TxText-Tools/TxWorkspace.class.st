@@ -16,12 +16,16 @@ Class {
 { #category : 'instance creation' }
 TxWorkspace class >> open [
 	<script>
+
 	^ self openLabel: 'Tx-Workspace'
 ]
 
 { #category : 'instance creation' }
 TxWorkspace class >> openLabel: aLabel [
-	^ self new openLabel: aLabel ; yourself
+
+	^ self new
+		  openLabel: aLabel;
+		  yourself
 ]
 
 { #category : 'opening' }
@@ -48,7 +52,8 @@ TxWorkspace >> buildContextMenu: announcement [
 
 { #category : 'morphic ui' }
 TxWorkspace >> defaultExtent [
-	^ 800@500
+
+	^ 800 @ 500
 ]
 
 { #category : 'initialization' }
@@ -59,60 +64,63 @@ TxWorkspace >> initialize [
 ]
 
 { #category : 'actions' }
-TxWorkspace >> invokeDoitIn: editorMorph [ 
-	| myeditor |
-	myeditor := editorMorph controller. 
+TxWorkspace >> invokeDoitIn: editorMorph [
 
-	myeditor selection isEmpty ifTrue: [  
-		myeditor moveToLineStart; extendSelectionToLineEnd. 
-	].
-
-	myeditor selection isEmpty ifFalse: [ 
-		Smalltalk compiler evaluate: myeditor selection asString.
-	 ].
-]
-
-{ #category : 'actions' }
-TxWorkspace >> invokeInspectItIn: editorMorph [ 
 	| myeditor |
 	myeditor := editorMorph controller.
 
-	myeditor selection isEmpty ifTrue: [  
-		myeditor moveToLineStart; extendSelectionToLineEnd. 
-	].
+	myeditor selection isEmpty ifTrue: [
+		myeditor
+			moveToLineStart;
+			extendSelectionToLineEnd ].
 
-	myeditor selection isEmpty ifFalse: [ 
-		(Smalltalk compiler evaluate: myeditor selection asString) inspect.	
-	 ].
+	myeditor selection isEmpty ifFalse: [
+		Smalltalk compiler evaluate: myeditor selection asString ]
 ]
 
 { #category : 'actions' }
-TxWorkspace >> invokePrintItIn: editorMorph [ 
+TxWorkspace >> invokeInspectItIn: editorMorph [
+
+	| myeditor |
+	myeditor := editorMorph controller.
+
+	myeditor selection isEmpty ifTrue: [
+		myeditor
+			moveToLineStart;
+			extendSelectionToLineEnd ].
+
+	myeditor selection isEmpty ifFalse: [
+		(self class compiler evaluate: myeditor selection asString) inspect ]
+]
+
+{ #category : 'actions' }
+TxWorkspace >> invokePrintItIn: editorMorph [
+
 	| myeditor result |
 	myeditor := editorMorph controller.
 
-	myeditor selection isEmpty ifTrue: [  
-		myeditor moveToLineStart; extendSelectionToLineEnd. 
-	].
+	myeditor selection isEmpty ifTrue: [
+		myeditor
+			moveToLineStart;
+			extendSelectionToLineEnd ].
 
-	myeditor selection isEmpty ifFalse: [ 
-		result := ' ' , (Smalltalk compiler evaluate: myeditor selection asString) printString.
+	myeditor selection isEmpty ifFalse: [
+		result := ' ', (self class compiler evaluate: myeditor selection asString) printString.
 		myeditor collapseSelection.
-		editorMorph insert: result
-		
-	 ].
+		editorMorph insert: result ]
 ]
 
 { #category : 'events' }
-TxWorkspace >> onTextDeleted: ann [ 
+TxWorkspace >> onTextDeleted: ann [
 	"self scheduleSyntaxHighlightingUpdate."
-	
-	self updateSyntaxHighlighting.
+
+	self updateSyntaxHighlighting
 ]
 
 { #category : 'events' }
-TxWorkspace >> onTextInserted: ann [ 
-	self updateSyntaxHighlighting.
+TxWorkspace >> onTextInserted: ann [
+
+	self updateSyntaxHighlighting
 ]
 
 { #category : 'opening' }
@@ -125,26 +133,37 @@ TxWorkspace >> openLabel: aLabel [
 TxWorkspace >> openText: aText withLabel: aLabel [
 
 	| view wrapper |
-	
 	text := aText asTxModel.
 	view := TxViewContainer new.
 
-	view addDecorator: (TxScrollbarDecorator new placeRight color: Color blue;yourself).
-	view addDecorator: (TxScrollbarDecorator new placeBottom color: Color green;yourself).
-	view editText: text.
-	view wrapText: true.
-	view hResizing: #spaceFill ; vResizing: #spaceFill .
+	view addDecorator:
+		(TxScrollbarDecorator new placeRight
+			color: Color blue;
+			yourself).
+	view addDecorator:
+		(TxScrollbarDecorator new placeBottom
+			color: Color green;
+			yourself).
+	view
+		editText: text;
+		wrapText: true.
+	view
+		hResizing: #spaceFill;
+		vResizing: #spaceFill.
 	view layoutFrame: LayoutFrame identity.
-	
-	view view onAnnouncement: TxContextMenuAnnouncement send: #buildContextMenu: to: self.
+
+	view view
+		onAnnouncement: TxContextMenuAnnouncement
+		send: #buildContextMenu:
+		to: self.
 	editor := view view.
-	
+
 	self wireEvents.
-	
+
 	wrapper := AthensWrapMorph new.
 	wrapper layoutPolicy: ProportionalLayout new.
 	wrapper addMorph: view.
-	
+
 	^ (wrapper openInWindowLabeled: aLabel) extent: self defaultExtent
 ]
 

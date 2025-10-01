@@ -26,11 +26,12 @@ TxInterval class >> on: aText [
 ]
 
 { #category : 'conversion' }
-TxInterval >> asString [ 
-		
-	^String streamContents: [ :s | 
-		self normalized start printTextOn: s upTo: self normalized end.		
-	]
+TxInterval >> asString [
+
+	^ String streamContents: [ :aStream |
+		  self normalized start
+			  printTextOn: aStream
+			  upTo: self normalized end ]
 ]
 
 { #category : 'testing' }

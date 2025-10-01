@@ -5,9 +5,16 @@ Class {
 	#package : 'TxText-Athens-Tests'
 }
 
+{ #category : 'testing' }
+TxAthensTextTest class >> isAbstract [
+
+	^ self == TxAthensTextTest
+]
+
 { #category : 'private' }
 TxAthensTextTest >> defaultLayoutViewExtent [
-	self subclassResponsibility 
+
+	^ self subclassResponsibility
 ]
 
 { #category : 'private' }

@@ -22,7 +22,7 @@ TxHighlightRendererTest >> assertRectangle: rectangleNumber coversFullViewWidthO
 	self assert: rectangle topLeft equals: expectedStart topPoint.
 	lineEndPosition := view layout positionAt: line endPosition ifOutside: [ self fail ].
 	expectedEndPoint := view width @ lineEndPosition bottomPoint y.
-	self assert: rectangle bottomRight equals: expectedEndPoint.
+	self assert: rectangle bottomRight equals: expectedEndPoint
 ]
 
 { #category : 'asserting' }
@@ -35,7 +35,7 @@ TxHighlightRendererTest >> assertRectangle: rectangleNumber coversLeftPartOfLine
 	expectedStart := view layout positionAt: line startPosition ifOutside: [ self fail ].
 	self assert: rectangle topLeft equals: expectedStart topPoint.
 	expectedEnd := view layout positionAt: interval end ifOutside: [ self fail ].
-	self assert: rectangle bottomRight equals: expectedEnd bottomPoint.
+	self assert: rectangle bottomRight equals: expectedEnd bottomPoint
 ]
 
 { #category : 'asserting' }
@@ -49,7 +49,7 @@ TxHighlightRendererTest >> assertRectangle: rectangleNumber coversRightPartOfLin
 	self assert: rectangle topLeft equals: expectedStart topPoint.
 	lineEndPosition := view layout positionAt: line endPosition ifOutside: [ self fail ].
 	expectedEndPoint := view width @ lineEndPosition bottomPoint y.
-	self assert: rectangle bottomRight equals: expectedEndPoint.
+	self assert: rectangle bottomRight equals: expectedEndPoint
 ]
 
 { #category : 'asserting' }
@@ -61,20 +61,20 @@ TxHighlightRendererTest >> assertRectangleCoversMiddleOfLine: aNumber [
 	self assert: drawnShapes first topLeft equals: expectedStart topPoint.
 	
 	expectedEnd := view layout positionAt: interval end ifOutside: [ self fail ].
-	self assert: drawnShapes first bottomRight equals: expectedEnd bottomPoint.
+	self assert: drawnShapes first bottomRight equals: expectedEnd bottomPoint
 ]
 
 { #category : 'canvas' }
-TxHighlightRendererTest >> drawShape: aRectangle [ 
+TxHighlightRendererTest >> drawShape: aRectangle [
 
-	drawnShapes add: aRectangle.
+	drawnShapes add: aRectangle
 ]
 
 { #category : 'helpers' }
 TxHighlightRendererTest >> initializeRendererWithIntervalFrom: startTextPosition to: endTextPosition [
 	
 	interval := startTextPosition to: endTextPosition.
-	renderer := TxHighlightRenderer highlighting: interval in: view with: nil.
+	renderer := TxHighlightRenderer highlighting: interval in: view with: nil
 ]
 
 { #category : 'canvas' }
@@ -85,13 +85,13 @@ TxHighlightRendererTest >> pathTransform [
 { #category : 'canvas' }
 TxHighlightRendererTest >> restoreAfter: aBlock [
 
-	aBlock value.
+	aBlock value
 ]
 
 { #category : 'canvas' }
 TxHighlightRendererTest >> setPaint: anObject [
 
-	isPaintSet := true.
+	isPaintSet := true
 ]
 
 { #category : 'running' }
@@ -99,7 +99,7 @@ TxHighlightRendererTest >> setUp [
 
 	super setUp.
 	drawnShapes := OrderedCollection new.
-	isPaintSet := false.
+	isPaintSet := false
 ]
 
 { #category : 'tests' }
@@ -115,7 +115,7 @@ TxHighlightRendererTest >> testHighlightMoreThanTwoLines [
 	self assert: drawnShapes size equals: 3.
 	self assertRectangle: 1 coversRightPartOfLine: 1.
 	self assertRectangle: 2 coversFullViewWidthOfLine: 2.
-	self assertRectangle: 3 coversLeftPartOfLine: 3.
+	self assertRectangle: 3 coversLeftPartOfLine: 3
 ]
 
 { #category : 'tests' }
@@ -129,7 +129,7 @@ TxHighlightRendererTest >> testHighlightPartialLine [
 	renderer renderHighlightOn: self.
 
 	self assert: drawnShapes size equals: 1.
-	self assertRectangleCoversMiddleOfLine: 1.
+	self assertRectangleCoversMiddleOfLine: 1
 ]
 
 { #category : 'tests' }
@@ -146,7 +146,7 @@ TxHighlightRendererTest >> testHighlightTwoLines [
 
 	self assert: drawnShapes size equals: 2.	
 	self assertRectangle: 1 coversRightPartOfLine: 1.
-	self assertRectangle: 2 coversLeftPartOfLine: 2.
+	self assertRectangle: 2 coversLeftPartOfLine: 2
 ]
 
 { #category : 'tests' }
@@ -163,7 +163,7 @@ TxHighlightRendererTest >> testHighlightsOnlyFromLayoutStartPosition [
 
 	"Assert first line, which is out of view, is not highlighted"
 	self assert: drawnShapes size equals: 1.
-	self assertRectangle: 1 coversLeftPartOfLine: 1. "From the layout's perspective, 1 is the first one visible e.g. the second line in our selection"
+	self assertRectangle: 1 coversLeftPartOfLine: 1 "From the layout's perspective, 1 is the first one visible e.g. the second line in our selection"
 ]
 
 { #category : 'tests' }
@@ -181,7 +181,7 @@ TxHighlightRendererTest >> testHighlightsOnlyToLayoutEndPosition [
 
 	"Assert second line, which is out of view, is not highlighted"
 	self assert: drawnShapes size equals: 1.
-	self assertRectangle: 1 coversRightPartOfLine: lastVisibleLineIndex.
+	self assertRectangle: 1 coversRightPartOfLine: lastVisibleLineIndex
 ]
 
 { #category : 'tests' }
@@ -196,7 +196,7 @@ TxHighlightRendererTest >> testNoHighlightIfOutOfView [
 
 	renderer renderHighlightOn: self.
 
-	self assert: drawnShapes isEmpty.
+	self assert: drawnShapes isEmpty
 ]
 
 { #category : 'canvas' }

@@ -33,6 +33,7 @@ TxCharacterSpan >> accept: anObject [
 
 { #category : 'operation' }
 TxCharacterSpan >> applyAttribute: anAttribute from: startPosition to: endPosition [
+
 	| splitStart splitEnd secondSpan |
 	(style includes: anAttribute)
 		ifTrue: [ ^ self ].
@@ -46,7 +47,7 @@ TxCharacterSpan >> applyAttribute: anAttribute from: startPosition to: endPositi
 		ifTrue: [ self splitAt: splitStart ]
 		ifFalse: [ self ].
 	splitEnd - splitStart < secondSpan size
-		ifTrue: [ 
+		ifTrue: [
 			secondSpan splitAt: splitEnd - splitStart.	"update the position"
 			endPosition position: secondSpan endPosition ].
 	secondSpan applyAttribute: anAttribute
@@ -54,32 +55,38 @@ TxCharacterSpan >> applyAttribute: anAttribute from: startPosition to: endPositi
 
 { #category : 'printing' }
 TxCharacterSpan >> asStringOn: aStream [
-	aStream nextPutAll: characters.
+
+	aStream nextPutAll: characters
 ]
 
 { #category : 'printing' }
 TxCharacterSpan >> asStringOn: aStream startingAt: index [
-	self asStringOn: aStream startingAt: index upTo: characters size.
+
+	self asStringOn: aStream startingAt: index upTo: characters size
 ]
 
 { #category : 'printing' }
 TxCharacterSpan >> asStringOn: aStream startingAt: startIndex upTo: endIndex [
-	aStream nextPutAll: (characters copyFrom: startIndex + 1 to: endIndex).
+
+	aStream nextPutAll:
+		(characters copyFrom: startIndex + 1 to: endIndex)
 ]
 
 { #category : 'printing' }
 TxCharacterSpan >> asStringOn: aStream upTo: index [
-	self asStringOn: aStream startingAt: 0 upTo: index.
+
+	self asStringOn: aStream startingAt: 0 upTo: index
 ]
 
 { #category : 'operation' }
 TxCharacterSpan >> at: aTxPosition insertSingleLine: aString [
 	"Insert a single line character string at the given position,
 	answer a new position pointing to the end of inserted string"
+
 	| insertionEnd |
 	insertionEnd := self size - aTxPosition spanPosition.
-	characters := String new: self size + aString size streamContents: [ :s|
-		s
+	characters := String new: self size + aString size streamContents: [ :aStream |
+		aStream
 			next: aTxPosition spanPosition putAll: characters; 
 			nextPutAll: aString;
 			next: insertionEnd putAll: characters startingAt: aTxPosition spanPosition + 1 ].
@@ -89,16 +96,16 @@ TxCharacterSpan >> at: aTxPosition insertSingleLine: aString [
 
 { #category : 'operations' }
 TxCharacterSpan >> canMerge: aCharacterSpan [
-	^ self style = aCharacterSpan style.
+
+	^ self style = aCharacterSpan style
 ]
 
 { #category : 'accessing' }
 TxCharacterSpan >> characterBeforePosition: spanPosition ifNone: aBlock [
-
 	"Answer character which is right before the position, located in receiver
 	or evaluate a block if there's none"
-	^ characters at: spanPosition ifAbsent: aBlock
 
+	^ characters at: spanPosition ifAbsent: aBlock
 ]
 
 { #category : 'accessing' }
@@ -133,22 +140,24 @@ TxCharacterSpan >> deleteUpTo: endPosition startingAt: startPosition [
 
 { #category : 'accessing-text position' }
 TxCharacterSpan >> endPosition [
+
 	^ self positionAt: self lastInsertPosition
 ]
 
 { #category : 'accessing' }
 TxCharacterSpan >> height [
+
 	| font |
 	font := self getAttribute: TxFontAttribute.
-	^font height
+	^ font height
 ]
 
 { #category : 'initialize-release' }
-TxCharacterSpan >> initialize [ 
+TxCharacterSpan >> initialize [
 
 	super initialize.
 
-	characters := String empty.
+	characters := String empty
 ]
 
 { #category : 'operation' }
@@ -157,7 +166,6 @@ TxCharacterSpan >> insertCharacters: chars at: position attributes: insertAttrib
 	answer a new position pointing to the end of inserted string"
 
 	| spanPos insertionEnd |
-
 	spanPos := position spanPosition.
 	
 	style = insertAttributes ifFalse: [
@@ -166,7 +174,7 @@ TxCharacterSpan >> insertCharacters: chars at: position attributes: insertAttrib
 		newSpan := (text newCharacterSpan: chars) replaceAttributes: insertAttributes.
 		
 		spanPos = 0 ifTrue: [
-			self insertPrev: newSpan.
+			self insertPrevious: newSpan.
 			^ self startPosition
 			].
 		
@@ -175,30 +183,28 @@ TxCharacterSpan >> insertCharacters: chars at: position attributes: insertAttrib
 		self insertNext: newSpan.
 		^ newSpan endPosition.
 	].
-		
+
 	"attributes are same, just insert characters"
  	insertionEnd := self size - spanPos.
-	characters := String new: self size + chars size streamContents: [ :s|
-		s
+	characters := String new: self size + chars size streamContents: [ :aStream |
+		aStream
 			next: spanPos putAll: characters; 
 			nextPutAll: chars;
 			next: insertionEnd putAll: characters startingAt: spanPos + 1 ].
 	
-	^ self positionAt: spanPos + chars size.
+	^ self positionAt: spanPos + chars size
 ]
 
 { #category : 'operation' }
 TxCharacterSpan >> insertLineSeparator: separator at: position [
 	
 	| spanPos |
-	
 	spanPos := position spanPosition.
 	
 	"at start"
 	spanPos = 0 ifTrue: [
-		self insertPrev: separator.
-		^ position
-		].
+		self insertPrevious: separator.
+		^ position ].
 	
 	"at end & middle"
 	spanPos < self size ifTrue: [ self splitAt: spanPos ].
@@ -332,7 +338,7 @@ TxCharacterSpan >> tryMergeAndUpdatePosition: position [
 	
 	self isEmpty ifTrue: [  
 		self delete.
-		^ prev endPosition ].
+		^ previous endPosition ].
 		
 	^ position
 ]

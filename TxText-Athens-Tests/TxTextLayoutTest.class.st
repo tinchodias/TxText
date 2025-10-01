@@ -9,28 +9,33 @@ Class {
 	#package : 'TxText-Athens-Tests'
 }
 
-{ #category : 'private' }
-TxTextLayoutTest >> defaultLayoutViewExtent [
-	^ self subclassResponsibility 
+{ #category : 'testing' }
+TxTextLayoutTest class >> isAbstract [
+
+	^ self == TxTextLayoutTest
 ]
 
 { #category : 'running' }
 TxTextLayoutTest >> setUp [
+
 	| text |
+	super setUp.
+
 	text := self newText: self textForView1.
-	view1 := self newViewOn:  text .
+	view1 := self newViewOn: text.
 	
 	text := self newText: self textForView2.
-	view2 := self newViewOn:  text .
-
+	view2 := self newViewOn: text
 ]
 
 { #category : 'private' }
 TxTextLayoutTest >> textForView1 [
-	^ self subclassResponsibility 
+
+	^ self subclassResponsibility
 ]
 
 { #category : 'private' }
 TxTextLayoutTest >> textForView2 [
-	^ self subclassResponsibility 
+
+	^ self subclassResponsibility
 ]
