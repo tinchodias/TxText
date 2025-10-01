@@ -15,62 +15,74 @@ I can also give access to an absolute position in text using #asTextIndex access
 
 "
 Class {
-	#name : #TxTextPosition,
-	#superclass : #TxBasicTextPosition,
+	#name : 'TxTextPosition',
+	#superclass : 'TxBasicTextPosition',
 	#instVars : [
 		'span',
 		'spanPosition'
 	],
-	#category : #'TxText-Model'
+	#category : 'TxText-Model',
+	#package : 'TxText-Model'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 TxTextPosition class >> on: aText [
+
 	^ self span: aText startSpan spanPosition: 0
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 TxTextPosition class >> span: span spanPosition: spanPosition [
 
 	^ self basicNew
-			span: span spanPosition: spanPosition
-
+		initializeSpan: span
+			spanPosition: spanPosition;
+		yourself
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 TxTextPosition >> asCursor [
 	^ TxTextCursor new position: self
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 TxTextPosition >> asPosition [
 	^ self
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxTextPosition >> deleteUpTo: aTxPosition [
 	^ span deleteUpTo: aTxPosition startingAt: self
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 TxTextPosition >> hash [
 	^ span hash bitXor: spanPosition hash
 ]
 
-{ #category : #operations }
+{ #category : 'initialize-release' }
+TxTextPosition >> initializeSpan: aSpan spanPosition: aSpanPosition [
+
+	self initialize.
+	span := aSpan.
+	spanPosition := aSpanPosition
+	
+]
+
+{ #category : 'operations' }
 TxTextPosition >> insert: aString [
 	^ span at: self insert: aString.
 
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxTextPosition >> insertObject: anObject [ 
 	"Answer the position right after the inserted object."
 	^ span at: self insertObject: anObject.
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxTextPosition >> linePosition: pos [
 	"Compute new position, located at new position in the same line as receiver.
 	If given position larger than line length, answer the position at the end of line.
@@ -93,12 +105,12 @@ TxTextPosition >> linePosition: pos [
 	^ self class span: linespan spanPosition: sz
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxTextPosition >> mergeUpTo: aTxPosition [
 	span deleteUpTo: aTxPosition startingAt: self
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxTextPosition >> moveDown: number [
 	"Answer the new position, *number* of lines below than receiver's line,
 	trying to preserve the same line position"
@@ -118,7 +130,7 @@ TxTextPosition >> moveDown: number [
 	
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxTextPosition >> moveLeft: number [
 	| newSpan newSpanPos |
 	
@@ -143,7 +155,7 @@ TxTextPosition >> moveLeft: number [
 	
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxTextPosition >> moveRight: number [
 	| newSpan newSpanPos |
 	(number < 0)
@@ -165,25 +177,25 @@ TxTextPosition >> moveRight: number [
 	
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxTextPosition >> moveTo: anotherTextPosition [
 
 	^ anotherTextPosition 
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxTextPosition >> moveToEnd [
 	^ self text endPosition
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxTextPosition >> moveToLineEnd [
 
 	^ (span nextLineSeparatorIfNone: [ ^ self text endPosition ])
 		startPosition
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxTextPosition >> moveToLineStart [
 	| sp |
 	self isAtLineStart ifTrue: [  ^ self ].
@@ -193,17 +205,17 @@ TxTextPosition >> moveToLineStart [
 	^ self text startPosition
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxTextPosition >> moveToStart [
 	^ self text startPosition
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxTextPosition >> moveUp [
 	^ self moveUp: 1
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxTextPosition >> moveUp: number [
 	| oldLinePosition  pos |
 	
@@ -222,7 +234,7 @@ TxTextPosition >> moveUp: number [
 
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxTextPosition >> nextPosition [
 	"answer the position which is right next to the receiver"
 	
@@ -231,18 +243,18 @@ TxTextPosition >> nextPosition [
 		ifTrue: [ span next startPosition ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxTextPosition >> nextPut: aCharacter [
 	self shouldBeImplemented 
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxTextPosition >> nextPutAll: aString [
 	^ self text at: self insert: aString
 
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 TxTextPosition >> printOn: aStream [
 
 	"super printOn: aStream. "
@@ -255,7 +267,7 @@ TxTextPosition >> printOn: aStream [
 		
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxTextPosition >> removeNextCharacter [
 	| copy |
 	copy := self copy.
@@ -263,7 +275,7 @@ TxTextPosition >> removeNextCharacter [
 	^ (self to: copy) cut start
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxTextPosition >> removePreviousCharacter [
 	| copy |
 	copy := self copy.
@@ -271,35 +283,27 @@ TxTextPosition >> removePreviousCharacter [
 	^ (copy to: self) cut start
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxTextPosition >> span [
 	^ span
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxTextPosition >> span: aSpan [
 	span := aSpan.
 ]
 
-{ #category : #'initialize-release' }
-TxTextPosition >> span: aSpan spanPosition: aSpanPosition [
-
-	span := aSpan.
-	spanPosition := aSpanPosition
-	
-]
-
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxTextPosition >> spanPosition [
 	^ spanPosition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxTextPosition >> spanPosition: anInteger [
 	spanPosition := anInteger
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxTextPosition >> text [
 	^ span text
 ]

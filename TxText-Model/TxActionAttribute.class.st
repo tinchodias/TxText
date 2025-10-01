@@ -6,38 +6,39 @@ Instance Variables:
 #value - an action block, with an optional argument to receive the event
 "
 Class {
-	#name : #TxActionAttribute,
-	#superclass : #TxAttribute,
+	#name : 'TxActionAttribute',
+	#superclass : 'TxAttribute',
 	#instVars : [
 		'filter'
 	],
 	#classVars : [
 		'Default'
 	],
-	#category : #'TxText-Model'
+	#category : 'TxText-Model',
+	#package : 'TxText-Model'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 TxActionAttribute class >> defaultValue [
 	^ Default ifNil: [  Default := self new ]
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 TxActionAttribute >> = anObject [
 	^ super = anObject and: [ filter = anObject filter ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxActionAttribute >> filter [
 	^ filter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxActionAttribute >> filter: aBlock [
 	filter := aBlock
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 TxActionAttribute >> filterEvent: anEvent [
 	"Answer true if event passes the filter, false otherwise"
 	
@@ -45,7 +46,7 @@ TxActionAttribute >> filterEvent: anEvent [
 	^ filter value: anEvent
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 TxActionAttribute >> handleEvent: anEvent [
 	"Answer true if event passes the filter, false otherwise"
 	
@@ -57,7 +58,7 @@ TxActionAttribute >> handleEvent: anEvent [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxActionAttribute >> value [
 	^ self
 ]

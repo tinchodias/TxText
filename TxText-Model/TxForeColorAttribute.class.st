@@ -2,12 +2,13 @@
 I represent the foreground color of a text span
 "
 Class {
-	#name : #TxForeColorAttribute,
-	#superclass : #TxAttribute,
-	#category : #'TxText-Model'
+	#name : 'TxForeColorAttribute',
+	#superclass : 'TxAttribute',
+	#category : 'TxText-Model',
+	#package : 'TxText-Model'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 TxForeColorAttribute class >> defaultValue [ 
 	^ Smalltalk ui theme textColor
 ]

@@ -2,25 +2,26 @@
 I represent a selection interval of a text.
 "
 Class {
-	#name : #TxSelection,
-	#superclass : #TxInterval,
-	#category : #'TxText-Model'
+	#name : 'TxSelection',
+	#superclass : 'TxInterval',
+	#category : 'TxText-Model',
+	#package : 'TxText-Model'
 }
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxSelection >> all [
 	self beSelection.
 	start moveToStart.
 	end moveToEnd.
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxSelection >> applyAttribute: anAttribute [
 
 	self text applyAttribute: anAttribute onSelection: self.
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxSelection >> backspaceKey [
 	"behave as if user pressed the Backspace key"
 	
@@ -30,20 +31,20 @@ TxSelection >> backspaceKey [
 	self cut
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxSelection >> beCursor [
 
 	self collapse
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxSelection >> beSelection [
 	"make sure that start and end are distinct objects,
 	so when you start moving one, you don't move the other one"
 	end == start ifTrue: [ end := start copy ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxSelection >> collapse [
 
 	"collapse the selection (making start == end)"
@@ -51,7 +52,7 @@ TxSelection >> collapse [
 	start position: end position.
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxSelection >> cut [
 	
 	"Delete the portion of text selected by receiver.
@@ -64,12 +65,12 @@ TxSelection >> cut [
 		end:  position.
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxSelection >> delete [
 	self cut
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxSelection >> deleteKey [
 	"behave as if user pressed the Delete key"
 	
@@ -79,42 +80,42 @@ TxSelection >> deleteKey [
 	self cut
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxSelection >> end: aPosition [
 	end position: aPosition asPosition
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 TxSelection >> initStart: startPosition end: endPosition [
 
 	start := startPosition asCursor.
 	end := endPosition asCursor 
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TxSelection >> isCursor [
 
 	^ end == start
 ]
 
-{ #category : #debugging }
+{ #category : 'debugging' }
 TxSelection >> isValid [
 	^ start isValid and: [ end isValid ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxSelection >> none [
 	self collapse.
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 TxSelection >> postCopy [
 	start := start copy.
 	end := end copy.
 
 ]
 
-{ #category : #helpers }
+{ #category : 'helpers' }
 TxSelection >> preservePositionsDuring: aBlock [
 	"Restore start and end after evaluating a block, using slow text index calculation"
 	
@@ -129,7 +130,7 @@ TxSelection >> preservePositionsDuring: aBlock [
 	]. 
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxSelection >> replaceWith: aString [
 
 	self cut.
@@ -137,7 +138,7 @@ TxSelection >> replaceWith: aString [
 	start moveTo: end
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxSelection >> start: aPosition [
 	start position: aPosition asPosition
 ]

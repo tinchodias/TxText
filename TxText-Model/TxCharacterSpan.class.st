@@ -2,20 +2,21 @@
 I am the span which holds characters. Usually i am most often used span type (along with line separator).
 "
 Class {
-	#name : #TxCharacterSpan,
-	#superclass : #TxSpanWithStyle,
+	#name : 'TxCharacterSpan',
+	#superclass : 'TxSpanWithStyle',
 	#instVars : [
 		'characters'
 	],
-	#category : #'TxText-Model'
+	#category : 'TxText-Model',
+	#package : 'TxText-Model'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 TxCharacterSpan class >> text: aText [
 	^ self text: aText characters: String empty
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 TxCharacterSpan class >> text: aText characters: aString [
 	^ self new
 		text: aText;
@@ -23,14 +24,14 @@ TxCharacterSpan class >> text: aText characters: aString [
 		yourself.
 ]
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 TxCharacterSpan >> accept: anObject [
 	"visitor pattern"
 	
 	^ anObject visitCharacterSpan: self
 ]
 
-{ #category : #operation }
+{ #category : 'operation' }
 TxCharacterSpan >> applyAttribute: anAttribute from: startPosition to: endPosition [
 	| splitStart splitEnd secondSpan |
 	(style includes: anAttribute)
@@ -51,27 +52,27 @@ TxCharacterSpan >> applyAttribute: anAttribute from: startPosition to: endPositi
 	secondSpan applyAttribute: anAttribute
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 TxCharacterSpan >> asStringOn: aStream [
 	aStream nextPutAll: characters.
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 TxCharacterSpan >> asStringOn: aStream startingAt: index [
 	self asStringOn: aStream startingAt: index upTo: characters size.
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 TxCharacterSpan >> asStringOn: aStream startingAt: startIndex upTo: endIndex [
 	aStream nextPutAll: (characters copyFrom: startIndex + 1 to: endIndex).
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 TxCharacterSpan >> asStringOn: aStream upTo: index [
 	self asStringOn: aStream startingAt: 0 upTo: index.
 ]
 
-{ #category : #operation }
+{ #category : 'operation' }
 TxCharacterSpan >> at: aTxPosition insertSingleLine: aString [
 	"Insert a single line character string at the given position,
 	answer a new position pointing to the end of inserted string"
@@ -86,12 +87,12 @@ TxCharacterSpan >> at: aTxPosition insertSingleLine: aString [
 	^ self positionAt: aTxPosition spanPosition + aString size.
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxCharacterSpan >> canMerge: aCharacterSpan [
 	^ self style = aCharacterSpan style.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxCharacterSpan >> characterBeforePosition: spanPosition ifNone: aBlock [
 
 	"Answer character which is right before the position, located in receiver
@@ -100,18 +101,18 @@ TxCharacterSpan >> characterBeforePosition: spanPosition ifNone: aBlock [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxCharacterSpan >> characters [
 	^ characters
 ]
 
-{ #category : #accessing }
-TxCharacterSpan >> characters: anObject [
+{ #category : 'accessing' }
+TxCharacterSpan >> characters: aString [
 	
-	characters := anObject
+	characters := aString
 ]
 
-{ #category : #operation }
+{ #category : 'operation' }
 TxCharacterSpan >> deleteUpTo: endPosition startingAt: startPosition [
 	"Note, startPosition span == self" 
 	
@@ -130,19 +131,19 @@ TxCharacterSpan >> deleteUpTo: endPosition startingAt: startPosition [
 
 ]
 
-{ #category : #'accessing-text position' }
+{ #category : 'accessing-text position' }
 TxCharacterSpan >> endPosition [
 	^ self positionAt: self lastInsertPosition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxCharacterSpan >> height [
 	| font |
 	font := self getAttribute: TxFontAttribute.
 	^font height
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 TxCharacterSpan >> initialize [ 
 
 	super initialize.
@@ -150,7 +151,7 @@ TxCharacterSpan >> initialize [
 	characters := String empty.
 ]
 
-{ #category : #operation }
+{ #category : 'operation' }
 TxCharacterSpan >> insertCharacters: chars at: position attributes: insertAttributes [
 	"Insert a single line character string at the given position,
 	answer a new position pointing to the end of inserted string"
@@ -186,7 +187,7 @@ TxCharacterSpan >> insertCharacters: chars at: position attributes: insertAttrib
 	^ self positionAt: spanPos + chars size.
 ]
 
-{ #category : #operation }
+{ #category : 'operation' }
 TxCharacterSpan >> insertLineSeparator: separator at: position [
 	
 	| spanPos |
@@ -207,33 +208,33 @@ TxCharacterSpan >> insertLineSeparator: separator at: position [
  
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TxCharacterSpan >> isCharacterSpan [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TxCharacterSpan >> isEmpty [
 	^self size = 0
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TxCharacterSpan >> isLastPosition: position [
 	^ position = self size
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxCharacterSpan >> lastInsertPosition [
 	^ characters size 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxCharacterSpan >> lineNumberAt: aTxTextPosition [ 
 	"i am not changing the number of lines"
 	^ self numberOfLinesBefore.
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 TxCharacterSpan >> merge: aSpan [
 	self characters: ((self characters), aSpan characters).
 	"I'am at the end of the text"
@@ -248,7 +249,7 @@ TxCharacterSpan >> merge: aSpan [
 	
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxCharacterSpan >> mergeUpTo: aSpan [
 	aSpan = self next
 		ifTrue: [
@@ -264,14 +265,14 @@ TxCharacterSpan >> mergeUpTo: aSpan [
 		ifFalse: [ ^ self next mergeUpTo: aSpan ].
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 TxCharacterSpan >> postCopy [
 	
 	super postCopy.
 	characters := characters copy.
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 TxCharacterSpan >> printContentsOn: aStream [
 	aStream 
 		nextPutAll: '"';
@@ -280,30 +281,30 @@ TxCharacterSpan >> printContentsOn: aStream [
 	
 ]
 
-{ #category : #operation }
+{ #category : 'operation' }
 TxCharacterSpan >> removeAfter: anOffset [
 	characters := characters first: anOffset.
 	characters isEmpty ifTrue: [ self delete ]
 ]
 
-{ #category : #operation }
+{ #category : 'operation' }
 TxCharacterSpan >> removeBefore: aSize [
 	characters := characters allButFirst: aSize
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 TxCharacterSpan >> removeFrom: start to: end [
 	"remove all the characters in the given range. 
 	Note that start is 0 based as it is the start point of the selection, left from the character"
 	characters := characters copyReplaceFrom: (start + 1) to: end with: ''.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxCharacterSpan >> size [
 	^ characters size
 ]
 
-{ #category : #operation }
+{ #category : 'operation' }
 TxCharacterSpan >> splitAt: offset [
 	| newSpan |
 	characters ifEmpty: [ ^ self ].
@@ -316,12 +317,12 @@ TxCharacterSpan >> splitAt: offset [
 	^ self insertNext: newSpan.
 ]
 
-{ #category : #'accessing-text position' }
+{ #category : 'accessing-text position' }
 TxCharacterSpan >> startPosition [
 	^ self positionAt: 0
 ]
 
-{ #category : #operation }
+{ #category : 'operation' }
 TxCharacterSpan >> tryMergeAndUpdatePosition: position [
 
 	"try to merge receiver with its neighbors, answer the updated position"
@@ -336,7 +337,7 @@ TxCharacterSpan >> tryMergeAndUpdatePosition: position [
 	^ position
 ]
 
-{ #category : #operation }
+{ #category : 'operation' }
 TxCharacterSpan >> tryMergeWithNext [
 	"Applicable only to character spans.
 	
@@ -353,7 +354,7 @@ TxCharacterSpan >> tryMergeWithNext [
 
 ]
 
-{ #category : #operation }
+{ #category : 'operation' }
 TxCharacterSpan >> tryMergeWithNextPreserving: selection [
 	"Applicable only to character spans"
 	

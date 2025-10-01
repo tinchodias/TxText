@@ -1,1 +1,1 @@
-Package { #name : #'TxText-Model' }
+Package { #name : 'TxText-Model' }

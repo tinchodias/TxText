@@ -2,12 +2,13 @@
 I represent the font of a text span
 "
 Class {
-	#name : #TxFontAttribute,
-	#superclass : #TxAttribute,
-	#category : #'TxText-Model'
+	#name : 'TxFontAttribute',
+	#superclass : 'TxAttribute',
+	#category : 'TxText-Model',
+	#package : 'TxText-Model'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 TxFontAttribute class >> defaultValue [ 
 	| font |
 	
@@ -22,7 +23,7 @@ TxFontAttribute class >> defaultValue [
 	^ font
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 TxFontAttribute class >> fontNamed: aFamilyName size: pointSize [
 
 	^  self new value: (LogicalFont familyName: aFamilyName pointSize: pointSize )

@@ -3,19 +3,20 @@ End span is span which _always_ last span of text and only one.
 So this span used to denote end of text.
 "
 Class {
-	#name : #TxEndSpan,
-	#superclass : #TxTerminalSpan,
-	#category : #'TxText-Model'
+	#name : 'TxEndSpan',
+	#superclass : 'TxTerminalSpan',
+	#category : 'TxText-Model',
+	#package : 'TxText-Model'
 }
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 TxEndSpan >> accept: anObject [
 	"visitor pattern"
 	
 	^ anObject visitEndSpan: self
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 TxEndSpan >> appendCopyTo: anotherText [
 	"Create a copy of receiver and append it to the another text (at the end of it).
 	Answer the copy"
@@ -24,7 +25,7 @@ TxEndSpan >> appendCopyTo: anotherText [
 	^ anotherText endSpan
 ]
 
-{ #category : #operation }
+{ #category : 'operation' }
 TxEndSpan >> at: aTxTextPosition insertSingleLine: aString [ 
 
 	prev isCharacterSpan ifFalse: [
@@ -34,7 +35,7 @@ TxEndSpan >> at: aTxTextPosition insertSingleLine: aString [
 	^ prev at: prev endPosition insertSingleLine: aString 
 ]
 
-{ #category : #operation }
+{ #category : 'operation' }
 TxEndSpan >> insertCharacters: chars at: position attributes: insertAttributes [
 	
 	"Insert characters (no line separators allowed!!!), with given attributes at given position in receiver.
@@ -54,48 +55,48 @@ TxEndSpan >> insertCharacters: chars at: position attributes: insertAttributes [
 	
 ]
 
-{ #category : #operation }
+{ #category : 'operation' }
 TxEndSpan >> insertLineSeparator: separator at: position [
 
 	self insertPrev: separator.
 	^ position
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TxEndSpan >> isAtEnd [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxEndSpan >> lineNumberAt: aTxTextPosition [
 	"same as my previous span"
 	^ prev lineNumberAt: prev endPosition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxEndSpan >> next: anObject [
 	self error: 'End span cannot have next span!'
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 TxEndSpan >> printOn: aStream [
 	 aStream nextPutAll: ' >>' 
 ]
 
-{ #category : #operation }
+{ #category : 'operation' }
 TxEndSpan >> removeBefore: anIndex [
 
 	self assert: anIndex = 0.
 	^ self
 ]
 
-{ #category : #'accessing-text position' }
+{ #category : 'accessing-text position' }
 TxEndSpan >> replaceAttributes: newAttributes [
 	"replace receiver's attributes by copying from given one"
 	^ self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxEndSpan >> style [
 	"My attributes are always same as my previous span,
 	unless text is empty, then it is default text attributes"

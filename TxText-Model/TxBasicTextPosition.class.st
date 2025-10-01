@@ -2,19 +2,20 @@
 I am an abstract class, defining the protocol for a text position.
 "
 Class {
-	#name : #TxBasicTextPosition,
-	#superclass : #Magnitude,
-	#category : #'TxText-Model'
+	#name : 'TxBasicTextPosition',
+	#superclass : 'Magnitude',
+	#category : 'TxText-Model',
+	#package : 'TxText-Model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicTextPosition >> + anInteger [
 	"Answer the position moved anInteger times right (positive) or left (negative) relative to receiver"
 	
 	^ self moveRight: anInteger
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicTextPosition >> -- aPosition [
 	"Answer the distance between receiver and position, in terms of number of moving receiver right (positive)
 	or left (negative) until it meets a given position. Answer zero if two positions coincide"
@@ -26,7 +27,7 @@ TxBasicTextPosition >> -- aPosition [
 		ifFalse: [ (aPosition timesToMoveRightTo: self) negated ]
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 TxBasicTextPosition >> < aPosition [
 	"Answer true if receiver is closer to start of the text than argument, false otherwise.
 	Note, both positions should belong to same text"
@@ -41,28 +42,28 @@ TxBasicTextPosition >> < aPosition [
 	^ self span < aPosition span
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 TxBasicTextPosition >> = anObject [
 	^ (anObject isKindOf: TxBasicTextPosition) and: [
 		anObject text = self text and: [ anObject span = self span and: [ anObject spanPosition = self spanPosition ]]]
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 TxBasicTextPosition >> asCursor [
 	^ self subclassResponsibility 
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 TxBasicTextPosition >> asPosition [
 	^ self subclassResponsibility 
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 TxBasicTextPosition >> asSelection [
 	^ TxSelection from: self to: self
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 TxBasicTextPosition >> asTextIndex [
 	"Answer the absolute index which corresponds to receiver's location inside text.
 	The resulting number is equivalent to the number of times of moving text starting position
@@ -81,14 +82,14 @@ TxBasicTextPosition >> asTextIndex [
 	^ self text startPosition timesToMoveRightTo: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicTextPosition >> characterStream [
 	"answer the character stream, starting at receiver's position"
 	
 	^ TxCharacterStream onPosition: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicTextPosition >> getCharacter [
 	"Answer the character, right before the receiver,
 	answer nil, if there's no character at given position"
@@ -96,7 +97,7 @@ TxBasicTextPosition >> getCharacter [
 	^ self span characterBeforePosition: self spanPosition ifNone: nil
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 TxBasicTextPosition >> hasSamePositionAs: position [
 	"Answer true if receiver having same position (in terms of text index) as another position.
 	See #textIndex for explanation of text index"
@@ -112,12 +113,12 @@ TxBasicTextPosition >> hasSamePositionAs: position [
 	^ false
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 TxBasicTextPosition >> hash [
 	^ self span hash bitXor: self spanPosition hash
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxBasicTextPosition >> insert: aString [ 
 	"
 	Insert a possibly multi-line string at given position of receiver.
@@ -127,7 +128,7 @@ TxBasicTextPosition >> insert: aString [
 	self subclassResponsibility 
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxBasicTextPosition >> insertObject: anObject [ 
 	"
 	Insert an embedded object at receiver.
@@ -136,59 +137,59 @@ TxBasicTextPosition >> insertObject: anObject [
 	self subclassResponsibility 
 ]
 
-{ #category : #'error handling' }
+{ #category : 'error handling' }
 TxBasicTextPosition >> invalidPosition [
 	"The receiver is no longer a valid text position for TxModel"
 
 	Error signal: 'Invalid text position'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TxBasicTextPosition >> isAtEnd [
 	"Answer true if receiver points to the end of text"
 	^ self span next isAtEnd and: [ self spanPosition = self span size ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TxBasicTextPosition >> isAtLineEnd [
 	^ (self spanPosition = 0 and: [ self span isLineSeparator ])
 		or: [  (self isAtSpanEnd and: [self span next isLineSeparator ])]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TxBasicTextPosition >> isAtLineStart [
 	^ self isAtStart or: [ self span isLineSeparator and: [ self isAtSpanEnd ] ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TxBasicTextPosition >> isAtSpanEnd [
 	^ self span isLastPosition: self spanPosition
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TxBasicTextPosition >> isAtSpanStart [
 	^ self spanPosition = 0
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TxBasicTextPosition >> isAtStart [
 	"Answer true if receiver points to the start of text"
 
 	^ self span prev isAtStart and: [ self spanPosition = 0 ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TxBasicTextPosition >> isValid [
 	^ (self text includesSpan: self span) and: [ self spanPosition between: 0 and: self span size ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicTextPosition >> lineNumber [
 	"Answer the 1-based line number, where receiver is currently in. "
 	^ self span lineNumberAt: self 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicTextPosition >> linePosition [
 	"Answer the position of receiver, relative to line start. "
 
@@ -202,35 +203,35 @@ TxBasicTextPosition >> linePosition [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicTextPosition >> linePosition: offset [ 
 	"Answer the position, in same line as receiver, relative to line start.
 	If offset bigger than line size, answer position for the end of line. "
 	self subclassResponsibility
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxBasicTextPosition >> moveDown [
 	^ self moveDown: 1
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxBasicTextPosition >> moveDown: number [
 	self subclassResponsibility 
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxBasicTextPosition >> moveLeft [
 	
 	^ self moveLeft: 1
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxBasicTextPosition >> moveLeft: number [
 	self subclassResponsibility 
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxBasicTextPosition >> moveRight [
 
 	^ self moveRight: 1
@@ -238,54 +239,54 @@ TxBasicTextPosition >> moveRight [
 
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxBasicTextPosition >> moveRight: number [
 	self subclassResponsibility 
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxBasicTextPosition >> moveTo: anotherTextPosition [
 
 	self subclassResponsibility 
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxBasicTextPosition >> moveToEnd [
 	self subclassResponsibility 
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxBasicTextPosition >> moveToLineEnd [
 	self subclassResponsibility 
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxBasicTextPosition >> moveToLineStart [
 	self subclassResponsibility 
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxBasicTextPosition >> moveToStart [
 	self subclassResponsibility 
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxBasicTextPosition >> moveUp [
 	^ self moveUp: 1
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxBasicTextPosition >> moveUp: number [
 	self subclassResponsibility 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicTextPosition >> nextPosition [
 	"answer the position in text, which follows the receiver"
 	self subclassResponsibility 
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 TxBasicTextPosition >> printTextOn: aStream upTo: endPosition [ 
 
 	self span == endPosition span ifTrue: [ 
@@ -298,31 +299,31 @@ TxBasicTextPosition >> printTextOn: aStream upTo: endPosition [
 	
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 TxBasicTextPosition >> selectTo: aPosition [
 	^ self text newSelection start: self; end: aPosition; yourself 
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicTextPosition >> span [
 	"Answer the span, where receiver is currently in. "
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicTextPosition >> spanPosition [
 	"Answer the span position, where receiver is currently in. "
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicTextPosition >> text [
 	"Answer the TxModel instance where receiver is pointing in. "
 	self subclassResponsibility
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 TxBasicTextPosition >> timesToMoveRightTo: aPosition [
 	"Private.
 	Assuming that receiver <= aPosition, answer the number of times
@@ -346,7 +347,7 @@ TxBasicTextPosition >> timesToMoveRightTo: aPosition [
 	self invalidPosition
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 TxBasicTextPosition >> to: aPosition [
 	^ TxInterval from: self to: aPosition
 ]

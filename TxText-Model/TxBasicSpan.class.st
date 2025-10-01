@@ -12,24 +12,25 @@ In this way TxTextPosition can navigate a span (using moveLeft/moveRight command
 without actually needing to deal with strings, characters or anything else.
 "
 Class {
-	#name : #TxBasicSpan,
-	#superclass : #Object,
+	#name : 'TxBasicSpan',
+	#superclass : 'Object',
 	#instVars : [
 		'next',
 		'prev',
 		'text'
 	],
-	#category : #'TxText-Model'
+	#category : 'TxText-Model',
+	#package : 'TxText-Model'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 TxBasicSpan class >> text: aTxModel [
 	^ self new
 		initWithText: aTxModel;
 		yourself
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TxBasicSpan >> < aSpan [
 	"Answer whether the receiver is closer to the start of the text than than argument.
 	NB: both spans must belong to the same text"
@@ -59,27 +60,27 @@ TxBasicSpan >> < aSpan [
 	
 ]
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 TxBasicSpan >> accept: anObject [
 	"visitor pattern"
 	
 	self subclassResponsibility 
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 TxBasicSpan >> appendCopyTo: anotherText [
 	"Answer anotherText, with a copy of myself appended to it"
 	
 	self subclassResponsibility 
 ]
 
-{ #category : #attributes }
+{ #category : 'attributes' }
 TxBasicSpan >> applyAttribute: anAttribute [
 
 	self subclassResponsibility 
 ]
 
-{ #category : #attributes }
+{ #category : 'attributes' }
 TxBasicSpan >> applyAttribute: anAttribute from: startPosition to: endPosition [
 	
 	"
@@ -99,22 +100,22 @@ TxBasicSpan >> applyAttribute: anAttribute from: startPosition to: endPosition [
 	self subclassResponsibility 
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 TxBasicSpan >> asStringOn: aStream [
 	"specialize in subclasses	"
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 TxBasicSpan >> asStringOn: aStream startingAt: startIndex upTo: endIndex [
 	"specialized in subclasses"
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 TxBasicSpan >> asStringOn: aStream upTo: index [
 	self asStringOn: aStream startingAt: 0 upTo: index.
 ]
 
-{ #category : #operation }
+{ #category : 'operation' }
 TxBasicSpan >> at: txPosition insert: aString [
 	"
 	Insert a possibly multi-line string at given position of receiver.
@@ -143,7 +144,7 @@ TxBasicSpan >> at: txPosition insert: aString [
 	^ position
 ]
 
-{ #category : #operation }
+{ #category : 'operation' }
 TxBasicSpan >> at: txPosition insertObject: anObject [
 
 	| newSpan |
@@ -168,24 +169,24 @@ TxBasicSpan >> at: txPosition insertObject: anObject [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicSpan >> attributeAt: anAttributeClass [
 	^ self style get: anAttributeClass
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 TxBasicSpan >> basicNext: anObject [
 	
 	next := anObject
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 TxBasicSpan >> basicPrev: anObject [
 	
 	prev := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicSpan >> characterBeforePosition: spanPosition ifNone: aBlock [
 
 	"Answer character which is right before the position, located in receiver
@@ -193,13 +194,13 @@ TxBasicSpan >> characterBeforePosition: spanPosition ifNone: aBlock [
 	^ aBlock value
 ]
 
-{ #category : #operation }
+{ #category : 'operation' }
 TxBasicSpan >> delete [
 	"remove myself from the span list".
 	prev next: next.
 ]
 
-{ #category : #operation }
+{ #category : 'operation' }
 TxBasicSpan >> deleteUpTo: end startingAt: start [
 	"start and end pointing to receiver, nothing to remove"
 	self assert: start span == self.
@@ -217,20 +218,20 @@ TxBasicSpan >> deleteUpTo: end startingAt: start [
 
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 TxBasicSpan >> do: aBlock [
 	| span |
 	span := self.
 	[ aBlock value: span. span := span nextIfNone: [ ^ self ] ] repeat.
 ]
 
-{ #category : #'accessing-text position' }
+{ #category : 'accessing-text position' }
 TxBasicSpan >> endPosition [
 	"answer the text position, pointing to the end of receiver"
 	self subclassResponsibility
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 TxBasicSpan >> first [
 	| span |
 	span := self.
@@ -238,24 +239,24 @@ TxBasicSpan >> first [
 	^ span
 ]
 
-{ #category : #attributes }
+{ #category : 'attributes' }
 TxBasicSpan >> getAttribute: anAttributeClass [
 
 	^self style get: anAttributeClass ifAbsent: [ text defaultStyle get: anAttributeClass ] 
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 TxBasicSpan >> initWithText: anObject [
 	
 	text := anObject
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 TxBasicSpan >> initialize [
 	next := prev := self
 ]
 
-{ #category : #operation }
+{ #category : 'operation' }
 TxBasicSpan >> insertCharacters: chars at: position attributes: insertAttributes [
 
 	"Insert characters (no line separators allowed!!!), with given attributes at given position into receiver.
@@ -265,7 +266,7 @@ TxBasicSpan >> insertCharacters: chars at: position attributes: insertAttributes
 	self subclassResponsibility 
 ]
 
-{ #category : #operation }
+{ #category : 'operation' }
 TxBasicSpan >> insertNewLine: aString [ 
 	"Insert a newline then the String"
 	| newline chars |
@@ -277,7 +278,7 @@ TxBasicSpan >> insertNewLine: aString [
 	^ chars
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicSpan >> insertNext: aSpans [
 	"insert new span(s) after receiver. "
 	| oldNext |
@@ -290,7 +291,7 @@ TxBasicSpan >> insertNext: aSpans [
 	^ aSpans
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicSpan >> insertPrev: aSpan [
 	
 	self isAtStart 
@@ -300,48 +301,48 @@ TxBasicSpan >> insertPrev: aSpan [
 
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TxBasicSpan >> isAtEnd [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TxBasicSpan >> isAtLineEnd [
 	^ self isAtEnd or: [ next isLineSeparator ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TxBasicSpan >> isAtLineStart [
 	^ self isAtStart or: [ self prev isLineSeparator ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TxBasicSpan >> isAtLineStart: spanPosition [
 	"just after the line start"
 	^ spanPosition = 0 and: [ prev isLineSeparator ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TxBasicSpan >> isAtStart [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TxBasicSpan >> isCharacterSpan [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TxBasicSpan >> isLastPosition: aNumber [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TxBasicSpan >> isLineSeparator [
 	^ false
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 TxBasicSpan >> last [
 	| span |
 	span := self.
@@ -349,12 +350,12 @@ TxBasicSpan >> last [
 	^ span
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicSpan >> lastInsertPosition [
 	^ 0
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicSpan >> lineEndSpan [
 	"Answer the last span in the same line as receiver" 
 	self
@@ -363,7 +364,7 @@ TxBasicSpan >> lineEndSpan [
 	Error signal: 'Should not happen'.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicSpan >> lineNumber [
 	| number |
 	number := 1.
@@ -375,17 +376,17 @@ TxBasicSpan >> lineNumber [
 	self error: 'cannot happen'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicSpan >> lineNumberAt: aTxTextPosition [ 
 	self subclassResponsibility.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicSpan >> lineSize [
 	^ self lineStartSpan sizeToLineEnd 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicSpan >> lineStartSpan [
 	" return the closest line start span "
 	self reverseDo: [ :span | 
@@ -393,20 +394,20 @@ TxBasicSpan >> lineStartSpan [
 	Error signal: 'Should not happen'.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicSpan >> lineStartSpanIfNone: aBlock [
 	self reverseDo: [ :span | 
 		span isAtLineStart ifTrue: [ ^ span ]].
 	^ aBlock value 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicSpan >> next [
 	
 	^ next
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicSpan >> next: anObject [
 	
 	self basicNext: anObject.
@@ -414,13 +415,13 @@ TxBasicSpan >> next: anObject [
 	^ anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicSpan >> nextIfNone: aBlock [
 	
 	^ next == self ifTrue: [ aBlock value] ifFalse: [ next ]
 ]
 
-{ #category : #operation }
+{ #category : 'operation' }
 TxBasicSpan >> nextLineIfNone: aBlock [
 	| span |
 	
@@ -429,7 +430,7 @@ TxBasicSpan >> nextLineIfNone: aBlock [
 	^ span next next
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicSpan >> nextLineSeparatorIfNone: aBlock [
 	"Find a nearest line separator next to receiver or evaluate a block if none found"
 	
@@ -439,7 +440,7 @@ TxBasicSpan >> nextLineSeparatorIfNone: aBlock [
 	^ span
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicSpan >> numberOfLinesBefore [
 	"Count the number of lines just before the receiver"
 	| number |
@@ -452,18 +453,18 @@ TxBasicSpan >> numberOfLinesBefore [
 	self error: 'cannot happen'
 ]
 
-{ #category : #'accessing-text position' }
+{ #category : 'accessing-text position' }
 TxBasicSpan >> positionAt: characterIndex [
 	^ TxTextPosition span: self spanPosition: characterIndex
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicSpan >> prev [
 	
 	^ prev
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicSpan >> prev: anObject [
 	
 	self basicPrev: anObject.
@@ -471,13 +472,13 @@ TxBasicSpan >> prev: anObject [
 	^ anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicSpan >> prevIfNone: aBlock [
 	
 	^ prev == self ifTrue: [ aBlock value] ifFalse: [ prev ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 TxBasicSpan >> printTextOn: aStream upTo: endSpan [ 
 	self do: [ :eachSpan |
 		
@@ -489,13 +490,13 @@ TxBasicSpan >> printTextOn: aStream upTo: endSpan [
 		
 ]
 
-{ #category : #attributes }
+{ #category : 'attributes' }
 TxBasicSpan >> replaceAttributes: newAttributes [
 	"replace receiver's attributes by copying from given one"
 	self subclassResponsibility 
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 TxBasicSpan >> reverseDo: aBlock [
 	| span |
 	span := self.
@@ -503,7 +504,7 @@ TxBasicSpan >> reverseDo: aBlock [
 	[ aBlock value: span. span := span prevIfNone: [ ^ self ] ] repeat
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicSpan >> sizeToLineEnd [
 	| size |
 	size := 0.
@@ -513,7 +514,7 @@ TxBasicSpan >> sizeToLineEnd [
 	Error signal: 'Should not happen!'.
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 TxBasicSpan >> spanAndPositionDo:  aBlock [
 	| position |
 	position := 0.
@@ -522,7 +523,7 @@ TxBasicSpan >> spanAndPositionDo:  aBlock [
 		position := position + span size ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 TxBasicSpan >> splitLinesOf: aString [
 
 
@@ -534,13 +535,13 @@ TxBasicSpan >> splitLinesOf: aString [
 	^ lines
 ]
 
-{ #category : #'accessing-text position' }
+{ #category : 'accessing-text position' }
 TxBasicSpan >> startPosition [
 	"answer the text position, pointing to the start of receiver"
 	self subclassResponsibility
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 TxBasicSpan >> string: aString linesDo: aBlock [
 
 	| stream cr current|
@@ -558,12 +559,12 @@ TxBasicSpan >> string: aString linesDo: aBlock [
 	aBlock value: current contents
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicSpan >> style [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicSpan >> styleAtPosition: txPosition [ 
 
 	"The receiver's attributes is defined for the next line,
@@ -573,24 +574,24 @@ TxBasicSpan >> styleAtPosition: txPosition [
 	^ self style
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicSpan >> text [
 	
 	^ text
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxBasicSpan >> text: aTxModel [
 	text := aTxModel.
 ]
 
-{ #category : #operation }
+{ #category : 'operation' }
 TxBasicSpan >> tryMergeWithNext [
 	"Applicable only to character spans"
 	^ self
 ]
 
-{ #category : #operation }
+{ #category : 'operation' }
 TxBasicSpan >> tryMergeWithNextPreserving: selection [
 	"Applicable only to character spans"
 	^ self

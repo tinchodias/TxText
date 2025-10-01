@@ -13,17 +13,18 @@ I don't provide a direct interface for mutating/editing my data (and this is a v
 
 "
 Class {
-	#name : #TxModel,
-	#superclass : #Object,
+	#name : 'TxModel',
+	#superclass : 'Object',
 	#instVars : [
 		'startSpan',
 		'endSpan',
 		'styles'
 	],
-	#category : #'TxText-Model'
+	#category : 'TxText-Model',
+	#package : 'TxText-Model'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 TxModel class >> fromString: aString [
 	| text |
 	text := self new.
@@ -31,13 +32,13 @@ TxModel class >> fromString: aString [
 	^ text
 ]
 
-{ #category : #'private-styles' }
+{ #category : 'private-styles' }
 TxModel >> addStyle: aTxStyle [
 
 	^ styles addStyle: aTxStyle 
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 TxModel >> applyAttribute: anAttribute onSelection: selection [
 	"Preserve the selection interval while modifying the text"
 	
@@ -57,34 +58,34 @@ TxModel >> applyAttribute: anAttribute onSelection: selection [
 	
 ]
 
-{ #category : #conversion }
+{ #category : 'conversion' }
 TxModel >> asString [ 
 	^ String streamContents: [ :str | self asStringOn: str ]
 	
 ]
 
-{ #category : #conversion }
+{ #category : 'conversion' }
 TxModel >> asStringOn: aStream [
 	self spansDo: [ :span | span asStringOn: aStream ].
 ]
 
-{ #category : #conversion }
+{ #category : 'conversion' }
 TxModel >> asTxModel [
 	^ self
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxModel >> at: aTxPosition insert: aString [ 
 
 	^ aTxPosition span at: aTxPosition insert: aString
 ]
 
-{ #category : #'factory methods' }
+{ #category : 'factory methods' }
 TxModel >> characterStream [
 	^ TxCharacterStream on: self
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 TxModel >> copy: interval [
 	"Answer a new text, holding a copy of text enclosed by receiver"
 
@@ -115,12 +116,12 @@ TxModel >> copy: interval [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxModel >> defaultStyle [
 	^ styles defaultStyle
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxModel >> delete: anInterval [
 	"Delete portion of text enclosed by interval.
 	Answer the insertion position pointing to the text where
@@ -129,24 +130,24 @@ TxModel >> delete: anInterval [
 	^ anInterval minMaxDo: [ :min :max | min deleteUpTo: max ]
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 TxModel >> endPosition [
 	^ TxTextPosition span: endSpan spanPosition: 0
 ]
 
-{ #category : #'accessing-spans' }
+{ #category : 'accessing-spans' }
 TxModel >> endSpan [
 	^ endSpan 
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TxModel >> includesSpan: span [
 
 	self spansDo: [ :each | each == span ifTrue: [ ^ true ] ].
 	^ false
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 TxModel >> initialize [
 	super initialize.
 	styles := TxTextStyles on: self.
@@ -154,46 +155,46 @@ TxModel >> initialize [
 	
 ]
 
-{ #category : #'initialize-release' }
+{ #category : 'initialize-release' }
 TxModel >> initializeContents [
 	startSpan := TxStartSpan text: self.
 	endSpan := TxEndSpan text: self.
 	startSpan next: endSpan
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TxModel >> isEmpty [
 	^ startSpan next == endSpan 
 ]
 
-{ #category : #'private-factory methods' }
+{ #category : 'private-factory methods' }
 TxModel >> newCharacterSpan [
 	^ TxCharacterSpan text: self
 ]
 
-{ #category : #'private-factory methods' }
+{ #category : 'private-factory methods' }
 TxModel >> newCharacterSpan: aString [
 	^ self newCharacterSpan
 		characters: aString;
 		yourself
 ]
 
-{ #category : #'factory methods' }
+{ #category : 'factory methods' }
 TxModel >> newCursor [
 	^ self startPosition asCursor
 ]
 
-{ #category : #'private-factory methods' }
+{ #category : 'private-factory methods' }
 TxModel >> newLineSeparator [ 
 	^ TxLineSeparator text: self
 ]
 
-{ #category : #'factory methods' }
+{ #category : 'factory methods' }
 TxModel >> newSelection [
 	^ TxSelection on: self
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 TxModel >> normalize: selection [
 	"Merge adjacent spans if they have the same style"
 
@@ -207,7 +208,7 @@ TxModel >> normalize: selection [
 
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 TxModel >> positionAtTextIndex: textIndex [
 	"Answer the position, which corresponds to given text index. This method is symmetrical to TxBasicTextPosition>>#textIndex. 
 	
@@ -218,13 +219,13 @@ TxModel >> positionAtTextIndex: textIndex [
 	^ self startPosition moveRight: textIndex
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 TxModel >> printOn: aStream [
 	super printOn: aStream.
 	aStream space; print: self spans
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxModel >> replaceAllWith: anotherTextModel [	
 	"Insert a copy of the argument at my start"
 
@@ -235,13 +236,13 @@ TxModel >> replaceAllWith: anotherTextModel [
 	endSpan := startSpan last
 ]
 
-{ #category : #'accessing-spans' }
+{ #category : 'accessing-spans' }
 TxModel >> spans [
 	^ Array streamContents: [ :stream |
 		self spansDo: [ :span | stream nextPut: span ] ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 TxModel >> spansAndLineNumbersDo: aBlock [
 	"This is an optimized way to search for a line. The alternative, querying each span for #lineNumber, could be very expensive because each time we must search the entire text up to that span"
 	| lineNumber |
@@ -252,22 +253,22 @@ TxModel >> spansAndLineNumbersDo: aBlock [
 		span isLineSeparator ifTrue: [ lineNumber := lineNumber + 1 ] ].
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 TxModel >> spansDo: aBlock [
 	self startSpan do: aBlock
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 TxModel >> startPosition [
 	^ TxTextPosition span: startSpan spanPosition: 0
 ]
 
-{ #category : #'accessing-spans' }
+{ #category : 'accessing-spans' }
 TxModel >> startSpan [
 	^ startSpan 
 ]
 
-{ #category : #'private-styles' }
+{ #category : 'private-styles' }
 TxModel >> styles [
 	^ styles
 ]

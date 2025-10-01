@@ -13,19 +13,20 @@ is a line separator (meaning that the next line is empty), I can provide informa
 
 "
 Class {
-	#name : #TxLineSeparator,
-	#superclass : #TxSpanWithStyle,
-	#category : #'TxText-Model'
+	#name : 'TxLineSeparator',
+	#superclass : 'TxSpanWithStyle',
+	#category : 'TxText-Model',
+	#package : 'TxText-Model'
 }
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 TxLineSeparator >> accept: anObject [
 	"visitor pattern"
 	
 	^ anObject visitLineSeparator: self
 ]
 
-{ #category : #attributes }
+{ #category : 'attributes' }
 TxLineSeparator >> applyAttribute: anAttribute from: startPosition to: endPosition [
 	"do not apply only if start position is > 1 or end < 1"
 	
@@ -35,17 +36,17 @@ TxLineSeparator >> applyAttribute: anAttribute from: startPosition to: endPositi
 
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 TxLineSeparator >> asStringOn: aStream [
 	aStream cr.
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 TxLineSeparator >> asStringOn: aStream startingAt: index [
 	index < 1 ifTrue: [  aStream cr ].
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 TxLineSeparator >> asStringOn: aStream startingAt: startIndex upTo: endIndex [
 	"specialized in subclasses"
 	(endIndex - startIndex > 0) ifTrue: [ 
@@ -53,7 +54,7 @@ TxLineSeparator >> asStringOn: aStream startingAt: startIndex upTo: endIndex [
 		 ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxLineSeparator >> characterBeforePosition: spanPosition ifNone: aBlock [
 
 	"Answer character which is right before the position, located in receiver
@@ -65,7 +66,7 @@ TxLineSeparator >> characterBeforePosition: spanPosition ifNone: aBlock [
 	^ aBlock value
 ]
 
-{ #category : #operation }
+{ #category : 'operation' }
 TxLineSeparator >> deleteUpTo: end startingAt: start [
 	self assert: start span == self.
 	
@@ -82,18 +83,18 @@ TxLineSeparator >> deleteUpTo: end startingAt: start [
 
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxLineSeparator >> doMerge: aCharacterSpan [
 	^ false.
 ]
 
-{ #category : #'accessing-text position' }
+{ #category : 'accessing-text position' }
 TxLineSeparator >> endPosition [
 	"answer the text position, pointing to the end of receiver"
 	^ self positionAt: 1
 ]
 
-{ #category : #operation }
+{ #category : 'operation' }
 TxLineSeparator >> insertCharacters: chars at: position attributes: insertAttributes [
 	"Insert a single line character string at the given position,
 	answer a new position pointing to the end of inserted string"
@@ -116,7 +117,7 @@ TxLineSeparator >> insertCharacters: chars at: position attributes: insertAttrib
 	^ next endPosition
 ]
 
-{ #category : #operation }
+{ #category : 'operation' }
 TxLineSeparator >> insertLineSeparator: separator at: position [
 	
 	position spanPosition > 0 ifTrue: [
@@ -127,40 +128,40 @@ TxLineSeparator >> insertLineSeparator: separator at: position [
 	^ self startPosition
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TxLineSeparator >> isAtLineStart: spanPosition [
 	"position behind #cr , means a line start"
 	^ spanPosition > 0
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TxLineSeparator >> isLastPosition: aNumber [
 	^ aNumber = 1
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TxLineSeparator >> isLineSeparator [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxLineSeparator >> lineNumberAt: textPosition [ 
 	"i am not changing the number of lines"
 	^ self numberOfLinesBefore + (textPosition spanPosition "0 or 1")
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxLineSeparator >> mergeUpTo: aSpan [
 	aSpan = self next ifTrue: [ ^ self next ].
 	^ self next mergeUpTo: aSpan.
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 TxLineSeparator >> printContentsOn: aStream [
 	aStream nextPutAll: '#cr'
 ]
 
-{ #category : #operation }
+{ #category : 'operation' }
 TxLineSeparator >> removeBefore: anIndex [
 	anIndex = 1 ifTrue: [
 		"remove ourselves"
@@ -169,18 +170,18 @@ TxLineSeparator >> removeBefore: anIndex [
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxLineSeparator >> size [
 	^ 1
 ]
 
-{ #category : #'accessing-text position' }
+{ #category : 'accessing-text position' }
 TxLineSeparator >> startPosition [
 	"answer the text position, pointing to the start of receiver"
 	^ self positionAt: 0
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxLineSeparator >> styleAtPosition: txPosition [ 
 
 	"The receiver's attributes is defined for the next line,

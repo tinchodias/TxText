@@ -2,12 +2,13 @@
 I control the mouse cursor appearance when the user holds the mouse over it.
 "
 Class {
-	#name : #TxMouseCursorAttribute,
-	#superclass : #TxAttribute,
-	#category : #'TxText-Model'
+	#name : 'TxMouseCursorAttribute',
+	#superclass : 'TxAttribute',
+	#category : 'TxText-Model',
+	#package : 'TxText-Model'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 TxMouseCursorAttribute class >> defaultValue [
 	^ Cursor overEditableText
 ]

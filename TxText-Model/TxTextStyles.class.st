@@ -4,22 +4,23 @@ I manage styles for a text, providing at least a default.
 Implementation note: except for my default style, I hold the style list weakly, so they will be automatically removed if unused.
 "
 Class {
-	#name : #TxTextStyles,
-	#superclass : #Object,
+	#name : 'TxTextStyles',
+	#superclass : 'Object',
 	#instVars : [
 		'text',
 		'defaultStyle',
 		'styles'
 	],
-	#category : #'TxText-Model'
+	#category : 'TxText-Model',
+	#package : 'TxText-Model'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 TxTextStyles class >> on: aTxModel [
 	^ self new initWithText: aTxModel
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxTextStyles >> addStyle: aStyle [
 	"Register a new style, but only if none of my existing styles match the argument; answer the registered style"
 	
@@ -30,12 +31,12 @@ TxTextStyles >> addStyle: aStyle [
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxTextStyles >> defaultStyle [
 	^ defaultStyle
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxTextStyles >> extend: style with: aNewAttribute [
 	"Answer a style, which is the same as the first argument, but with a new/different attribute value."
 	| newStyle |
@@ -44,12 +45,12 @@ TxTextStyles >> extend: style with: aNewAttribute [
 	^ self addStyle: newStyle
 ]
 
-{ #category : #initialize }
+{ #category : 'initialize' }
 TxTextStyles >> initWithText: aTxModel [
 	text := aTxModel
 ]
 
-{ #category : #initialize }
+{ #category : 'initialize' }
 TxTextStyles >> initialize [
 
 	self initializeDefaultStyle.
@@ -57,20 +58,20 @@ TxTextStyles >> initialize [
 	styles := WeakSet new.
 ]
 
-{ #category : #initialize }
+{ #category : 'initialize' }
 TxTextStyles >> initializeDefaultStyle [
 
 	defaultStyle := TxStyle new.
 	
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 TxTextStyles >> postCopy [
 	defaultStyle := defaultStyle copy.
 	styles := styles collect: [ :each | each copy ].
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxTextStyles >> text [
 	^ text
 ]

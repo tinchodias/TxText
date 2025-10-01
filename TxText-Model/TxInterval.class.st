@@ -2,29 +2,30 @@
 I am interval of text. I am immutable.
 "
 Class {
-	#name : #TxInterval,
-	#superclass : #Object,
+	#name : 'TxInterval',
+	#superclass : 'Object',
 	#instVars : [
 		'start',
 		'end'
 	],
-	#category : #'TxText-Model'
+	#category : 'TxText-Model',
+	#package : 'TxText-Model'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 TxInterval class >> from: startPosition to: endPosition [
 
 	^ self basicNew initStart: startPosition end: endPosition
 
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 TxInterval class >> on: aText [
 	"Answer an interval, containing whole text"
 	^ self from: aText startPosition to: aText endPosition
 ]
 
-{ #category : #conversion }
+{ #category : 'conversion' }
 TxInterval >> asString [ 
 		
 	^String streamContents: [ :s | 
@@ -32,19 +33,19 @@ TxInterval >> asString [
 	]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TxInterval >> contains: aPosition [
 	^ aPosition between: start and: end
 ]
 
-{ #category : #conversion }
+{ #category : 'conversion' }
 TxInterval >> copyText [
 	"answer a new text, holding a copy of text enclosed by receiver"
 	
 	^ self text copy: self
 ]
 
-{ #category : #enumeration }
+{ #category : 'enumeration' }
 TxInterval >> do: aBlock [
 
 	| iterator |
@@ -57,26 +58,26 @@ TxInterval >> do: aBlock [
 		iterator moveRight] 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxInterval >> end [
 	
 	^ end
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 TxInterval >> initStart: startPosition end: endPosition [
 
 	start := startPosition asPosition.
 	end := endPosition asPosition
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TxInterval >> isEmpty [
 
 	^ end hasSamePositionAs: start
 ]
 
-{ #category : #enumeration }
+{ #category : 'enumeration' }
 TxInterval >> minMaxDo: minMaxBlock [
 
 	^ start < end 
@@ -84,7 +85,7 @@ TxInterval >> minMaxDo: minMaxBlock [
 		ifFalse: [ minMaxBlock value: end value: start ]
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 TxInterval >> normalized [
 
 	| min max |
@@ -93,7 +94,7 @@ TxInterval >> normalized [
 	^ self class from: min to: max
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 TxInterval >> printOn: aStream [
 
 	super printOn: aStream.
@@ -111,13 +112,13 @@ TxInterval >> printOn: aStream [
 		nextPut: $]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxInterval >> start [
 	
 	^ start
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxInterval >> text [
 	
 	^ start text

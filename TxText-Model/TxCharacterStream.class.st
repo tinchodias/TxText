@@ -6,31 +6,32 @@ Please note: modifying the text while using gives undefined results, since any m
 The only responsibility of this class is to provide a convenient stream for reading character data from text.
 "
 Class {
-	#name : #TxCharacterStream,
-	#superclass : #Stream,
+	#name : 'TxCharacterStream',
+	#superclass : 'Stream',
 	#instVars : [
 		'position'
 	],
-	#category : #'TxText-Model'
+	#category : 'TxText-Model',
+	#package : 'TxText-Model'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 TxCharacterStream class >> on: txModel [
 	^ self onPosition: txModel startPosition 
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 TxCharacterStream class >> onPosition: aTxPosition [
 	^ self basicNew position: aTxPosition
 ]
 
-{ #category : #accesing }
+{ #category : 'accesing' }
 TxCharacterStream >> isAtEnd [
 
 	^ position isAtEnd 
 ]
 
-{ #category : #accesing }
+{ #category : 'accesing' }
 TxCharacterStream >> next [
 	| char |
 	
@@ -42,17 +43,17 @@ TxCharacterStream >> next [
 	] repeat.
 ]
 
-{ #category : #accesing }
+{ #category : 'accesing' }
 TxCharacterStream >> position [
 	^ position
 ]
 
-{ #category : #accesing }
+{ #category : 'accesing' }
 TxCharacterStream >> position: aTxPosition [
 	position := aTxPosition asPosition
 ]
 
-{ #category : #accesing }
+{ #category : 'accesing' }
 TxCharacterStream >> text [
 	^ position text
 ]

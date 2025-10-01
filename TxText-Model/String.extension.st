@@ -1,6 +1,6 @@
-Extension { #name : #String }
+Extension { #name : 'String' }
 
-{ #category : #'*TxText-Model' }
+{ #category : '*TxText-Model' }
 String >> asTxModel [
 	^ TxModel fromString: self
 ]

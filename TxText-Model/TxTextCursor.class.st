@@ -2,30 +2,31 @@
 I am just like a normal text position, but mutable.
 "
 Class {
-	#name : #TxTextCursor,
-	#superclass : #TxBasicTextPosition,
+	#name : 'TxTextCursor',
+	#superclass : 'TxBasicTextPosition',
 	#instVars : [
 		'position'
 	],
-	#category : #'TxText-Model'
+	#category : 'TxText-Model',
+	#package : 'TxText-Model'
 }
 
-{ #category : #converting }
+{ #category : 'converting' }
 TxTextCursor >> asCursor [
 	^ self
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 TxTextCursor >> asPosition [
 	^ position
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxTextCursor >> deleteUpTo: aTxPosition [
 	^ position deleteUpTo: aTxPosition 
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TxTextCursor >> insert: aString [ 
 	"
 	Insert a possibly multi-line string at given position of receiver.
@@ -36,73 +37,73 @@ TxTextCursor >> insert: aString [
 
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxTextCursor >> linePosition: offset [
 	position := position linePosition: offset
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxTextCursor >> moveDown: number [
 	position := position moveDown: number
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxTextCursor >> moveLeft: number [
 	position := position moveLeft: number
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxTextCursor >> moveRight: number [
 	position := position moveRight: number
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxTextCursor >> moveTo: anotherTextPosition [
 	position := anotherTextPosition asPosition 
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxTextCursor >> moveToEnd [
 	position := self text endPosition
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxTextCursor >> moveToLineEnd [
 	position := position moveToLineEnd
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxTextCursor >> moveToLineStart [
 	position := position moveToLineStart
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxTextCursor >> moveToStart [
 	position := self text startPosition
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 TxTextCursor >> moveUp: number [
 	position := position moveUp: number
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxTextCursor >> nextPosition [
 	"answer the position in text, which follows the receiver"
 	^ position nextPosition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxTextCursor >> position [
 	^ position
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxTextCursor >> position: aTextPosition [
 	position := aTextPosition
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 TxTextCursor >> printOn: aStream [
 
 	"super printOn: aStream. "
@@ -115,17 +116,17 @@ TxTextCursor >> printOn: aStream [
 		
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxTextCursor >> span [
 	^ position span
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxTextCursor >> spanPosition [
 	^ position spanPosition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TxTextCursor >> text [
 	^ position text
 ]
