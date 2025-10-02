@@ -31,14 +31,14 @@ TxAthensLayoutPosition class >> textPosition: textPosition layout: txLayout [
 { #category : 'accessing' }
 TxAthensLayoutPosition >> baselinePoint [
 	"answer the point at baseline matching with given layout position"
-	
-	^ horizontalOffset @ (lineTopOffset + line maxAscent )
+
+	^ horizontalOffset @ (lineTopOffset + line maxAscent)
 ]
 
 { #category : 'accessing' }
 TxAthensLayoutPosition >> baselinePointInView [
 	"answer the point at baseline matching with given layout position"
-	
+
 	^ self baselinePoint - layout view offset
 ]
 
@@ -52,18 +52,20 @@ TxAthensLayoutPosition >> bottomPoint [
 { #category : 'accessing' }
 TxAthensLayoutPosition >> bottomPointInView [
 	"answer the point at baseline matching with given layout position"
-	
+
 	^ self bottomPoint - layout view offset
 ]
 
 { #category : 'accessing' }
 TxAthensLayoutPosition >> command [
 	"Answer the display command which correspond to given layout position"
+
 	^ command
 ]
 
 { #category : 'accessing' }
 TxAthensLayoutPosition >> horizontalOffset [
+
 	^ horizontalOffset
 ]
 
@@ -80,6 +82,7 @@ TxAthensLayoutPosition >> initializeTextPosition: aTextPosition layout: txLayout
 
 { #category : 'accessing' }
 TxAthensLayoutPosition >> layout [
+
 	^ layout
 ]
 

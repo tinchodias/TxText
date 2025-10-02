@@ -1,24 +1,18 @@
 "
-Any morphs embedded in the text should use me as a wrapper.
+I represent a morph that is used internally by this library to wrap a user morph embedded in the text.
 
-This class is private (you are not supposed to create 
-its instances by yourself).
+I provides some helpers for the morph's positioning etc.
 
-This morph wraps a user morph, embedded in a text,
-and provides some helpers for the morph's positioning etc.
+An example of using an embedded object can be found in `#exampleWithEmbeddedObject`.
 
-An example of using an embedded object can be found in #exampleWithEmbeddedObject
-
-To insert sanembedded object send #insertObject: 
-to a text position, for example:
-text endPosition insertObject: 123.
+To insert an embedded object, send `#insertObject:` to a text position, for example:
+```
+text endPosition insertObject: Morph new.
+```
 "
 Class {
 	#name : 'TxWrappingMorph',
 	#superclass : 'Morph',
-	#instVars : [
-		'currentPosition'
-	],
 	#category : 'TxText-Morphic',
 	#package : 'TxText-Morphic'
 }

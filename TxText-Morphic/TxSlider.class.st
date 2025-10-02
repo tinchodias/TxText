@@ -64,16 +64,15 @@ TxSlider >> animateScrollingBackward: downPos [
 TxSlider >> animateScrollingForward: downPos [
 
 	"stop scrolling if slider reached cursor position"
-	(downPos > (mappedPosition+ mappedThickness)) 
+	(downPos > (mappedPosition + mappedThickness)) 
 		ifTrue: [ self announcer announce: (TxSliderScrollForward source: self) ]
-		ifFalse: [ self stopStepping  ] 
-
-
+		ifFalse: [ self stopStepping ]
 ]
 
 { #category : 'protocol' }
 TxSlider >> backgroundColor [
-	^ Color darkGray 
+
+	^ Color darkGray
 ]
 
 { #category : 'as yet unclassified' }
@@ -137,18 +136,20 @@ TxSlider >> handlesMouseDown: evt [
 
 { #category : 'initialization' }
 TxSlider >> initialize [
+
 	super initialize.
 	sliderPosition := 0.
-	thickness  := 0.1.
+	thickness := 0.1.
 	captured := false.
-	
-	self computeSliderBounds 
+
+	self computeSliderBounds
 ]
 
-{ #category : 'layout' }
+{ #category : 'recategorized' }
 TxSlider >> layoutChanged [
+
 	super layoutChanged.
-	self computeSliderBounds 
+	self computeSliderBounds
 ]
 
 { #category : 'as yet unclassified' }
@@ -165,14 +166,15 @@ TxSlider >> minimumThicknessInPixels [
 { #category : 'event handling' }
 TxSlider >> mouseDown: evt [
 
-	| downPos |
-	
-	downPos := self mapMouseRelativeToSlider: evt position.
-	
-	downPos < mappedPosition ifTrue: [ ^ self handleMouseDownAheadOfSlider: evt mappedPosition: downPos ].
-	downPos > (mappedPosition + mappedThickness) ifTrue: [ ^ self handleMouseDownAfterSlider: evt  mappedPosition: downPos].
-	
-	self handleMouseDownOnSlider: evt  mappedPosition: downPos
+	| aPosition |
+	aPosition := self mapMouseRelativeToSlider: evt position.
+
+	aPosition < mappedPosition ifTrue: [
+		^ self handleMouseDownAheadOfSlider: evt mappedPosition: aPosition ].
+	aPosition > (mappedPosition + mappedThickness) ifTrue: [
+		^ self handleMouseDownAfterSlider: evt mappedPosition: aPosition ].
+
+	self handleMouseDownOnSlider: evt mappedPosition: aPosition
 ]
 
 { #category : 'event handling' }

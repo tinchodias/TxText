@@ -15,13 +15,15 @@ Class {
 { #category : 'instance creation' }
 TxInterval class >> from: startPosition to: endPosition [
 
-	^ self basicNew initStart: startPosition end: endPosition
-
+	^ self basicNew
+		initializeStart: startPosition end: endPosition;
+		yourself
 ]
 
 { #category : 'instance creation' }
 TxInterval class >> on: aText [
 	"Answer an interval, containing whole text"
+
 	^ self from: aText startPosition to: aText endPosition
 ]
 
@@ -66,7 +68,7 @@ TxInterval >> end [
 ]
 
 { #category : 'initialization' }
-TxInterval >> initStart: startPosition end: endPosition [
+TxInterval >> initializeStart: startPosition end: endPosition [
 
 	start := startPosition asPosition.
 	end := endPosition asPosition
@@ -99,18 +101,15 @@ TxInterval >> normalized [
 TxInterval >> printOn: aStream [
 
 	super printOn: aStream.
-	aStream 
+	aStream
 		nextPut: $[;
 		print: start.
-		
-	
-		aStream 
-			nextPutAll: ' .. ';
-			print: end.
-	
-	
+
 	aStream
-		nextPut: $]
+		nextPutAll: ' .. ';
+		print: end.
+
+	aStream nextPut: $]
 ]
 
 { #category : 'accessing' }

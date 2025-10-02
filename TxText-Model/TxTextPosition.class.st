@@ -199,14 +199,14 @@ TxTextPosition >> moveToLineEnd [
 { #category : 'navigation' }
 TxTextPosition >> moveToLineStart [
 
-	| sp |
+	| lineSpan |
 	self isAtLineStart ifTrue: [ ^ self ].
-	sp := span.
 
-	(span isLineSeparator and: [ spanPosition = 0 ]) ifTrue: [
-		sp := span previous ].
+	lineSpan := (span isLineSeparator and: [ spanPosition = 0 ])
+		ifTrue: [ span previous ]
+		ifFalse: [ span ].
 
-	sp reverseDo: [ :each |
+	lineSpan reverseDo: [ :each |
 		each isLineSeparator ifTrue: [ ^ each endPosition ] ].
 
 	^ self text startPosition

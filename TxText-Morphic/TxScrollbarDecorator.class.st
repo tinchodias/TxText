@@ -194,25 +194,19 @@ TxScrollbarDecorator >> sliderDragged: aTxSliderDragged [
 { #category : 'accessing' }
 TxScrollbarDecorator >> sliderScrollBackward [
 
-	vertical ifTrue: [ 
-		viewContainer viewMorph scrollBy: 0@viewContainer viewMorph height negated
-		]
-	ifFalse: [ 
-		viewContainer viewMorph scrollBy: viewContainer viewMorph width negated @0
-		
-		 ]
+	viewContainer viewMorph scrollBy:
+		(vertical
+			ifTrue: [ 0 @ viewContainer viewMorph height negated ]
+			ifFalse: [ viewContainer viewMorph width negated @ 0 ])
 ]
 
 { #category : 'accessing' }
 TxScrollbarDecorator >> sliderScrollForward [
 
-	vertical ifTrue: [ 
-		viewContainer viewMorph scrollBy: 0@viewContainer viewMorph height
-		]
-	ifFalse: [ 
-		viewContainer viewMorph scrollBy: viewContainer viewMorph width@0
-		
-		 ]
+	viewContainer viewMorph scrollBy:
+		(vertical
+			ifTrue: [ 0 @ viewContainer viewMorph height ]
+			ifFalse: [ viewContainer viewMorph width @ 0 ])
 ]
 
 { #category : 'accessing' }
@@ -221,38 +215,40 @@ TxScrollbarDecorator >> viewChanged: aTxLayoutViewChanged [
 	| view |
 	view := aTxLayoutViewChanged view.
 	
-	vertical ifFalse: [ 
-		| totalSize |
-		
-		autohide ifTrue: [ 
-			"automatically hide if we can"
-			view needsHorizontalScrolling ifFalse: [ self hide. ^ self ]].
-		
-		self visible: true.
-		
-		totalSize := view layout extent x.
-		
-		totalSize isZero 
-			ifTrue: [ scrollbar sliderPosition: 0; thickness: 1 ]
-			ifFalse: [ 
-				scrollbar 
-					sliderPosition: view offset x / totalSize;
-					thickness: (view width/ totalSize min: 1.0)].
-	] ifTrue: [ 
-		"vertical one"
-		| numberOfLines |
+	vertical
+		ifFalse: [ 
+			| totalSize |
+			autohide ifTrue: [ 
+				"automatically hide if we can"
+				view needsHorizontalScrolling ifFalse: [ ^ self hide ] ].
+			
+			self visible: true.
+			
+			totalSize := view layout extent x.
+			
+			totalSize isZero 
+				ifTrue: [
+					scrollbar
+						sliderPosition: 0;
+						thickness: 1 ]
+				ifFalse: [ 
+					scrollbar 
+						sliderPosition: view offset x / totalSize;
+						thickness: (view width / totalSize min: 1.0)] ]
 
-		autohide ifTrue: [ 
-			"automatically hide if we can"
-			view needsVerticalScrolling ifFalse: [ self hide. ^ self ]].
+		ifTrue: [ 
+			"vertical one"
+			| numberOfLines |
+			autohide ifTrue: [ 
+				"automatically hide if we can"
+				view needsVerticalScrolling ifFalse: [ ^ self hide ] ].
 
-		self visible: true.
-		numberOfLines := view text endPosition lineNumber.
-		
-		scrollbar thickness: (view layout numberOfLines / numberOfLines).
-		scrollbar sliderPosition: (view layout startPosition lineNumber - 1) / numberOfLines. 
-	
-	 ]
+			self visible: true.
+			numberOfLines := view text endPosition lineNumber.
+			
+			scrollbar
+				thickness: (view layout numberOfLines / numberOfLines);
+				sliderPosition: (view layout startPosition lineNumber - 1) / numberOfLines ]
 ]
 
 { #category : 'geometry' }

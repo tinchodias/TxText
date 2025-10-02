@@ -12,16 +12,6 @@ Class {
 	#tag : 'Layout'
 }
 
-{ #category : 'private' }
-TxAthensLayoutStrategy >> alignTab: font [
-	| tabWidth lineWidth |
-	tabWidth := self layout tabWidthUsingFont: font.
-	lineWidth := currentLine width.
-	
-	^ lineWidth // tabWidth + 1 * tabWidth - lineWidth @ 0
-	
-]
-
 { #category : 'building' }
 TxAthensLayoutStrategy >> completeLine [
 
@@ -44,13 +34,14 @@ TxAthensLayoutStrategy >> layout [
 TxAthensLayoutStrategy >> scanSingleVisualLineFor: aLayout startingAt: aPosition [
 	"Scan a single visual line until meeting stop condition.
 	Note, the incoming position can be in the middle of text line (because of wrapping)"
-	
+
 	layout := aLayout.
-	currentPosition := aPosition.	
+	currentPosition := aPosition.
 	self startNewLine.
+
 	metStopCondition := false.
-	
-	[ currentPosition := currentPosition span accept: self. metStopCondition ] whileFalse.
+	[ currentPosition := currentPosition span accept: self ]
+		doWhileFalse: [ metStopCondition ].
 
 	^ currentLine
 ]
@@ -65,6 +56,16 @@ TxAthensLayoutStrategy >> startNewLine [
 			yourself
 ]
 
+{ #category : 'private' }
+TxAthensLayoutStrategy >> tabAdvanceUsingFont: font [
+
+	| tabWidth lineWidth |
+	tabWidth := self layout tabWidthUsingFont: font.
+	lineWidth := currentLine width.
+
+	^ lineWidth // tabWidth + 1 * tabWidth - lineWidth @ 0
+]
+
 { #category : 'accessing' }
 TxAthensLayoutStrategy >> view [
 
@@ -75,16 +76,17 @@ TxAthensLayoutStrategy >> view [
 TxAthensLayoutStrategy >> visitEmbeddedObjectSpan: aSpan [
 
 	| font fontMetricsProvider command |
-	font := aSpan getAttribute: TxFontAttribute.  
+	font := aSpan getAttribute: TxFontAttribute.
 	fontMetricsProvider := layout fontMetricsProviderFor: font.
 
 	command := layout newEmbeddedObjectCommand: aSpan.
-	
+
 	"embedded object's height contributes to font ascent, as its bottom is aligned to baseline"
 	currentLine accumulateAscent: command height.
-	currentLine accumulateHeight: command height + (fontMetricsProvider fontHeight - fontMetricsProvider fontAscent).
+	currentLine accumulateHeight: command height
+		+ (fontMetricsProvider fontHeight - fontMetricsProvider fontAscent).
 	currentLine addWidth: command width.
-	
+
 	currentLine addCommand: command.
 
 	^ aSpan next startPosition

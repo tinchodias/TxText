@@ -82,9 +82,14 @@ TxTextEditorMorph class >> exampleTextMultiSizeFont [
 	text := TxModel new.
 	100 timesRepeat: [
 		1 to: 10 do: [ :i | | font lastLineSelection | 
-			text endPosition insert: 'The quick brown fox jumps over the lazy dog 1234567890'.
-			font := LogicalFont familyName: self fontFamilyForExamples pointSize: 9 + i.
-			lastLineSelection := text endPosition moveToLineStart selectTo: text endPosition.
+			text endPosition insert:
+				'The quick brown fox jumps over the lazy dog 1234567890'.
+			font :=
+				LogicalFont
+					familyName: self fontFamilyForExamples
+					pointSize: 9 + i.
+			lastLineSelection :=
+				text endPosition moveToLineStart selectTo: text endPosition.
 			lastLineSelection applyAttribute: (TxFontAttribute with: font).
 			text endPosition insert: String cr.
 		] ].
@@ -378,25 +383,29 @@ TxTextEditorMorph >> fullDrawOnAthensCanvas: aCanvas [
 { #category : 'editing' }
 TxTextEditorMorph >> handleBackspaceKey [
 
+	"If the selected portion to delete contains layout starting position.
+	We must take care resetting view to new position."
 	(controller selection contains: self layoutView layout startPosition)
-		ifTrue: [ "The selected portion to delete contains layout starting position. We must
-			take care resetting view to new position"
-			self layoutView resetLayout: controller selection start ].
+		ifTrue: [ self layoutView resetLayout: controller selection start ].
+
 	controller backspace.
+
 	self layoutView layout startPosition isValid ifFalse: [
 		self layoutView resetLayout: controller selection start ].
+
 	self controllerChanged
 ]
 
 { #category : 'editing' }
 TxTextEditorMorph >> handleDeleteKey [
 
+	"If the selected portion to delete contains layout starting position.
+	We must take care resetting view to new position"
 	(controller selection contains: self layoutView layout startPosition)
-		ifTrue: [ "The selected portion to delete contains layout starting position. We must
-		take care resetting view to new position"
-			self layoutView resetLayout: controller selection start ].
+		ifTrue: [ self layoutView resetLayout: controller selection start ].
 
 	controller delete.
+
 	self controllerChanged
 ]
 
@@ -470,6 +479,7 @@ TxTextEditorMorph >> initializeController [
 { #category : 'initialization' }
 TxTextEditorMorph >> initializeShortcuts: aKMDispatcher [
 
+	super initializeShortcuts: aKMDispatcher.
 	aKMDispatcher attachCategory: #TxTextEditorMorph
 ]
 

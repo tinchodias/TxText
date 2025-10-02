@@ -119,7 +119,6 @@ TxTextCursor >> position: aTextPosition [
 { #category : 'printing' }
 TxTextCursor >> printOn: aStream [
 
-	"super printOn: aStream. "
 	self isValid ifFalse: [ aStream nextPutAll: '**invalid cursor position**'. ^ self ].
 	aStream 
 		nextPutAll: 'cursor line: ';
@@ -131,15 +130,18 @@ TxTextCursor >> printOn: aStream [
 
 { #category : 'accessing' }
 TxTextCursor >> span [
+
 	^ position span
 ]
 
 { #category : 'accessing' }
 TxTextCursor >> spanPosition [
+
 	^ position spanPosition
 ]
 
 { #category : 'accessing' }
 TxTextCursor >> text [
+
 	^ position text
 ]

@@ -27,18 +27,18 @@ TxBasicTextPosition >> -- aPosition [
 		ifFalse: [ (aPosition timesToMoveRightTo: self) negated ]
 ]
 
-{ #category : 'comparing' }
+{ #category : 'testing' }
 TxBasicTextPosition >> < aPosition [
 	"Answer true if receiver is closer to start of the text than argument, false otherwise.
 	Note, both positions should belong to same text"
-		
-	aPosition text == self text ifFalse: [ self error: 'Cannot compare positions belonging to different text' ].
+
+	aPosition text == self text ifFalse: [
+		self error: 'Cannot compare positions belonging to different text' ].
 
 	"local case first"
-	self span == aPosition span ifTrue: [ 
-		^ self spanPosition < aPosition spanPosition
-	].
-	
+	self span == aPosition span ifTrue: [
+		^ self spanPosition < aPosition spanPosition ].
+
 	^ self span < aPosition span
 ]
 
@@ -122,6 +122,7 @@ TxBasicTextPosition >> hasSamePositionAs: position [
 
 { #category : 'comparing' }
 TxBasicTextPosition >> hash [
+
 	^ self span hash bitXor: self spanPosition hash
 ]
 
@@ -148,7 +149,7 @@ TxBasicTextPosition >> insertObject: anObject [
 TxBasicTextPosition >> invalidPosition [
 	"The receiver is no longer a valid text position for TxModel"
 
-	Error signal: 'Invalid text position'
+	self error: 'Invalid text position'
 ]
 
 { #category : 'testing' }

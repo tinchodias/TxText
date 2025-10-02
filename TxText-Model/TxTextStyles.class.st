@@ -17,7 +17,10 @@ Class {
 
 { #category : 'instance creation' }
 TxTextStyles class >> on: aTxModel [
-	^ self new initWithText: aTxModel
+
+	^ self new
+		  initWithText: aTxModel;
+		  yourself
 ]
 
 { #category : 'operations' }
@@ -33,6 +36,7 @@ TxTextStyles >> addStyle: aStyle [
 
 { #category : 'accessing' }
 TxTextStyles >> defaultStyle [
+
 	^ defaultStyle
 ]
 

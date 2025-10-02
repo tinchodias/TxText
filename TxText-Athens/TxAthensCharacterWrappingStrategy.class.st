@@ -26,17 +26,20 @@ Class {
 
 { #category : 'initialization' }
 TxAthensCharacterWrappingStrategy >> initialize [
+
 	super initialize.
-	rightMargin := 0.
+	rightMargin := 0
 ]
 
 { #category : 'accessing' }
 TxAthensCharacterWrappingStrategy >> rightMargin [
+
 	^ rightMargin
 ]
 
 { #category : 'accessing' }
 TxAthensCharacterWrappingStrategy >> rightMargin: aNumber [
+
 	rightMargin := aNumber
 ]
 

@@ -26,6 +26,7 @@ Class {
 
 { #category : 'instance creation' }
 TxModel class >> fromString: aString [
+
 	| text |
 	text := self new.
 	text endPosition insert: aString.
@@ -58,10 +59,10 @@ TxModel >> applyAttribute: anAttribute onSelection: selection [
 	
 ]
 
-{ #category : 'conversion' }
-TxModel >> asString [ 
+{ #category : 'converting' }
+TxModel >> asString [
+
 	^ String streamContents: [ :str | self asStringOn: str ]
-	
 ]
 
 { #category : 'conversion' }
@@ -83,6 +84,7 @@ TxModel >> at: aTxPosition insert: aString [
 
 { #category : 'factory methods' }
 TxModel >> characterStream [
+
 	^ TxCharacterStream on: self
 ]
 
@@ -90,35 +92,33 @@ TxModel >> characterStream [
 TxModel >> copy: interval [
 	"Answer a new text, holding a copy of text enclosed by receiver"
 
-	| copyStartSpan copyEndSpan  newText |
-	 
-	newText := self class new. 
+	| copyStartSpan copyEndSpan newText |
+	newText := self class new.
 
 	interval isEmpty ifTrue: [ ^ newText ].
-	
+
 	interval minMaxDo: [ :min :max |
 		| span |
-		
 		span := min span.
-		
-		[ | copy | 
+
+		[	| copy |
 			copy := span appendCopyTo: newText.
 			span == min span ifTrue: [ copyStartSpan := copy ].
-			span == max span ifTrue: [ copyEndSpan := copy  ].
+			span == max span ifTrue: [ copyEndSpan := copy ].
 			span ~= max span ] whileTrue: [ span := span next ].
-		 
+
 		"we cut the end first, to not invalidate the start position"
-		((copyEndSpan positionAt: max spanPosition) selectTo: newText endPosition) cut.
-		(newText startPosition selectTo: (copyStartSpan positionAt: min spanPosition)) cut.
-	 ].
+		((copyEndSpan positionAt: max spanPosition) selectTo:
+			 newText endPosition) cut.
+		(newText startPosition selectTo:
+			 (copyStartSpan positionAt: min spanPosition)) cut ].
 
 	^ newText
-
-
 ]
 
 { #category : 'accessing' }
 TxModel >> defaultStyle [
+
 	^ styles defaultStyle
 ]
 
@@ -133,12 +133,14 @@ TxModel >> delete: anInterval [
 
 { #category : 'positioning' }
 TxModel >> endPosition [
+
 	^ TxTextPosition span: endSpan spanPosition: 0
 ]
 
 { #category : 'accessing-spans' }
 TxModel >> endSpan [
-	^ endSpan 
+
+	^ endSpan
 ]
 
 { #category : 'testing' }
@@ -148,16 +150,17 @@ TxModel >> includesSpan: span [
 	^ false
 ]
 
-{ #category : 'initialize-release' }
+{ #category : 'initialization' }
 TxModel >> initialize [
+
 	super initialize.
 	styles := TxTextStyles on: self.
-	self initializeContents.
-	
+	self initializeContents
 ]
 
 { #category : 'initialize-release' }
 TxModel >> initializeContents [
+
 	startSpan := TxStartSpan text: self.
 	endSpan := TxEndSpan text: self.
 	startSpan next: endSpan
@@ -165,16 +168,19 @@ TxModel >> initializeContents [
 
 { #category : 'testing' }
 TxModel >> isEmpty [
-	^ startSpan next == endSpan 
+
+	^ startSpan next == endSpan
 ]
 
 { #category : 'private-factory methods' }
 TxModel >> newCharacterSpan [
+
 	^ TxCharacterSpan text: self
 ]
 
 { #category : 'private-factory methods' }
 TxModel >> newCharacterSpan: aString [
+
 	^ self newCharacterSpan
 		characters: aString;
 		yourself
@@ -182,16 +188,19 @@ TxModel >> newCharacterSpan: aString [
 
 { #category : 'factory methods' }
 TxModel >> newCursor [
+
 	^ self startPosition asCursor
 ]
 
 { #category : 'private-factory methods' }
-TxModel >> newLineSeparator [ 
+TxModel >> newLineSeparator [
+
 	^ TxLineSeparatorSpan text: self
 ]
 
 { #category : 'factory methods' }
 TxModel >> newSelection [
+
 	^ TxSelection on: self
 ]
 
@@ -204,9 +213,7 @@ TxModel >> normalize: selection [
 	span := normalizedSelection start span previous.
 	
 	[ span tryMergeWithNextPreserving: selection.
-	  span == normalizedSelection end span ] whileFalse: [ span := span next ].
-
-
+	  span == normalizedSelection end span ] whileFalse: [ span := span next ]
 ]
 
 { #category : 'positioning' }
@@ -222,12 +229,15 @@ TxModel >> positionAtTextIndex: textIndex [
 
 { #category : 'printing' }
 TxModel >> printOn: aStream [
+
 	super printOn: aStream.
-	aStream space; print: self spans
+	aStream
+		space;
+		print: self spans
 ]
 
 { #category : 'operations' }
-TxModel >> replaceAllWith: anotherTextModel [	
+TxModel >> replaceAllWith: anotherTextModel [
 	"Insert a copy of the argument at my start"
 
 	| copy |
@@ -239,37 +249,43 @@ TxModel >> replaceAllWith: anotherTextModel [
 
 { #category : 'accessing-spans' }
 TxModel >> spans [
+
 	^ Array streamContents: [ :stream |
-		self spansDo: [ :span | stream nextPut: span ] ]
+		  self spansDo: [ :span | stream nextPut: span ] ]
 ]
 
 { #category : 'enumerating' }
 TxModel >> spansAndLineNumbersDo: aBlock [
 	"This is an optimized way to search for a line. The alternative, querying each span for #lineNumber, could be very expensive because each time we must search the entire text up to that span"
+
 	| lineNumber |
 	lineNumber := 1.
-	
+
 	self startSpan do: [ :span |
 		aBlock value: span value: lineNumber.
-		span isLineSeparator ifTrue: [ lineNumber := lineNumber + 1 ] ].
+		span isLineSeparator ifTrue: [ lineNumber := lineNumber + 1 ] ]
 ]
 
 { #category : 'enumerating' }
 TxModel >> spansDo: aBlock [
+
 	self startSpan do: aBlock
 ]
 
 { #category : 'positioning' }
 TxModel >> startPosition [
+
 	^ TxTextPosition span: startSpan spanPosition: 0
 ]
 
 { #category : 'accessing-spans' }
 TxModel >> startSpan [
-	^ startSpan 
+
+	^ startSpan
 ]
 
 { #category : 'private-styles' }
 TxModel >> styles [
+
 	^ styles
 ]
