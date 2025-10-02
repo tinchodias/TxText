@@ -133,12 +133,20 @@ TxTextEditorMorph class >> exampleWithEmbeddedObject [
 
 	| text |
 	text := TxModel new.
-	1000 timesRepeat: [
+
+	Color registeredColorNames withIndexDo: [ :each :index |
 		text endPosition
-			insert: 'wioeuhfiw eufi';
-			insertObject: Morph new;
-			insert: 'uwe hfiuweh fiue' , String cr;
-			insert: '-------' , String cr ].
+			insert: index asString;
+			insert: '.';
+			insert: String tab;
+			insertObject:
+				(Morph new
+					color: (Color named: each);
+					extent: 100 @ 20;
+					yourself);
+			insert: String tab;
+			insert: each;
+			insert: String cr ].
 
 	^ self openInWindowWithText: text
 ]
