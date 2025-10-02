@@ -69,7 +69,7 @@ TxTextEditorMorph class >> exampleSimple [
 	| text |
 	text := TxModel new.
 	text endPosition
-		insert: (String loremIpsum: 1000);
+		insert: (String loremIpsum: 10000);
 		insert: String cr.
 
 	^ self openInWindowWithText: text

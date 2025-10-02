@@ -58,17 +58,20 @@ TxAthensLayoutView class >> example [
 { #category : 'instance creation' }
 TxAthensLayoutView class >> on: aTxModel extent: aPoint [
 
-	^ self new
-		initWithPosition: aTxModel startPosition extent: aPoint;
-		yourself
+	^ self
+		  on: aTxModel
+		  extent: aPoint
+		  container: TxAthensNullViewContainer new
 ]
 
 { #category : 'instance creation' }
 TxAthensLayoutView class >> on: aTxModel extent: aPoint container: aContainer [
 
-	^ self new
-		container: aContainer;
-		initWithPosition: aTxModel startPosition extent: aPoint;
+	^ self basicNew
+		initializeWithContainer: aContainer
+		layoutStrategy: TxAthensNoWrapStrategy new
+		position: aTxModel startPosition
+		extent: aPoint;
 		yourself
 ]
 
@@ -118,12 +121,6 @@ TxAthensLayoutView >> debugRenderOn: canvas [
 
 	renderer := TxTextRenderer new.
 	renderer renderLines: layout lines on: canvas
-]
-
-{ #category : 'defaults' }
-TxAthensLayoutView >> defaultStrategy [
-
-	^ TxAthensNoWrapStrategy new
 ]
 
 { #category : 'geometry' }
@@ -194,30 +191,18 @@ TxAthensLayoutView >> hideEmbeddedObject: morph [
 ]
 
 { #category : 'initializing' }
-TxAthensLayoutView >> initWithPosition: aStartPosition extent: aPoint [
+TxAthensLayoutView >> initializeWithContainer: aViewContainer layoutStrategy: aLayoutStrategy position: aStartPosition extent: aPoint [
 
-	^ self
-		initWithStrategy: self defaultStrategy
-		position: aStartPosition
-		extent: aPoint
-]
-
-{ #category : 'initializing' }
-TxAthensLayoutView >> initWithStrategy: aLayoutStrategy position: aStartPosition extent: aPoint [
+	self initialize.
 
 	offset := 0 @ 0.
+	announcer := Announcer new.
+
+	container := aViewContainer.
 	layoutStrategy := aLayoutStrategy.
 	extent := aPoint.
 
 	self resetLayout: aStartPosition
-]
-
-{ #category : 'initialization' }
-TxAthensLayoutView >> initialize [
-
-	offset := 0 @ 0.
-	announcer := Announcer new.
-	container := TxAthensNullViewContainer new
 ]
 
 { #category : 'accessing' }
@@ -331,20 +316,22 @@ TxAthensLayoutView >> resetLayout [
 { #category : 'initializing' }
 TxAthensLayoutView >> resetLayout: startPosition [
 
-	| pos |
+	| position |
 	"Always align with line start"
 	self layoutIsAboutToReset.
 
-	pos := startPosition asPosition moveToLineStart.
-	pos span previous isAtStart ifTrue: [ pos := pos moveLeft ].
+	position := startPosition asPosition moveToLineStart.
+	position span previous isAtStart
+		ifTrue: [ position := position moveLeft ].
 
-	layout := TxAthensLayout new view: self.
-	layout initializePosition: pos strategy: layoutStrategy.
+	layout := TxAthensLayout new view: self; yourself.
+	layout initializePosition: position strategy: layoutStrategy.
 
 	"Keep scanning until it's enough to fill the view"
 	[ extent y + offset y > layout height ] whileTrue: [
 		"or nothing more to scan"
-		layout extendOneLineDown ifFalse: [ ^ self announceViewChanged ] ].
+		layout extendOneLineDown
+			ifFalse: [ ^ self announceViewChanged ] ].
 
 	self announceViewChanged
 ]

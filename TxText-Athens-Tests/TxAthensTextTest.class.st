@@ -31,9 +31,15 @@ TxAthensTextTest >> newText: aString [
 ]
 
 { #category : 'private' }
-TxAthensTextTest >> newViewOn: aText [ 
+TxAthensTextTest >> newViewOn: aText [
+
 	| layoutView |
-	layoutView :=  TxAthensLayoutView on: aText extent: self defaultLayoutViewExtent.
+	layoutView :=
+		TxAthensLayoutView
+			on: aText
+			extent: self defaultLayoutViewExtent.
+
 	layoutView layoutStrategy: self defaultStrategy.
+
 	^ layoutView
 ]

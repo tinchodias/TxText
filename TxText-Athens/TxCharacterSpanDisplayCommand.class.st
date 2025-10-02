@@ -19,9 +19,9 @@ TxCharacterSpanDisplayCommand >> advance [
 ]
 
 { #category : 'accessing' }
-TxCharacterSpanDisplayCommand >> advance: anObject [
-	
-	advance := anObject
+TxCharacterSpanDisplayCommand >> advance: aPoint [
+
+	advance := aPoint
 ]
 
 { #category : 'testing' }

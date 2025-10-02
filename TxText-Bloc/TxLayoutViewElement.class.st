@@ -27,10 +27,13 @@ TxLayoutViewElement >> hideEmbeddedObject: anElement [
 ]
 
 { #category : 'initialization' }
-TxLayoutViewElement >> initializeText: aTxModel [ 
-	layoutView := TxAthensLayoutView new.
-	layoutView container: self.
-	layoutView initWithPosition: aTxModel startPosition extent: self extent. 
+TxLayoutViewElement >> initializeText: aTxModel [
+
+	layoutView :=
+		TxAthensLayoutView
+			on: aTxModel
+			extent: self extent
+			container: self
 ]
 
 { #category : 'view notifications' }

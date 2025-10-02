@@ -27,45 +27,9 @@ TxHighlightRenderer class >> highlighting: aTxInterval in: layoutView with: pain
 ]
 
 { #category : 'private-accessing' }
-TxHighlightRenderer >> interval: aTxInterval [
+TxHighlightRenderer >> computeShapes [	
 
-	interval := aTxInterval.
-	shapes := nil
-]
-
-{ #category : 'private-accessing' }
-TxHighlightRenderer >> layout [
-
-	^ layoutView layout
-]
-
-{ #category : 'private-accessing' }
-TxHighlightRenderer >> layoutView: anObject [
-
-	layoutView := anObject
-]
-
-{ #category : 'private-accessing' }
-TxHighlightRenderer >> paint: anObject [
-
-	paint := anObject
-]
-
-{ #category : 'rendering' }
-TxHighlightRenderer >> renderHighlightOn: canvas [
-
-	canvas pathTransform restoreAfter: [
-		canvas pathTransform translateBy: layoutView offset negated.
-		canvas setPaint: paint.
-		self shapes do: [ :e | canvas drawShape: e ] ]
-]
-
-{ #category : 'private-accessing' }
-TxHighlightRenderer >> shapes [
-
-	| lineStream currentLine startPoint endPoint height highlightStartPosition highlightEndPosition |
-	shapes ifNotNil: [ ^ shapes ].
-	
+	| highlightStartPosition highlightEndPosition height lineStream currentLine startPoint endPoint |
 	shapes := OrderedCollection new.
 	self trimIntervalToLayout.
 	interval isEmpty ifTrue: [ ^ shapes ].
@@ -108,8 +72,47 @@ TxHighlightRenderer >> shapes [
 				@ (height + currentLine height) ]
 		ifFalse: [ highlightEndPosition bottomPoint ].
 	
-	shapes add: (startPoint rectangle: endPoint).
+	shapes add: (startPoint rectangle: endPoint)
+]
 
+{ #category : 'private-accessing' }
+TxHighlightRenderer >> interval: aTxInterval [
+
+	interval := aTxInterval.
+	shapes := nil
+]
+
+{ #category : 'private-accessing' }
+TxHighlightRenderer >> layout [
+
+	^ layoutView layout
+]
+
+{ #category : 'private-accessing' }
+TxHighlightRenderer >> layoutView: anObject [
+
+	layoutView := anObject
+]
+
+{ #category : 'private-accessing' }
+TxHighlightRenderer >> paint: anObject [
+
+	paint := anObject
+]
+
+{ #category : 'rendering' }
+TxHighlightRenderer >> renderHighlightOn: canvas [
+
+	canvas pathTransform restoreAfter: [
+		canvas pathTransform translateBy: layoutView offset negated.
+		canvas setPaint: paint.
+		self shapes do: [ :each | canvas drawShape: each ] ]
+]
+
+{ #category : 'private-accessing' }
+TxHighlightRenderer >> shapes [
+
+	shapes ifNil: [ self computeShapes ].
 	^ shapes
 ]
 

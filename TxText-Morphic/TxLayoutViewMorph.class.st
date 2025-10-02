@@ -43,11 +43,11 @@ TxLayoutViewMorph >> hideEmbeddedObject: morph [
 { #category : 'initialization' }
 TxLayoutViewMorph >> initializeText: aTxModel [
 
-	layoutView := TxAthensLayoutView new.
-	layoutView container: self.
-	layoutView
-		initWithPosition: aTxModel startPosition
-		extent: self extent
+	layoutView :=
+		TxAthensLayoutView
+			on: aTxModel
+			extent: self extent
+			container: self
 ]
 
 { #category : 'morphic geometry' }
