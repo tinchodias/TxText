@@ -1,5 +1,5 @@
 Class {
-	#name : 'TxCairoCharacterSpanDisplayCommand',
+	#name : 'TxAthensGlyphsDisplayCommand',
 	#superclass : 'TxCharacterSpanDisplayCommand',
 	#instVars : [
 		'glyphs'
@@ -10,13 +10,13 @@ Class {
 }
 
 { #category : 'private' }
-TxCairoCharacterSpanDisplayCommand >> getGlyphsUsing: renderer [
+TxAthensGlyphsDisplayCommand >> getGlyphsUsing: renderer [
 
 	glyphs := renderer glyphsOf: span characters from: start to: stop
 ]
 
 { #category : 'rendering' }
-TxCairoCharacterSpanDisplayCommand >> renderOn: renderer [
+TxAthensGlyphsDisplayCommand >> renderOn: renderer [
 
 	| canvas glyphRenderer |
 	canvas := renderer canvas.
@@ -26,14 +26,11 @@ TxCairoCharacterSpanDisplayCommand >> renderOn: renderer [
 	glyphs ifNil: [ self getGlyphsUsing: glyphRenderer ].
 	glyphRenderer renderGlyphs: glyphs.
 
-	"	canvas setPaint: Color random.
-	canvas drawShape: (0@0 corner: advance x @ 3).
-"
 	renderer advance: advance
 ]
 
 { #category : 'setting up' }
-TxCairoCharacterSpanDisplayCommand >> span: aSpan start: startPosition stop: stopPosition [
+TxAthensGlyphsDisplayCommand >> span: aSpan start: startPosition stop: stopPosition [
 
 	span := aSpan.
 	start := startPosition.

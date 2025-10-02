@@ -3,7 +3,7 @@ Extension { #name : 'CairoFontMetricsProvider' }
 { #category : '*TxText-Athens' }
 CairoFontMetricsProvider >> newCharacterSpanDisplayCommand: span start: startPos stop: stopPos advance: aPoint [
 
-	^ TxCairoCharacterSpanDisplayCommand new 
+	^ TxAthensGlyphsDisplayCommand new 
 		span: span start: startPos stop: stopPos;
 		advance: aPoint;
 		yourself
