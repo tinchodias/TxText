@@ -42,12 +42,16 @@ TxTextEditor >> announcer [
 
 { #category : 'editing' }
 TxTextEditor >> backspace [
+	"Perform the classical effect of pressing backspace in text editors.
+	This is: when there is a selection, it will be deleted; when there
+	is no selection, then one item at the left will be deleted. If there
+	was no selection and cursor is at the begining, then nothing happens."
 
-	selection isEmpty
-		ifTrue: [ selection end moveLeft ]
-		ifFalse: [
-			selection cut.
-			self notifyDeleted ]
+	selection isEmpty ifTrue: [ selection end moveLeft ].
+	
+	selection isEmpty ifFalse: [
+		selection cut.
+		self notifyDeleted ]
 ]
 
 { #category : 'selection' }
@@ -72,12 +76,16 @@ TxTextEditor >> cursorPosition [
 
 { #category : 'editing' }
 TxTextEditor >> delete [
+	"Perform the classical effect of pressing delete in text editors.
+	This is: when there is a selection, it will be deleted; when there
+	is no selection, then one item at the right will be deleted. If there
+	was no selection and cursor is at the end, then nothing happens."
 
-	selection isEmpty
-		ifTrue: [ selection end moveRight ]
-		ifFalse: [
-			selection cut.
-			self notifyDeleted ]
+	selection isEmpty ifTrue: [ selection end moveRight ].
+	
+	selection isEmpty ifFalse: [
+		selection cut.
+		self notifyDeleted ]
 ]
 
 { #category : 'selection' }
