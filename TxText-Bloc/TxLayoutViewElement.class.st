@@ -59,7 +59,7 @@ TxLayoutViewElement >> layoutView [
 { #category : 'factory' }
 TxLayoutViewElement >> newEmbeddedObjectCommand: aTxEmbeddedObjectSpan [ 
 	| morph |
-	morph := TxWrappingMorph for: (aTxEmbeddedObjectSpan object asMorph).
+	morph := TxEmbeddedMorph for: (aTxEmbeddedObjectSpan object asMorph).
 	self registerEmbeddedMorph: morph.
 	
 	^ TxEmbeddedObjectCommand new 

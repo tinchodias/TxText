@@ -11,14 +11,14 @@ text endPosition insertObject: Morph new.
 ```
 "
 Class {
-	#name : 'TxWrappingMorph',
+	#name : 'TxEmbeddedMorph',
 	#superclass : 'Morph',
 	#category : 'TxText-Morphic',
 	#package : 'TxText-Morphic'
 }
 
 { #category : 'instance creation' }
-TxWrappingMorph class >> for: aMorph [
+TxEmbeddedMorph class >> for: aMorph [
 
 	^ self new
 		wrapAround: aMorph;
@@ -26,13 +26,13 @@ TxWrappingMorph class >> for: aMorph [
 ]
 
 { #category : 'accessing' }
-TxWrappingMorph >> currentPosition: aPoint [
+TxEmbeddedMorph >> currentPosition: aPoint [
 
 	self position: aPoint x @ (aPoint y - self height)
 ]
 
 { #category : 'drawing' }
-TxWrappingMorph >> drawOnAthensCanvas: aCanvas [
+TxEmbeddedMorph >> drawOnAthensCanvas: aCanvas [
 	"nothing"
 	
 "	aCanvas setPaint: (Color red alpha: 0.4).
@@ -45,7 +45,7 @@ TxWrappingMorph >> drawOnAthensCanvas: aCanvas [
 ]
 
 { #category : 'drawing' }
-TxWrappingMorph >> fullDrawOnAthensCanvas: aCanvas [
+TxEmbeddedMorph >> fullDrawOnAthensCanvas: aCanvas [
 	"nothing"
 
 	aCanvas pathTransform restoreAfter: [
@@ -54,19 +54,19 @@ TxWrappingMorph >> fullDrawOnAthensCanvas: aCanvas [
 ]
 
 { #category : 'accessing' }
-TxWrappingMorph >> isLocked [
+TxEmbeddedMorph >> isLocked [
 
 	^ false
 ]
 
 { #category : 'accessing' }
-TxWrappingMorph >> layoutView [
+TxEmbeddedMorph >> layoutView [
 
 	^ owner layoutView
 ]
 
 { #category : 'events-processing' }
-TxWrappingMorph >> processEvent: anEvent using: defaultDispatcher [
+TxEmbeddedMorph >> processEvent: anEvent using: defaultDispatcher [
 "	| evt |
 	evt := anEvent transformedBy: owner transform.
 
@@ -80,7 +80,7 @@ TxWrappingMorph >> processEvent: anEvent using: defaultDispatcher [
 ]
 
 { #category : 'accessing' }
-TxWrappingMorph >> wrapAround: aMorph [
+TxEmbeddedMorph >> wrapAround: aMorph [
 
 	aMorph delete.
 	aMorph position: 0 @ 0.
