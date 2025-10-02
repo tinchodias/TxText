@@ -23,8 +23,8 @@ Class {
 { #category : 'instance creation' }
 TxAthensLayoutPosition class >> textPosition: textPosition layout: txLayout [
 
-	^ self new
-		textPosition: textPosition layout: txLayout;
+	^ self basicNew
+		initializeTextPosition: textPosition layout: txLayout;
 		yourself
 ]
 
@@ -67,6 +67,17 @@ TxAthensLayoutPosition >> horizontalOffset [
 	^ horizontalOffset
 ]
 
+{ #category : 'initializing' }
+TxAthensLayoutPosition >> initializeTextPosition: aTextPosition layout: txLayout [
+
+	self initialize.
+
+	textPosition := aTextPosition.
+	layout := txLayout.
+
+	self updateInfo
+]
+
 { #category : 'accessing' }
 TxAthensLayoutPosition >> layout [
 	^ layout
@@ -81,17 +92,6 @@ TxAthensLayoutPosition >> line [
 TxAthensLayoutPosition >> textPosition [
 
 	^ textPosition
-]
-
-{ #category : 'initializing' }
-TxAthensLayoutPosition >> textPosition: aTextPosition layout: txLayout [
-
-	self initialize.
-	
-	textPosition := aTextPosition.
-	layout := txLayout.
-
-	self updateInfo
 ]
 
 { #category : 'accessing' }
