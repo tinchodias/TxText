@@ -19,56 +19,56 @@ Class {
 { #category : 'visiting' }
 TxAthensNoWrapStrategy >> visitCharacterSpan: aSpan [
 	
-	| chars startPos font w  fontMetricsProvider |
-	chars := aSpan characters.
+	| spanCharacters start font lineWidth fontMetricsProvider |
+	spanCharacters := aSpan characters.
 	
-	startPos := currentPosition spanPosition.
-	startPos = 0 ifTrue: [ startPos := 1 ].
+	start := currentPosition spanPosition.
+	start = 0 ifTrue: [ start := 1 ].
 	
 	font := aSpan getAttribute: TxFontAttribute.  
-	
 	fontMetricsProvider := self fontMetricsProviderFor: font.
-	currentLine accumulateHeight: fontMetricsProvider fontHeight.
-	currentLine accumulateAscent: fontMetricsProvider fontAscent.
+	currentLine
+		accumulateHeight: fontMetricsProvider fontHeight;
+		accumulateAscent: fontMetricsProvider fontAscent.
 	
-	w := 0.
-	startPos to: chars size do: [ :i |
-		| char tabAdvance |
-		char := chars at: i.
-		char == Character tab 
+	lineWidth := 0.
+	start to: spanCharacters size do: [ :index |
+		| eachCharacter tabAdvance |
+		eachCharacter := spanCharacters at: index.
+		eachCharacter == Character tab 
 			ifTrue: [ 
-				i > startPos ifTrue: [ 
-					currentLine addWidth: w.
+				index > start ifTrue: [ 
+					currentLine addWidth: lineWidth.
 
 					currentLine addCommand:
 						(fontMetricsProvider 
 							newCharacterSpanDisplayCommand: aSpan
-							start: startPos
-							stop: i - 1
-							advance: w @ 0) ].
+							start: start
+							stop: index - 1
+							advance: lineWidth @ 0) ].
 
-					tabAdvance := self alignTab: font.
+					tabAdvance := self tabAdvanceUsingFont: font.
 					currentLine addCommand:
 						(fontMetricsProvider 
 							newTabDisplayCommand: aSpan
-							start: i - 1
-							stop: i
+							start: index - 1
+							stop: index
 							advance: tabAdvance).
 						
 					currentLine addWidth: tabAdvance x.
 					
-					^ aSpan positionAt: i + 1 ]
+					^ aSpan positionAt: index + 1 ]
 			ifFalse: [
-				w := w + (fontMetricsProvider getGlyphWidth: (chars at: i)) ] ].
+				lineWidth := lineWidth + (fontMetricsProvider getGlyphWidth: eachCharacter) ] ].
 
-	currentLine addWidth: w.
+	currentLine addWidth: lineWidth.
 
 	currentLine addCommand:
 		(fontMetricsProvider 
 			newCharacterSpanDisplayCommand: aSpan
-			start: startPos
+			start: start
 			stop: aSpan size
-			advance: w @ 0).
+			advance: lineWidth @ 0).
 		
 	^ aSpan next startPosition
 ]

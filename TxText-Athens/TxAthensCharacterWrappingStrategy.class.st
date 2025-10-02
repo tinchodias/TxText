@@ -43,58 +43,59 @@ TxAthensCharacterWrappingStrategy >> rightMargin: aNumber [
 { #category : 'visitor' }
 TxAthensCharacterWrappingStrategy >> visitCharacterSpan: aSpan [
 	
-	| chars pos startPos font w fontMetricsProvider viewWidth  glyphWidth |
-	chars := aSpan characters.
-	startPos := pos := currentPosition spanPosition.
-	font := aSpan getAttribute: TxFontAttribute.  
+	| spanCharacters index start font lineWidth fontMetricsProvider viewWidth glyphWidth |
+	spanCharacters := aSpan characters.
+	index := currentPosition spanPosition.
+	font := aSpan getAttribute: TxFontAttribute.
 	
 	fontMetricsProvider := self fontMetricsProviderFor: font.
-	currentLine accumulateHeight: fontMetricsProvider fontHeight.
-	currentLine accumulateAscent: fontMetricsProvider fontAscent.
+	currentLine
+		accumulateHeight: fontMetricsProvider fontHeight;
+		accumulateAscent: fontMetricsProvider fontAscent.
 	
 	viewWidth := self view extent x.
-	glyphWidth := w := 0.
-	startPos := pos + 1.
+	lineWidth := 0.
+	start := index + 1.
 	
-	[ pos < chars size ] whileTrue: [
-		| char |
-		char := chars at: pos + 1.
-		char == Character tab ifTrue: [
-			| ta | 
-			ta := self alignTab: font.
-			((currentLine width + ta x > (viewWidth - rightMargin))
+	[ index < spanCharacters size ] whileTrue: [
+		| eachCharacter |
+		eachCharacter := spanCharacters at: index + 1.
+		eachCharacter == Character tab ifTrue: [
+			| tabAdvance |
+			tabAdvance := self tabAdvanceUsingFont: font.
+			((currentLine width + tabAdvance x > (viewWidth - rightMargin))
 				and: [ currentLine width > 0 ]) ifTrue: [
 
 				"Need to wrap"
 				currentLine addCommand:
 					(fontMetricsProvider 
 						newCharacterSpanDisplayCommand: aSpan 
-						start: startPos 
-						stop: pos 
-						advance: w @ 0).
+						start: start 
+						stop: index 
+						advance: lineWidth @ 0).
 
-				currentPosition := aSpan positionAt: pos.
+				currentPosition := aSpan positionAt: index.
 				self completeLine.
 				^ currentPosition ].
 				
 			currentLine addCommand:
 				(fontMetricsProvider 
 					newCharacterSpanDisplayCommand: aSpan 
-					start: startPos 
-					stop: pos
-					advance: w @ 0).
+					start: start 
+					stop: index
+					advance: lineWidth @ 0).
 
-			currentLine addWidth: ta x.
+			currentLine addWidth: tabAdvance x.
 			currentLine addCommand:
 				(fontMetricsProvider 
 					newTabDisplayCommand: aSpan
-					start: pos - 1
-					stop: pos
-					advance: ta).
-			currentPosition := aSpan positionAt: pos + 1.
+					start: index - 1
+					stop: index
+					advance: tabAdvance).
+			currentPosition := aSpan positionAt: index + 1.
 			^ currentPosition ].
 
-		glyphWidth := fontMetricsProvider getGlyphWidth: char.
+		glyphWidth := fontMetricsProvider getGlyphWidth: eachCharacter.
 		"Do not wrap unless we put at least one character into current line"
 		((currentLine width + glyphWidth > (viewWidth - rightMargin))
 			and: [ currentLine width > 0 ])
@@ -103,24 +104,24 @@ TxAthensCharacterWrappingStrategy >> visitCharacterSpan: aSpan [
 					currentLine addCommand:
 						(fontMetricsProvider 
 							newCharacterSpanDisplayCommand: aSpan 
-							start: startPos 
-							stop: pos 
-							advance: w @ 0).
+							start: start 
+							stop: index 
+							advance: lineWidth @ 0).
 
-					currentPosition := aSpan positionAt: pos.
+					currentPosition := aSpan positionAt: index.
 					self completeLine.
 					^ currentPosition ]
 				ifFalse: [
 					currentLine addWidth: glyphWidth.
-					w := w + glyphWidth.
-					pos := pos + 1 ] ].
+					lineWidth := lineWidth + glyphWidth.
+					index := index + 1 ] ].
 
 	currentLine addCommand:
 		(fontMetricsProvider 
 			newCharacterSpanDisplayCommand: aSpan 
-			start: startPos 
-			stop: chars size
-			advance: w @ 0).
-			
+			start: start 
+			stop: spanCharacters size
+			advance: lineWidth @ 0).
+
 	^ aSpan next startPosition
 ]
