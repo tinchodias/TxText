@@ -44,8 +44,11 @@ TxBasicTextPosition >> < aPosition [
 
 { #category : 'comparing' }
 TxBasicTextPosition >> = anObject [
-	^ (anObject isKindOf: TxBasicTextPosition) and: [
-		anObject text = self text and: [ anObject span = self span and: [ anObject spanPosition = self spanPosition ]]]
+
+	^ anObject class = self class and: [
+		  anObject text = self text and: [
+			  anObject span = self span and: [
+				  anObject spanPosition = self spanPosition ] ] ]
 ]
 
 { #category : 'converting' }
