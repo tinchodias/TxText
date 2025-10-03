@@ -24,8 +24,8 @@ BaselineOfTxText >> baseline: spec [
 				package: 'TxText-Styler' with: [ spec requires: #('TxText-Model') ];
 				package: 'TxText-Tools' with: [ spec requires: #('TxText-Editor' 'TxText-Morphic' 'TxText-Styler') ].
 
-			spec
-				package: 'TxText-Bloc' with: [ spec requires: #('TxText-Athens' 'TxText-Editor' 'TxText-Model' 'TxText-Morphic') ]
+			"spec
+				package: 'TxText-Bloc' with: [ spec requires: #('TxText-Athens' 'TxText-Editor' 'TxText-Model' 'TxText-Morphic') ]"
 
 			]
 ]
