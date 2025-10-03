@@ -51,6 +51,16 @@ TxTextEditorMorph class >> buildTextEditorKeymapsOn: aBuilder [
 ]
 
 { #category : 'examples' }
+TxTextEditorMorph class >> exampleHugePharoChanges [
+	"Inspired in Album's #example_EditorPharoChangesText"
+
+	| text |
+	text := Smalltalk changesFile contents asTxModel.
+
+	^ self openInWindowWithText: text
+]
+
+{ #category : 'examples' }
 TxTextEditorMorph class >> exampleHugeText [
 
 	| text |
