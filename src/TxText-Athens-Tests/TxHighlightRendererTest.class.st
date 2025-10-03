@@ -18,10 +18,19 @@ TxHighlightRendererTest >> assertRectangle: rectangleNumber coversFullViewWidthO
 	| line rectangle expectedStart expectedEndPoint lineEndPosition |
 	line := view layout lines at: lineNumber.
 	rectangle := drawnShapes at: rectangleNumber.
-	expectedStart := view layout positionAt: line startPosition ifOutside: [ self fail ].
+	expectedStart :=
+		view layout
+			positionAt: line startPosition
+			ifOutside: [ self fail ].
+
 	self assert: rectangle topLeft equals: expectedStart topPoint.
-	lineEndPosition := view layout positionAt: line endPosition ifOutside: [ self fail ].
+
+	lineEndPosition :=
+		view layout
+			positionAt: line endPosition
+			ifOutside: [ self fail ].
 	expectedEndPoint := view width @ lineEndPosition bottomPoint y.
+
 	self assert: rectangle bottomRight equals: expectedEndPoint
 ]
 
@@ -32,9 +41,18 @@ TxHighlightRendererTest >> assertRectangle: rectangleNumber coversLeftPartOfLine
 	| line rectangle expectedStart expectedEnd |
 	line := view layout lines at: lineNumber.
 	rectangle := drawnShapes at: rectangleNumber.
-	expectedStart := view layout positionAt: line startPosition ifOutside: [ self fail ].
+	expectedStart :=
+		view layout
+			positionAt: line startPosition
+			ifOutside: [ self fail ].
+
 	self assert: rectangle topLeft equals: expectedStart topPoint.
-	expectedEnd := view layout positionAt: interval end ifOutside: [ self fail ].
+
+	expectedEnd :=
+		view layout
+			positionAt: interval end
+			ifOutside: [ self fail ].
+
 	self assert: rectangle bottomRight equals: expectedEnd bottomPoint
 ]
 
@@ -45,10 +63,19 @@ TxHighlightRendererTest >> assertRectangle: rectangleNumber coversRightPartOfLin
 	| line rectangle expectedStart expectedEndPoint lineEndPosition |
 	line := view layout lines at: lineNumber.
 	rectangle := drawnShapes at: rectangleNumber.
-	expectedStart := view layout positionAt: interval start ifOutside: [ self fail ].
+	expectedStart :=
+		view layout
+			positionAt: interval start
+			ifOutside: [ self fail ].
+
 	self assert: rectangle topLeft equals: expectedStart topPoint.
-	lineEndPosition := view layout positionAt: line endPosition ifOutside: [ self fail ].
+
+	lineEndPosition :=
+		view layout
+			positionAt: line endPosition
+			ifOutside: [ self fail ].
 	expectedEndPoint := view width @ lineEndPosition bottomPoint y.
+
 	self assert: rectangle bottomRight equals: expectedEndPoint
 ]
 
@@ -57,10 +84,18 @@ TxHighlightRendererTest >> assertRectangleCoversMiddleOfLine: aNumber [
 	"For a single line selection, simply from the start to end of the selection should be highlighted"
 
 	| expectedStart expectedEnd |
-	expectedStart := view layout positionAt: interval start ifOutside: [ self fail ].
+	expectedStart :=
+		view layout
+			positionAt: interval start
+			ifOutside: [ self fail ].
+
 	self assert: drawnShapes first topLeft equals: expectedStart topPoint.
 	
-	expectedEnd := view layout positionAt: interval end ifOutside: [ self fail ].
+	expectedEnd :=
+		view layout
+			positionAt: interval end
+			ifOutside: [ self fail ].
+
 	self assert: drawnShapes first bottomRight equals: expectedEnd bottomPoint
 ]
 

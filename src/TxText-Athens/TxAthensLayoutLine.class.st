@@ -49,10 +49,9 @@ TxAthensLayoutLine >> accumulateSpanFontMetrics: span [
 ]
 
 { #category : 'accessing' }
-TxAthensLayoutLine >> addCommand: cmd [
+TxAthensLayoutLine >> addCommand: aDisplayCommand [
 
-	commands add: cmd
-	
+	commands add: aDisplayCommand
 ]
 
 { #category : 'scanning' }
@@ -87,13 +86,14 @@ TxAthensLayoutLine >> commands [
 ]
 
 { #category : 'rendering' }
-TxAthensLayoutLine >> debugRenderOn: aTxTextRenderer [ 
-	
-	aTxTextRenderer canvas 
+TxAthensLayoutLine >> debugRenderOn: aTxTextRenderer [
+
+	aTxTextRenderer canvas
 		setPaint: Color red;
-		drawShape: (0@ maxAscent negated corner: width@(maxAscent negated+height)).
-	
-	commands do: [:cmd | cmd renderOn: aTxTextRenderer ]
+		drawShape:
+			(0 @ maxAscent negated corner: width @ (maxAscent negated + height)).
+
+	commands do: [ :cmd | cmd renderOn: aTxTextRenderer ]
 ]
 
 { #category : 'accessing' }
@@ -117,23 +117,22 @@ TxAthensLayoutLine >> height [
 ]
 
 { #category : 'geometry' }
-TxAthensLayoutLine >> horizontalOffsetFor: textPosition [ 
+TxAthensLayoutLine >> horizontalOffsetFor: aPosition [ 
 
 	| totalAdvance |
 	totalAdvance := 0. 
 	
 	"special case, when line starting position don't matching the first command position"
 	commands isEmpty ifTrue: [ "empty line" ^ 0 ].
-	commands first startPosition > textPosition ifTrue: [ ^ 0 ]. 
+	commands first startPosition > aPosition ifTrue: [ ^ 0 ]. 
 		
-	commands do: [:cmd |
-		(cmd contains: textPosition)
+	commands do: [ :each |
+		(each contains: aPosition)
 			ifTrue: [
-				^ totalAdvance + (cmd horizontalAdvanceUpTo: textPosition layout: layout) ]
-			ifFalse: [ totalAdvance := totalAdvance + cmd advance x ]
-	].
+				^ totalAdvance + (each horizontalAdvanceUpTo: aPosition layout: layout) ]
+			ifFalse: [ totalAdvance := totalAdvance + each advance x ] ].
 
-	"if we reach here, just answert he accumulated total advance"
+	"if we reach here, just answer the accumulated total advance"
 	^ totalAdvance
 ]
 
@@ -172,7 +171,7 @@ TxAthensLayoutLine >> maxAscent [
 { #category : 'notifications' }
 TxAthensLayoutLine >> notifyRemovedFrom: aTxAthensLayout [
 
-	commands do: [ :ea | ea notifyRemovedFrom: aTxAthensLayout ]
+	commands do: [ :each | each notifyRemovedFrom: aTxAthensLayout ]
 ]
 
 { #category : 'printing' }
@@ -185,13 +184,13 @@ TxAthensLayoutLine >> printOn: aStream [
 ]
 
 { #category : 'rendering' }
-TxAthensLayoutLine >> renderOn: aTxTextRenderer [ 
-	
+TxAthensLayoutLine >> renderOn: aTxTextRenderer [
+
 	"aTxTextRenderer canvas 
 		setPaint: (Color red alpha:0.5);
-		drawShape: (0@ maxAscent negated corner: width@(maxAscent negated+height)).
-"	
-	commands do: [:cmd | cmd renderOn: aTxTextRenderer ]
+		drawShape: (0@ maxAscent negated corner: width@(maxAscent negated+height))."
+
+	commands do: [ :each | each renderOn: aTxTextRenderer ]
 ]
 
 { #category : 'accessing' }
@@ -217,12 +216,14 @@ TxAthensLayoutLine >> textPositionAtHorizontalOffset: anOffset [
 	| advance |
 	anOffset < 0 ifTrue: [ ^ self startPosition ].
 	advance := 0.
-	commands do: [ :cmd |
-		cmd advance x + advance > anOffset ifTrue: [
-			^ cmd
-				  textPositionForHorizontalOffset: anOffset - advance
-				  layout: layout ].
-		advance := advance + cmd advance x ].
+
+	commands do: [ :each |
+		each advance x + advance > anOffset ifTrue: [
+			^ each
+				textPositionForHorizontalOffset: anOffset - advance
+				layout: layout ].
+		advance := advance + each advance x ].
+
 	^ self endPosition
 ]
 
@@ -233,7 +234,7 @@ TxAthensLayoutLine >> width [
 ]
 
 { #category : 'geometry' }
-TxAthensLayoutLine >> width: anObject [
+TxAthensLayoutLine >> width: aNumber [
 
-	width := anObject
+	width := aNumber
 ]

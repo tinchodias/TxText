@@ -31,11 +31,10 @@ TxAthensLayout >> addLine: newLine [
 TxAthensLayout >> commandForPosition: aTextPosition ifOutside: aBlock [
 	"Answer the display command which correspond to given text position in layout,
 	or evaluate block if layout does not contains given position"
-	
-	lines do: [:line |
-		(line interval contains: aTextPosition) ifTrue: [ 
-			^ line commandForPosition: aTextPosition ifOutside: aBlock ]
-	].
+
+	lines do: [ :line |
+		(line interval contains: aTextPosition) ifTrue: [
+			^ line commandForPosition: aTextPosition ifOutside: aBlock ] ].
 
 	^ aBlock value
 ]
@@ -73,52 +72,51 @@ TxAthensLayout >> endPosition [
 
 { #category : 'scanning' }
 TxAthensLayout >> extendOneLineDown [
-	
 	"Extend layout to the bottom, by scanning one more visual line.
 	Answer true if new line was added due to scanning..
 	or false, if there's nothing left to scan (end of text) "
-	| pos newLine |
-	pos := self endPosition.
-	pos isAtEnd ifTrue: [ ^ false ].
+
+	| start newLine |
+	start := self endPosition.
+	start isAtEnd ifTrue: [ ^ false ].
 
 	"if end position is at line separator, advance to next line"
-	(pos span isLineSeparator and: [ pos isAtSpanStart ]) ifTrue: [  pos := pos nextPosition ].
-	
-	newLine := strategy scanSingleVisualLineFor: self startingAt: pos.
+	(start span isLineSeparator and: [ start isAtSpanStart ]) ifTrue: [
+		start := start nextPosition ].
+
+	newLine := strategy scanSingleVisualLineFor: self startingAt: start.
 	lines add: newLine.
 	extent := (extent x max: newLine width) @ (extent y + newLine height).
-	
+
 	^ true
 ]
 
 { #category : 'scanning' }
 TxAthensLayout >> extendOneLineUp [
 	
-	| pos newLine extraLines h |
-	pos := self startPosition.
-	
-	pos isAtStart ifTrue: [ ^ false ].
-		
-	pos := self startPosition moveUp moveToLineStart.
+	| start newLine extraLines height |
+	start := self startPosition.
+	start isAtStart ifTrue: [ ^ false ].
+	start := start moveUp moveToLineStart.
 	
 	extraLines := OrderedCollection new.
-	
 	[ 
-		newLine := strategy scanSingleVisualLineFor: self startingAt: pos.	
+		newLine := strategy scanSingleVisualLineFor: self startingAt: start.	
 		extraLines add: newLine.
 		
 		"if end position is at line separator, advance to next line"
-		pos := newLine endPosition.
-		(pos span isLineSeparator and: [ pos isAtSpanStart ]) ifTrue: [  pos := pos nextPosition ].
-		pos = self startPosition
-	] whileFalse.
+		start := newLine endPosition.
+		(start span isLineSeparator and: [ start isAtSpanStart ])
+			ifTrue: [ start := start nextPosition ].
+		
+	] doWhileFalse: [ start = self startPosition ].
 
-	h := extent y.
+	height := extent y.
 	extraLines reverseDo: [ :line |
 		lines addFirst: line.
 		extent := (extent x max: line width) @ (extent y + line height) ].
 	
-	view privSetVerticalOffset: view offset y + (extent y - h).
+	view privSetVerticalOffset: view offset y + (extent y - height).
 	
 	^ true
 ]
@@ -177,13 +175,13 @@ TxAthensLayout >> interval [
 TxAthensLayout >> isWellFormed [
 	"check that every position within the receiver interval corresponds to some line "
 
-	| pos end |
-	pos := self startPosition.
+	| current end |
+	current := self startPosition.
 	end := self endPosition.
 
-	[ pos <= end ] whileTrue: [
-		self positionAt: pos ifOutside: [ ^ false ].
-		pos := pos nextPosition ].
+	[ current <= end ] whileTrue: [
+		self positionAt: current ifOutside: [ ^ false ].
+		current := current nextPosition ].
 
 	^ true
 ]
@@ -209,10 +207,12 @@ TxAthensLayout >> numberOfLines [
 { #category : 'geometry' }
 TxAthensLayout >> positionAt: aTextPosition ifOutside: aBlock [
 
-	(self interval contains: aTextPosition)
+	^ (self interval contains: aTextPosition)
 		ifTrue: [
-			^ TxAthensLayoutPosition textPosition: aTextPosition layout: self ]
-		ifFalse: [ ^ aBlock value ]
+			TxAthensLayoutPosition
+				textPosition: aTextPosition
+				layout: self ]
+		ifFalse: [ aBlock value ]
 ]
 
 { #category : 'accessing' }

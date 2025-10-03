@@ -67,9 +67,9 @@ TxBasicViewMorph >> backgroundColor [
 ]
 
 { #category : 'accessing' }
-TxBasicViewMorph >> backgroundColor: anObject [
+TxBasicViewMorph >> backgroundColor: aColor [
 
-	backgroundColor := anObject
+	backgroundColor := aColor
 ]
 
 { #category : 'text wrapping' }

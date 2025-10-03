@@ -192,7 +192,9 @@ TxTextEditorMorph >> borderWidth [
 { #category : 'text wrapping' }
 TxTextEditorMorph >> characterWrappingStrategy [
 
-	^ TxAthensCharacterWrappingStrategy new rightMargin: CursorEdgeMargin
+	^ TxAthensCharacterWrappingStrategy new
+		rightMargin: CursorEdgeMargin;
+		yourself
 ]
 
 { #category : 'drawing' }
