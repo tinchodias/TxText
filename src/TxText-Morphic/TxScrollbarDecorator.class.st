@@ -32,6 +32,28 @@ TxScrollbarDecorator >> computeBoundsIn: layoutBounds [
 	^ result
 ]
 
+{ #category : 'initialize' }
+TxScrollbarDecorator >> computeScrollbar [
+
+	| ann |
+	self removeAllMorphs.
+	scrollbar ifNotNil: [  scrollbar announcer unsubscribe: self ].
+
+	scrollbar :=
+		(vertical
+			ifTrue: [ TxSlider vertical ]
+			ifFalse: [ TxSlider horizontal ]) new.
+	
+	self addMorph: scrollbar.
+
+	ann := scrollbar announcer weak.
+	
+	ann 
+		when: TxSliderDragged send: #sliderDragged: to: self;
+		when: TxSliderScrollBackward send: #sliderScrollBackward to: self;
+		when: TxSliderScrollForward send: #sliderScrollForward to: self
+]
+
 { #category : 'accessing - defaults' }
 TxScrollbarDecorator >> defaultBounds [
 	"answer the default bounds for the receiver"
@@ -55,28 +77,6 @@ TxScrollbarDecorator >> height [
 		ifTrue: [ super height ]
 ]
 
-{ #category : 'initialize' }
-TxScrollbarDecorator >> initScrollbar [
-
-	| ann |
-	self removeAllMorphs.
-	scrollbar ifNotNil: [  scrollbar announcer unsubscribe: self ].
-
-	scrollbar :=
-		(vertical
-			ifTrue: [ TxSlider vertical ]
-			ifFalse: [ TxSlider horizontal ]) new.
-	
-	self addMorph: scrollbar.
-
-	ann := scrollbar announcer weak.
-	
-	ann 
-		when: TxSliderDragged send: #sliderDragged: to: self;
-		when: TxSliderScrollBackward send: #sliderScrollBackward to: self;
-		when: TxSliderScrollForward send: #sliderScrollForward to: self
-]
-
 { #category : 'initialization' }
 TxScrollbarDecorator >> initialize [
 
@@ -86,17 +86,11 @@ TxScrollbarDecorator >> initialize [
 	autohide := true
 ]
 
-{ #category : 'layout' }
-TxScrollbarDecorator >> layoutChanged [
-
-	^ super layoutChanged
-]
-
 { #category : 'placement' }
 TxScrollbarDecorator >> placeBottom [
 
 	vertical := false.
-	self initScrollbar.
+	self computeScrollbar.
 
 	super placeBottom
 ]
@@ -105,7 +99,7 @@ TxScrollbarDecorator >> placeBottom [
 TxScrollbarDecorator >> placeLeft [
 
 	vertical := true.
-	self initScrollbar.
+	self computeScrollbar.
 
 	super placeLeft
 ]
@@ -114,7 +108,7 @@ TxScrollbarDecorator >> placeLeft [
 TxScrollbarDecorator >> placeRight [
 
 	vertical := true.
-	self initScrollbar.
+	self computeScrollbar.
 
 	super placeRight
 ]
@@ -123,7 +117,7 @@ TxScrollbarDecorator >> placeRight [
 TxScrollbarDecorator >> placeTop [
 
 	vertical := false.
-	self initScrollbar.
+	self computeScrollbar.
 
 	super placeTop
 ]
