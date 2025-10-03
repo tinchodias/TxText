@@ -67,7 +67,7 @@ TxWorkspace >> initialize [
 TxWorkspace >> invokeDoitIn: editorMorph [
 
 	| myeditor |
-	myeditor := editorMorph controller.
+	myeditor := editorMorph editor.
 
 	myeditor selection isEmpty ifTrue: [
 		myeditor
@@ -82,7 +82,7 @@ TxWorkspace >> invokeDoitIn: editorMorph [
 TxWorkspace >> invokeInspectItIn: editorMorph [
 
 	| myeditor |
-	myeditor := editorMorph controller.
+	myeditor := editorMorph editor.
 
 	myeditor selection isEmpty ifTrue: [
 		myeditor
@@ -97,7 +97,7 @@ TxWorkspace >> invokeInspectItIn: editorMorph [
 TxWorkspace >> invokePrintItIn: editorMorph [
 
 	| myeditor result |
-	myeditor := editorMorph controller.
+	myeditor := editorMorph editor.
 
 	myeditor selection isEmpty ifTrue: [
 		myeditor
@@ -174,7 +174,7 @@ TxWorkspace >> updateSyntaxHighlighting [
 	| textEditor start end |
 	true ifTrue: [ ^ self ].
 
-	textEditor := editor controller.
+	textEditor := editor editor.
 	text := textEditor text.
 
 	self flag:
@@ -193,7 +193,7 @@ TxWorkspace >> updateSyntaxHighlighting [
 TxWorkspace >> wireEvents [
 
 	| textEditor |
-	textEditor := editor controller.
+	textEditor := editor editor.
 
 	textEditor announcer
 		when: TxDeletedTextAnnouncement

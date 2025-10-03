@@ -13,7 +13,7 @@ TxViewCoordinatesToTextPositionTest >> testLayoutPositionShouldBeBeyondStartPosi
 	layoutPosition :=
 		view
 			layoutPositionAt: oneCharRight
-			ifOutside: [ self assert: false ].
+			ifOutside: [ self fail ].
 	self assert: view text identicalTo: oneCharRight text.
 
 	self assert: layoutPosition baselinePoint x > 0
@@ -27,7 +27,7 @@ TxViewCoordinatesToTextPositionTest >> testOriginMovedRightShouldIncreaseTextPos
 	layoutPosition :=
 		view
 			layoutPositionAt: oneCharRight
-			ifOutside: [ self assert: false ].
+			ifOutside: [ self fail ].
 	pt := layoutPosition baselinePointInView.
 
 	position := view textPositionAt: pt + (1 @ 0).

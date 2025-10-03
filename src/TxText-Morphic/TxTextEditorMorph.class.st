@@ -2,9 +2,9 @@ Class {
 	#name : 'TxTextEditorMorph',
 	#superclass : 'TxBasicViewMorph',
 	#instVars : [
-		'controller',
 		'cursorMorph',
-		'layoutViewMorph'
+		'layoutViewMorph',
+		'editor'
 	],
 	#classVars : [
 		'CursorEdgeMargin'
@@ -210,37 +210,26 @@ TxTextEditorMorph >> characterWrappingStrategy [
 { #category : 'drawing' }
 TxTextEditorMorph >> clipSubmorphs [
 	"we're always clipping"
+
 	^ true
 ]
 
 { #category : 'accessing' }
 TxTextEditorMorph >> contents: anObject [
 
-	controller contents: anObject.
+	editor contents: anObject.
 
-	self resetViewTo: controller cursorPosition.
-	self controllerChanged
-]
+	self resetViewTo: editor cursorPosition.
 
-{ #category : 'accessing' }
-TxTextEditorMorph >> controller [
-
-	^ controller
-]
-
-{ #category : 'updating' }
-TxTextEditorMorph >> controllerChanged [
-
-	layoutViewMorph updateMorph.
-	self updateCursor: true
+	self editorChanged
 ]
 
 { #category : 'editing' }
 TxTextEditorMorph >> copyToClipboard [
 
-	controller selection isEmpty ifTrue: [ ^ self ].
+	editor selection isEmpty ifTrue: [ ^ self ].
 
-	Clipboard clipboardText: controller selection asString
+	Clipboard clipboardText: editor selection asString
 ]
 
 { #category : 'accessing' }
@@ -263,9 +252,9 @@ TxTextEditorMorph >> cursorForPosition: aPoint [
 { #category : 'editing' }
 TxTextEditorMorph >> cutToClipboard [
 
-	controller selection isEmpty ifTrue: [ ^ self ].
+	editor selection isEmpty ifTrue: [ ^ self ].
 
-	Clipboard clipboardText: controller selection asString.
+	Clipboard clipboardText: editor selection asString.
 	self handleDeleteKey
 ]
 
@@ -289,7 +278,7 @@ TxTextEditorMorph >> drawCursorPositionOn: aCanvas [
 	"debugging: draw the cursor position (line/col numbers)"
 
 	| pathTransform pos |
-	pos := controller cursorPosition asString.
+	pos := editor cursorPosition asString.
 
 	pathTransform := aCanvas pathTransform.
 	pathTransform restoreAfter: [
@@ -348,13 +337,13 @@ TxTextEditorMorph >> drawOverlaysOn: aCanvas [
 { #category : 'drawing' }
 TxTextEditorMorph >> drawSelectionOn: aCanvas [
 
-	controller selection isEmpty ifTrue: [ ^ self ].
+	editor selection isEmpty ifTrue: [ ^ self ].
 
 	aCanvas pathTransform restoreAfter: [
 		aCanvas pathTransform translateBy: self innerBounds topLeft.
 		aCanvas clipBy: (0 @ 0 extent: self layoutView extent) during: [
 			self layoutView
-				renderHighlight: controller selection
+				renderHighlight: editor selection
 				with: self theme selectionColor
 				on: aCanvas ] ]
 ]
@@ -362,6 +351,19 @@ TxTextEditorMorph >> drawSelectionOn: aCanvas [
 { #category : 'drawing-not supported' }
 TxTextEditorMorph >> drawSubmorphsOn: aCanvas [
 	"I'm Athens only!"
+]
+
+{ #category : 'accessing' }
+TxTextEditorMorph >> editor [
+
+	^ editor
+]
+
+{ #category : 'updating' }
+TxTextEditorMorph >> editorChanged [
+
+	layoutViewMorph updateMorph.
+	self updateCursor: true
 ]
 
 { #category : 'navigation-selection' }
@@ -373,14 +375,16 @@ TxTextEditorMorph >> extendSelectionDown [
 { #category : 'navigation-selection' }
 TxTextEditorMorph >> extendSelectionLeft [
 
-	controller extendSelectionLeft.
+	editor extendSelectionLeft.
+	
 	self updateCursor: true
 ]
 
 { #category : 'navigation-selection' }
 TxTextEditorMorph >> extendSelectionRight [
 
-	controller extendSelectionRight.
+	editor extendSelectionRight.
+
 	self updateCursor: true
 ]
 
@@ -405,15 +409,15 @@ TxTextEditorMorph >> handleBackspaceKey [
 
 	"If the selected portion to delete contains layout starting position.
 	We must take care resetting view to new position."
-	(controller selection contains: self layoutView layout startPosition)
-		ifTrue: [ self layoutView resetLayout: controller selection start ].
+	(editor selection contains: self layoutView layout startPosition)
+		ifTrue: [ self layoutView resetLayout: editor selection start ].
 
-	controller backspace.
+	editor backspace.
 
 	self layoutView layout startPosition isValid ifFalse: [
-		self layoutView resetLayout: controller selection start ].
+		self layoutView resetLayout: editor selection start ].
 
-	self controllerChanged
+	self editorChanged
 ]
 
 { #category : 'editing' }
@@ -421,19 +425,20 @@ TxTextEditorMorph >> handleDeleteKey [
 
 	"If the selected portion to delete contains layout starting position.
 	We must take care resetting view to new position"
-	(controller selection contains: self layoutView layout startPosition)
-		ifTrue: [ self layoutView resetLayout: controller selection start ].
+	(editor selection contains: self layoutView layout startPosition)
+		ifTrue: [ self layoutView resetLayout: editor selection start ].
 
-	controller delete.
+	editor delete.
 
-	self controllerChanged
+	self editorChanged
 ]
 
 { #category : 'editing' }
 TxTextEditorMorph >> handleEnterKey [
 
 	self insert: String cr.
-	self controllerChanged
+
+	self editorChanged
 ]
 
 { #category : 'event handling' }
@@ -490,10 +495,11 @@ TxTextEditorMorph >> hasFocus [
 ]
 
 { #category : 'updating' }
-TxTextEditorMorph >> initializeController [
+TxTextEditorMorph >> initializeEditor [
 
-	controller := TxTextEditor text: self text.
-	self controllerChanged
+	editor := TxTextEditor text: self text.
+
+	self editorChanged
 ]
 
 { #category : 'initialization' }
@@ -506,32 +512,30 @@ TxTextEditorMorph >> initializeShortcuts: aKMDispatcher [
 { #category : 'initialization' }
 TxTextEditorMorph >> initializeText: aTxModel [
 
-	cursorMorph := TxCaretCursor new.
+	cursorMorph := self defaultCursor.
 	self addMorph: cursorMorph.
 
 	layoutViewMorph := self newViewMorphOn: aTxModel.
-	"layoutViewMorph.
-		hResizing: #spaceFill;
-		vResizing: #spaceFill"
 	self addMorph: layoutViewMorph.
 
-	self initializeController.
+	self initializeEditor.
 	self color: Color white
 ]
 
 { #category : 'editing' }
 TxTextEditorMorph >> insert: aString [
 
-	controller insert: aString.
+	editor insert: aString.
 
-	self controllerChanged
+	self editorChanged
 ]
 
 { #category : 'editing' }
 TxTextEditorMorph >> insertObject: anObject [
 
-	controller insertObject: anObject.
-	self controllerChanged
+	editor insertObject: anObject.
+
+	self editorChanged
 ]
 
 { #category : 'event handling' }
@@ -571,12 +575,12 @@ TxTextEditorMorph >> layoutViewMorph [
 { #category : 'event handling' }
 TxTextEditorMorph >> mouseDown: anEvent [
 
-	| pos action point |
+	| textPosition action point |
 	self takeKeyboardFocus.
 	
 	point := anEvent position - layoutViewMorph innerBounds origin.
-	pos := layoutViewMorph textPositionAt: point. 
-	action := pos span attributeAt: TxActionAttribute.
+	textPosition := layoutViewMorph textPositionAt: point. 
+	action := textPosition span attributeAt: TxActionAttribute.
 	(action handleEvent: anEvent) ifTrue: [  ^ self ].
 	
 	anEvent redButtonPressed ifTrue: [
@@ -585,12 +589,12 @@ TxTextEditorMorph >> mouseDown: anEvent [
 			ifFalse: [ self moveTo: point ] ].
 
 	anEvent yellowButtonPressed ifTrue: [
-		self announcer announce: (TxContextMenuAnnouncement new
-			event: anEvent;
-			editorMorph: self;
-			textPosition: pos;
-			yourself)
-	]
+		self announcer announce:
+			(TxContextMenuAnnouncement new
+				event: anEvent;
+				editorMorph: self;
+				textPosition: textPosition;
+				yourself) ]
 ]
 
 { #category : 'event handling' }
@@ -610,10 +614,11 @@ TxTextEditorMorph >> mouseMove: anEvent [
 	anEvent redButtonPressed ifTrue: [ 
 		(anEvent position y between: self top and: self bottom)
 			ifFalse: [
-				self startStepping: #autoScrollView:
-				at: Time millisecondClockValue
-				arguments: (Array with: anEvent)
-				stepTime: 100. "fast enough" ]
+				self
+					startStepping: #autoScrollView:
+					at: Time millisecondClockValue
+					arguments: (Array with: anEvent)
+					stepTime: 100. "fast enough" ]
 			ifTrue: [ 		
 				self stopSteppingSelector: #autoScrollView:.
 				self selectTo: anEvent position - layoutViewMorph innerBounds origin ] ]
@@ -640,22 +645,22 @@ TxTextEditorMorph >> mouseWheel: event [
 TxTextEditorMorph >> moveDown [
 	"move down visually"
 
-	| pos visualPos point |
-	pos := controller cursorPosition.
-	visualPos :=
+	| cursorPosition visualPosition point |
+	cursorPosition := editor cursorPosition.
+	visualPosition :=
 		layoutViewMorph
-			layoutPositionAt: pos
+			layoutPositionAt: cursorPosition
 			ifOutside: [
 				"outside of layout, lets move down via text"
-				controller moveDown.
+				editor moveDown.
 				^ self updateCursor: true ].
 
 	"we are adding small constant to point just outside the bounds of current line where cursor is located"
-	point := visualPos bottomPoint + (0 @ 0.001).
+	point := visualPosition bottomPoint + (0 @ 0.001).
 	layoutViewMorph ensurePointWithinLayout: point.
 
 	".. and if there's something more, let layout give us new position "
-	controller moveCursorTo: (layoutViewMorph textPositionAt: point).
+	editor moveCursorTo: (layoutViewMorph textPositionAt: point).
 	self updateCursor: true
 ]
 
@@ -663,24 +668,25 @@ TxTextEditorMorph >> moveDown [
 TxTextEditorMorph >> moveDown: extendingSelection [
 	"move down visually"
 
-	| pos visualPos point |
-	pos := controller cursorPosition.
-	visualPos :=
+	| cursorPosition visualPosition point |
+	cursorPosition := editor cursorPosition.
+	visualPosition :=
 		layoutViewMorph
-			layoutPositionAt: pos
-			ifOutside: [ "outside of layout, lets move down via text"
-				controller moveDown.
+			layoutPositionAt: cursorPosition
+			ifOutside: [
+				"outside of layout, lets move down via text"
+				editor moveDown.
 				^ self updateCursor: true ].
 
 	"we are adding small constant to point just outside the bounds of current line where cursor is located"
-	point := visualPos bottomPoint + (0 @ 0.001).
+	point := visualPosition bottomPoint + (0 @ 0.001).
 	layoutViewMorph ensurePointWithinLayout: point.
 
 	".. and if there's something more, let layout give us new position "
 	point := layoutViewMorph textPositionAt: point.
 	extendingSelection
-		ifTrue: [ controller moveSelectionEndTo: point ]
-		ifFalse: [ controller moveCursorTo: point ].
+		ifTrue: [ editor moveSelectionEndTo: point ]
+		ifFalse: [ editor moveCursorTo: point ].
 
 	self updateCursor: true
 ]
@@ -688,7 +694,7 @@ TxTextEditorMorph >> moveDown: extendingSelection [
 { #category : 'navigation' }
 TxTextEditorMorph >> moveLeft [
 
-	controller moveLeft.
+	editor moveLeft.
 	self updateCursor: true
 ]
 
@@ -696,22 +702,20 @@ TxTextEditorMorph >> moveLeft [
 TxTextEditorMorph >> movePageDown [
 	"move down visually"
 
-	| pos visualPos point |
-	pos := controller cursorPosition.
-	visualPos :=
+	| cursorPosition visualPosition point |
+	cursorPosition := editor cursorPosition.
+	visualPosition :=
 		layoutViewMorph
-			layoutPositionAt: pos
+			layoutPositionAt: cursorPosition
 			ifOutside: [
-				layoutViewMorph scrollIntoView: pos.
-				visualPos := layoutViewMorph
-					layoutPositionAt: pos
-					ifOutside: [ self error: 'that''s not damn possible' ] ].
+				layoutViewMorph
+					scrollIntoView: cursorPosition;
+					layoutPositionAt: cursorPosition ].
 
-	"we are adding small constant to point just outside the bounds of current line where cursor is located"
-	point := visualPos topPointInView.
-	layoutViewMorph scrollBy: 0 @ visualPos layout view height.
+	point := visualPosition topPointInView.
+	layoutViewMorph scrollBy: 0 @ visualPosition layout view height.
 
-	controller moveCursorTo: (layoutViewMorph textPositionAt: point).
+	editor moveCursorTo: (layoutViewMorph textPositionAt: point).
 	self updateCursor: true
 ]
 
@@ -719,30 +723,27 @@ TxTextEditorMorph >> movePageDown [
 TxTextEditorMorph >> movePageUp [
 	"move up visually"
 
-	| pos visualPos point |
-	pos := controller cursorPosition.
-	visualPos :=
+	| cursorPosition visualPosition point |
+	cursorPosition := editor cursorPosition.
+	visualPosition :=
 		layoutViewMorph
-			layoutPositionAt: pos
+			layoutPositionAt: cursorPosition
 			ifOutside: [
-				layoutViewMorph scrollIntoView: pos.
-				visualPos :=
-					layoutViewMorph
-						layoutPositionAt: pos
-						ifOutside: [ self error: 'that''s not damn possible' ] ].
+				layoutViewMorph
+					scrollIntoView: cursorPosition;
+					layoutPositionAt: cursorPosition ].
 
-	"we are adding small constant to point just outside the bounds of current line where cursor is located"
-	point := visualPos topPointInView.
-	layoutViewMorph scrollBy: 0 @ visualPos layout view height negated.
+	point := visualPosition topPointInView.
+	layoutViewMorph scrollBy: 0 @ visualPosition layout view height negated.
 
-	controller moveCursorTo: (layoutViewMorph textPositionAt: point).
+	editor moveCursorTo: (layoutViewMorph textPositionAt: point).
 	self updateCursor: true
 ]
 
 { #category : 'navigation' }
 TxTextEditorMorph >> moveRight [
 
-	controller moveRight.
+	editor moveRight.
 	self updateCursor: true
 ]
 
@@ -752,21 +753,21 @@ TxTextEditorMorph >> moveTo: aPoint [
 
 	| textPosition |
 	textPosition := layoutViewMorph textPositionAt: aPoint.
-	controller moveCursorTo: textPosition.
+	editor moveCursorTo: textPosition.
 	self updateCursor: true
 ]
 
 { #category : 'navigation' }
 TxTextEditorMorph >> moveToLineEnd [
 
-	controller moveToLineEnd.
+	editor moveToLineEnd.
 	self updateCursor: true
 ]
 
 { #category : 'navigation' }
 TxTextEditorMorph >> moveToLineStart [
 
-	controller moveToLineStart.
+	editor moveToLineStart.
 	self updateCursor: true
 ]
 
@@ -781,25 +782,25 @@ TxTextEditorMorph >> moveUp [
 TxTextEditorMorph >> moveUp: extendingSelection [
 	"move up visually"
 
-	| pos visualPos point |
-	pos := controller cursorPosition.
-	visualPos :=
+	| cursorPosition visualPosition point |
+	cursorPosition := editor cursorPosition.
+	visualPosition :=
 		layoutViewMorph
-			layoutPositionAt: pos
+			layoutPositionAt: cursorPosition
 			ifOutside: [
 				"outside of layout, lets move down via text"
-				controller moveUp.
+				editor moveUp.
 				^ self updateCursor: true ].
 
-	"we are subtracting small constant to point just outside the bounds at the top of current line"
-	point := visualPos topPointInView - (0 @ 0.0001).
+	"we subtract a small constant to point just outside the bounds at the top of current line"
+	point := visualPosition topPointInView - (0 @ 0.0001).
 	layoutViewMorph ensurePointWithinLayout: point.
-
-	pos := layoutViewMorph textPositionAt: point.
+	cursorPosition := layoutViewMorph textPositionAt: point.
 
 	extendingSelection
-		ifTrue: [ controller moveSelectionEndTo: pos ]
-		ifFalse: [ controller moveCursorTo: pos ].
+		ifTrue: [ editor moveSelectionEndTo: cursorPosition ]
+		ifFalse: [ editor moveCursorTo: cursorPosition ].
+
 	self updateCursor: true
 ]
 
@@ -848,7 +849,7 @@ TxTextEditorMorph >> scrollIntoView: aTextPosition [
 { #category : 'navigation-selection' }
 TxTextEditorMorph >> selectAll [
 
-	controller selectAll.
+	editor selectAll.
 	self updateCursor: false.
 	self changed
 ]
@@ -859,28 +860,28 @@ TxTextEditorMorph >> selectTo: aPoint [
 
 	| textPosition |
 	textPosition := layoutViewMorph textPositionAt: aPoint.
-	controller moveSelectionEndTo: textPosition.
+	editor moveSelectionEndTo: textPosition.
 	self updateCursor: true
 ]
 
 { #category : 'navigation' }
 TxTextEditorMorph >> selectToLineEnd [
 
-	controller extendSelectionToLineEnd.
+	editor extendSelectionToLineEnd.
 	self updateCursor: true
 ]
 
 { #category : 'navigation' }
 TxTextEditorMorph >> selectToLineStart [
 
-	controller extendSelectionToLineStart.
+	editor extendSelectionToLineStart.
 	self updateCursor: true
 ]
 
 { #category : 'testing' }
 TxTextEditorMorph >> selectionIsEmpty [
 
-	^ controller selection isEmpty
+	^ editor selection isEmpty
 ]
 
 { #category : 'focus management' }
@@ -898,8 +899,9 @@ TxTextEditorMorph >> text [
 { #category : 'editing' }
 TxTextEditorMorph >> undo [
 
-	controller undo.
-	self controllerChanged
+	editor undo.
+
+	self editorChanged
 ]
 
 { #category : 'updating' }
@@ -909,15 +911,15 @@ TxTextEditorMorph >> updateCursor [
 ]
 
 { #category : 'updating' }
-TxTextEditorMorph >> updateCursor: scrollViewToCursorPos [
+TxTextEditorMorph >> updateCursor: shouldScrollViewToCursor [
 
 	| position textPosition |
-	scrollViewToCursorPos ifTrue: [
+	shouldScrollViewToCursor ifTrue: [
 		layoutViewMorph
-			scrollIntoView: controller cursorPosition
+			scrollIntoView: editor cursorPosition
 			margin: CursorEdgeMargin ].
 
-	textPosition := controller cursorPosition.
+	textPosition := editor cursorPosition.
 	position :=
 		layoutViewMorph
 			layoutPositionAt: textPosition

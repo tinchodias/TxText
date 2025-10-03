@@ -81,6 +81,12 @@ TxLayoutViewMorph >> layoutIsAboutToResetIn: view [
 ]
 
 { #category : 'geometry' }
+TxLayoutViewMorph >> layoutPositionAt: aTextPosition [
+
+	^ layoutView layoutPositionAt: aTextPosition
+]
+
+{ #category : 'geometry' }
 TxLayoutViewMorph >> layoutPositionAt: aTextPosition ifOutside: aBlock [
 
 	^ layoutView layoutPositionAt: aTextPosition ifOutside: aBlock
@@ -104,7 +110,7 @@ TxLayoutViewMorph >> newEmbeddedObjectCommand: aTxEmbeddedObjectSpan [
 
 	| morph |
 	morph := TxEmbeddedMorph for: aTxEmbeddedObjectSpan object asMorph.
-	self registerEmbeddedMorph: morph.
+	self addMorph: morph.
 
 	^ TxEmbeddedObjectCommand new
 		span: aTxEmbeddedObjectSpan;
@@ -117,12 +123,6 @@ TxLayoutViewMorph >> privateFullMoveBy: delta [
 	"Private! Relocate me and all of my subMorphs by recursion. Subclasses that implement different coordinate systems may override this method."
 
 	self privateMoveBy: delta
-]
-
-{ #category : 'view notifications' }
-TxLayoutViewMorph >> registerEmbeddedMorph: aTxWrappingMorph [
-
-	self addMorph: aTxWrappingMorph
 ]
 
 { #category : 'updating' }
