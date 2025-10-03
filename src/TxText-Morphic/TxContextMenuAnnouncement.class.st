@@ -4,8 +4,7 @@ Class {
 	#instVars : [
 		'event',
 		'editorMorph',
-		'textPosition',
-		'menu'
+		'textPosition'
 	],
 	#category : 'TxText-Morphic',
 	#package : 'TxText-Morphic'
