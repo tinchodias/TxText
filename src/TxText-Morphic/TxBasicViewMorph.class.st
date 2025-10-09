@@ -42,7 +42,7 @@ TxBasicViewMorph class >> openInWindowWithText: aTxModel [
 		layoutFrame: LayoutFrame identity;
 		wrapText: true.
 		
-	wrapper := AthensWrapMorph new.
+	wrapper := TxAthensWrapperMorph new.
 	wrapper
 		layoutPolicy: ProportionalLayout new;
 		addMorph: editorMorph.

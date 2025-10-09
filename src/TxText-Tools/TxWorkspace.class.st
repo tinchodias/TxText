@@ -160,7 +160,7 @@ TxWorkspace >> openText: aText withLabel: aLabel [
 
 	self wireEvents.
 
-	wrapper := AthensWrapMorph new.
+	wrapper := TxAthensWrapperMorph new.
 	wrapper layoutPolicy: ProportionalLayout new.
 	wrapper addMorph: view.
 

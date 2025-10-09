@@ -28,7 +28,7 @@ TxViewContainer class >> editText: aText [
 	view hResizing: #spaceFill ; vResizing: #spaceFill .
 	view layoutFrame: LayoutFrame identity.
 	
-	wrapper := AthensWrapMorph new.
+	wrapper := TxAthensWrapperMorph new.
 	wrapper layoutPolicy: ProportionalLayout new.
 	wrapper addMorph: view.
 	
@@ -67,17 +67,17 @@ TxViewContainer class >> example2 [
 	view addDecorator: (TxViewDecoratorMorph new placeBottom color: Color green;yourself).
 	view addDecorator: (TxScrollbarDecorator new placeRight color: Color blue;yourself).
 	view addDecorator: (TxScrollbarDecorator new placeBottom color: Color green;yourself).
+
 	view useEditor.
 	view wrapText: false.
 	view hResizing: #spaceFill ; vResizing: #spaceFill .
 	view layoutFrame: LayoutFrame identity.
 	
-	wrapper := AthensWrapMorph new.
+	wrapper := TxAthensWrapperMorph new.
 	wrapper layoutPolicy: ProportionalLayout new.
 	wrapper addMorph: view.
 	
-	wrapper openInWindow extent: 400@400.
-
+	wrapper openInWindow extent: 400@400
 
 
 ]
@@ -118,7 +118,7 @@ TxViewContainer class >> exampleEditorExistingTextWithEmbeddedObjects [
 		vResizing: #spaceFill.
 	view layoutFrame: LayoutFrame identity.
 
-	wrapper := AthensWrapMorph new.
+	wrapper := TxAthensWrapperMorph new.
 	wrapper layoutPolicy: ProportionalLayout new.
 	wrapper addMorph: view.
 
@@ -141,14 +141,11 @@ TxViewContainer class >> exampleOneLineEditor [
 	view hResizing: #spaceFill ; vResizing: #spaceFill .
 	view layoutFrame: LayoutFrame identity.
 	
-	wrapper := AthensWrapMorph new.
+	wrapper := TxAthensWrapperMorph new.
 	wrapper layoutPolicy: ProportionalLayout new.
 	wrapper addMorph: view.
 	
-	wrapper openInWindow extent: 400@400.
-
-
-
+	wrapper openInWindow extent: 400@400
 ]
 
 { #category : 'accessing' }

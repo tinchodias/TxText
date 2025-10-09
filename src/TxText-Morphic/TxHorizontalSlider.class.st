@@ -5,6 +5,20 @@ Class {
 	#package : 'TxText-Morphic'
 }
 
+{ #category : 'tests' }
+TxHorizontalSlider class >> test [
+	<script>
+
+	| m w |
+	m := self new.
+	m announcer when: TxSliderScrollForward send: #advance to: m.
+	m announcer when: TxSliderScrollBackward send: #retreat to: m.
+	
+	w := TxAthensWrapperMorph new.
+	w addMorph: m.
+	w openInWindow
+]
+
 { #category : 'geometry' }
 TxHorizontalSlider >> computeSliderBounds [
 
