@@ -51,6 +51,12 @@ TxTextEditorMorph class >> buildTextEditorKeymapsOn: aBuilder [
 ]
 
 { #category : 'examples' }
+TxTextEditorMorph class >> exampleHelloWorld [
+
+	^ self openInWindowWithText: 'Hello World' asTxModel
+]
+
+{ #category : 'examples' }
 TxTextEditorMorph class >> exampleHugePharoChanges [
 	"Inspired in Album's #example_EditorPharoChangesText"
 

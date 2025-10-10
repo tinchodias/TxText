@@ -102,9 +102,9 @@ TxAthensLayoutView >> container [
 ]
 
 { #category : 'accessing' }
-TxAthensLayoutView >> container: anObject [
+TxAthensLayoutView >> container: aViewContainer [
 
-	container := anObject
+	container := aViewContainer
 ]
 
 { #category : 'debug rendering' }
