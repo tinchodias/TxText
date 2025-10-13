@@ -32,13 +32,15 @@ TxAthensWrapperMorph >> createAthensSurface [
 { #category : 'private' }
 TxAthensWrapperMorph >> drawAthensSurfaceOn: aCanvas [
 
+	| logicalIntegerExtent |
+	logicalIntegerExtent := self extent asIntegerPoint.
 	aCanvas
 		formSet: (FormSet
-			extent: self extent asIntegerPoint
+			extent: logicalIntegerExtent
 			depth: 32
 			forms: { surface asForm })
 		at: bounds origin
-		sourceRect: (0 @ 0 extent: surface extent)
+		sourceRect: (0 @ 0 extent: logicalIntegerExtent)
 		rule: Form blendAlphaScaled
 ]
 
