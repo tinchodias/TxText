@@ -9,6 +9,7 @@ Class {
 }
 
 { #category : 'defaults' }
-TxForeColorAttribute class >> defaultValue [ 
+TxForeColorAttribute class >> defaultValue [
+
 	^ Smalltalk ui theme textColor
 ]

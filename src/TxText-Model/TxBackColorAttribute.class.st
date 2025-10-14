@@ -10,5 +10,6 @@ Class {
 
 { #category : 'defaults' }
 TxBackColorAttribute class >> defaultValue [
+
 	^ Smalltalk ui theme backgroundColor
 ]

@@ -14,6 +14,7 @@ Class {
 
 { #category : 'defaults' }
 TxAttribute class >> defaultValue [
+
 	self subclassResponsibility
 ]
 
@@ -27,12 +28,14 @@ TxAttribute class >> with: valueObject [
 
 { #category : 'comparing' }
 TxAttribute >> = anObject [
-	^  self species == anObject species and: [ value = anObject value ]
+
+	^ self species == anObject species and: [ value = anObject value ]
 ]
 
 { #category : 'comparing' }
 TxAttribute >> hash [
-	^ self species hash
+
+	^ self species hash bitXor: value hash
 ]
 
 { #category : 'accessing' }

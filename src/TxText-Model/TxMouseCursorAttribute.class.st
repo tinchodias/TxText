@@ -10,5 +10,6 @@ Class {
 
 { #category : 'defaults' }
 TxMouseCursorAttribute class >> defaultValue [
+
 	^ Cursor overEditableText
 ]

@@ -20,21 +20,25 @@ Class {
 
 { #category : 'defaults' }
 TxActionAttribute class >> defaultValue [
-	^ Default ifNil: [  Default := self new ]
+
+	^ Default ifNil: [ Default := self new ]
 ]
 
 { #category : 'comparing' }
 TxActionAttribute >> = anObject [
+
 	^ super = anObject and: [ filter = anObject filter ]
 ]
 
 { #category : 'accessing' }
 TxActionAttribute >> filter [
+
 	^ filter
 ]
 
 { #category : 'accessing' }
 TxActionAttribute >> filter: aBlock [
+
 	filter := aBlock
 ]
 
@@ -49,16 +53,22 @@ TxActionAttribute >> filterEvent: anEvent [
 { #category : 'event handling' }
 TxActionAttribute >> handleEvent: anEvent [
 	"Answer true if event passes the filter, false otherwise"
-	
-	(self filterEvent: anEvent) ifTrue: [ 
-		value cull: anEvent.
-		^ true
-		 ].
-	^ false
 
+	(self filterEvent: anEvent) ifTrue: [
+		value cull: anEvent.
+		^ true ].
+
+	^ false
+]
+
+{ #category : 'comparing' }
+TxActionAttribute >> hash [
+
+	^ super hash bitXor: filter hash
 ]
 
 { #category : 'accessing' }
 TxActionAttribute >> value [
+
 	^ self
 ]
