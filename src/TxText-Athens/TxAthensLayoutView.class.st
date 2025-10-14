@@ -173,9 +173,7 @@ TxAthensLayoutView >> extent: aPoint [
 { #category : 'geometry' }
 TxAthensLayoutView >> fontMetricsProviderFor: aFont [
 
-	^ CairoFontMetricsProvider new
-		  font: aFont;
-		  yourself
+	^ TxFontMetricsProviderCache current at: aFont
 ]
 
 { #category : 'accessing' }
